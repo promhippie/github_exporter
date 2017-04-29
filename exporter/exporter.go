@@ -14,11 +14,11 @@ const (
 )
 
 var (
-	// validResponse defines if the API response can get processed.
-	validResponse = prometheus.NewGauge(
+	// isUp defines if the API response can get processed.
+	isUp = prometheus.NewGauge(
 		prometheus.GaugeOpts{
 			Namespace: namespace,
-			Name:      "valid_response",
+			Name:      "up",
 			Help:      "Check if GitHub response can be processed",
 		},
 	)
@@ -47,7 +47,7 @@ var (
 
 // init just defines the initial state of the exports.
 func init() {
-	validResponse.Set(0)
+	isUp.Set(0)
 }
 
 // NewExporter gives you a new exporter instance.
@@ -67,7 +67,7 @@ type Exporter struct {
 
 // Describe defines the metric descriptions for Prometheus.
 func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
-	ch <- validResponse.Desc()
+	ch <- isUp.Desc()
 
 	for _, metric := range openIssues {
 		ch <- metric.Desc()
@@ -106,13 +106,13 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	if err := e.scrape(); err != nil {
 		log.Error(err)
 
-		validResponse.Set(0)
-		ch <- validResponse
+		isUp.Set(0)
+		ch <- isUp
 
 		return
 	}
 
-	ch <- validResponse
+	ch <- isUp
 
 	for _, metric := range openIssues {
 		ch <- metric
@@ -163,7 +163,7 @@ func (e *Exporter) scrape() error {
 		}
 	}
 
-	validResponse.Set(1)
+	isUp.Set(1)
 	return nil
 }
 
