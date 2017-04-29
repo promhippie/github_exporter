@@ -50,6 +50,11 @@ func main() {
 		os.Exit(0)
 	}
 
+	if len(orgs) == 0 && len(repos) == 0 {
+		fmt.Fprintln(os.Stderr, "Please provide a repository or an organization")
+		os.Exit(1)
+	}
+
 	log.Infoln("Starting GitHub exporter", version.Info())
 	log.Infoln("Build context", version.BuildContext())
 
