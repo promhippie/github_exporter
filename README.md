@@ -54,7 +54,7 @@ make test build
 ```
 # HELP github_exporter_build_info A metric with a constant '1' value labeled by version, revision, branch, and goversion from which github_exporter was built.
 # TYPE github_exporter_build_info gauge
-github_exporter_build_info{branch="HEAD",goversion="go1.8.1",revision="HEAD",version="0.1.0"} 1
+github_exporter_build_info{branch="HEAD",goversion="go1.8.1",revision="970771d5cbf98d9a3347f0a15e3e9438ebb5cfe4",version="0.2.0"} 1
 # HELP github_forks How often have this repository been forked
 # TYPE github_forks gauge
 github_forks{owner="webhippie",repo="redirects"} 0
@@ -70,12 +70,12 @@ github_size{owner="webhippie",repo="redirects"} 1769
 # HELP github_stars How often have this repository been stared
 # TYPE github_stars gauge
 github_stars{owner="webhippie",repo="redirects"} 2
+# HELP github_up Check if GitHub response can be processed
+# TYPE github_up gauge
+github_up 1
 # HELP github_updated A timestamp when the repository have been updated
 # TYPE github_updated gauge
 github_updated{owner="webhippie",repo="redirects"} 1.492589212e+09
-# HELP github_valid_response Check if GitHub response can be processed
-# TYPE github_valid_response gauge
-github_valid_response 1
 # HELP github_watchers How often have this repository been watched
 # TYPE github_watchers gauge
 github_watchers{owner="webhippie",repo="redirects"} 2
