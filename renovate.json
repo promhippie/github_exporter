@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "labels": [
+    "renovate"
+  ],
+  "rebaseLabel": "rebase"
+}
