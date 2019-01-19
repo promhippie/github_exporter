@@ -2,7 +2,7 @@
   "extends": [
     "config:base"
   ],
-  "labels"; [
+  "labels": [
     "renovate"
   ],
   "rebaseLabel": "rebase"
