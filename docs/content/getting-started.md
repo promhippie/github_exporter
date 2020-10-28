@@ -9,7 +9,7 @@ weight: 10
 
 We won't cover further details how to properly setup [Prometheus](https://prometheus.io) itself, we will only cover some basic setup based on [docker-compose](https://docs.docker.com/compose/). But if you want to run this exporter without [docker-compose](https://docs.docker.com/compose/) you should be able to adopt that to your needs.
 
-First of all we need to prepare a configuration for [Prometheus](https://prometheus.io) that includes the exporter as a target based on a static host mapping which is just the [docker-compose](https://docs.docker.com/compose/) container name, e.g. `github-exporter`.
+First of all we need to prepare a configuration for [Prometheus](https://prometheus.io) that includes the exporter as a target based on a static host mapping which is just the [docker-compose](https://docs.docker.com/compose/) container name, e.g. `github_exporter`.
 
 {{< highlight yaml >}}
 global:
@@ -21,7 +21,7 @@ scrape_configs:
 - job_name: github
   static_configs:
   - targets:
-    - github-exporter:9504
+    - github_exporter:9504
 {{< / highlight >}}
 
 After preparing the configuration we need to create the `docker-compose.yml` within the same folder, this `docker-compose.yml` starts a simple [Prometheus](https://prometheus.io) instance together with the exporter. Don't forget to update the exporter envrionment variables with the required credentials.
@@ -42,20 +42,20 @@ services:
       - prometheus:/prometheus
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
 
-  github-exporter:
-    image: promhippie/github-exporter:latest
+  github_exporter:
+    image: promhippie/github_exporter:latest
     restart: always
     environment:
       - GITHUB_EXPORTER_LOG_PRETTY=true
       - GITHUB_EXPORTER_ORG=promhippie
 {{< / highlight >}}
 
-Since our `latest` Docker tag always refers to the `master` branch of the Git repository you should always use some fixed version. You can see all available tags at our [DockerHub repository](https://hub.docker.com/r/promhippie/github-exporter/tags/), there you will see that we also provide a manifest, you can easily start the exporter on various architectures without any change to the image name. You should apply a change like this to the `docker-compose.yml`:
+Since our `latest` Docker tag always refers to the `master` branch of the Git repository you should always use some fixed version. You can see all available tags at our [DockerHub repository](https://hub.docker.com/r/promhippie/github_exporter/tags/), there you will see that we also provide a manifest, you can easily start the exporter on various architectures without any change to the image name. You should apply a change like this to the `docker-compose.yml`:
 
 {{< highlight diff >}}
   hcloud-exporter:
--   image: promhippie/github-exporter:latest
-+   image: promhippie/github-exporter:0.1.0
+-   image: promhippie/github_exporter:latest
++   image: promhippie/github_exporter:0.1.0
     restart: always
     environment:
       - GITHUB_EXPORTER_LOG_PRETTY=true
@@ -66,7 +66,7 @@ If you want to access the exporter directly you should bind it to a local port, 
 
 {{< highlight diff >}}
   hcloud-exporter:
-    image: promhippie/github-exporter:latest
+    image: promhippie/github_exporter:latest
     restart: always
 +   ports:
 +     - 127.0.0.1:9504:9504

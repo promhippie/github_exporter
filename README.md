@@ -5,13 +5,13 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/af9b80ac46294ac9a52d823e991eb4e9)](https://www.codacy.com/gh/promhippie/github_exporter/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=promhippie/github_exporter&amp;utm_campaign=Badge_Grade)
 [![Go Doc](https://godoc.org/github.com/promhippie/github_exporter?status.svg)](http://godoc.org/github.com/promhippie/github_exporter)
 [![Go Report](http://goreportcard.com/badge/github.com/promhippie/github_exporter)](http://goreportcard.com/report/github.com/promhippie/github_exporter)
-[![](https://images.microbadger.com/badges/image/promhippie/github-exporter.svg)](http://microbadger.com/images/promhippie/github-exporter "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/promhippie/github_exporter.svg)](http://microbadger.com/images/promhippie/github_exporter "Get your own image badge on microbadger.com")
 
 An exporter for [Prometheus](https://prometheus.io/) that collects metrics from [GitHub](https://github.com).
 
 ## Install
 
-You can download prebuilt binaries from our [GitHub releases](https://github.com/promhippie/github_exporter/releases), or you can use our Docker images published on [Docker Hub](https://hub.docker.com/r/promhippie/github-exporter/tags/). If you need further guidance how to install this take a look at our [documentation](https://promhippie.github.io/github_exporter/#getting-started).
+You can download prebuilt binaries from our [GitHub releases](https://github.com/promhippie/github_exporter/releases), or you can use our Docker images published on [Docker Hub](https://hub.docker.com/r/promhippie/github_exporter/tags/). If you need further guidance how to install this take a look at our [documentation](https://promhippie.github.io/github_exporter/#getting-started).
 
 ## Development
 

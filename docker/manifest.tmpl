@@ -1,4 +1,4 @@
-image: promhippie/github-exporter:{{#if build.tag}}{{trimPrefix "v" build.tag}}{{else}}latest{{/if}}
+image: promhippie/github_exporter:{{#if build.tag}}{{trimPrefix "v" build.tag}}{{else}}latest{{/if}}
 {{#if build.tags}}
 tags:
 {{#each build.tags}}
@@ -6,20 +6,20 @@ tags:
 {{/each}}
 {{/if}}
 manifests:
-  - image: promhippie/github-exporter:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}linux-amd64
+  - image: promhippie/github_exporter:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}linux-amd64
     platform:
       architecture: amd64
       os: linux
-  - image: promhippie/github-exporter:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}linux-i386
+  - image: promhippie/github_exporter:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}linux-i386
     platform:
       architecture: 386
       os: linux
-  - image: promhippie/github-exporter:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}linux-arm64v8
+  - image: promhippie/github_exporter:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}linux-arm64v8
     platform:
       architecture: arm64
       variant: v8
       os: linux
-  - image: promhippie/github-exporter:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}linux-arm32v6
+  - image: promhippie/github_exporter:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}linux-arm32v6
     platform:
       architecture: arm
       variant: v6
