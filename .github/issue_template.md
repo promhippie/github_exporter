@@ -1,7 +1,9 @@
-Please check the following:
+<!-- PLEASE READ BEFORE DELETING
 
-1. Please speak English, this is the language everybody of us can speak and write.
-2. Please ask questions or config/deploy problems on our Gitter channel: https://gitter.im/webhippie/general
-3. Please take a moment to search that an issue doesn't already exist.
+Please write English, this is the language everybody of us understands. Take a
+moment to search that an issue doesn't already exist If you only got questions
+please head over to our Matrix channel:
 
-**You MUST delete the content above including this line before posting, otherwise your issue will be invalid.**
+  https://matrix.to/#/#webhippie:matrix.org
+
+-->

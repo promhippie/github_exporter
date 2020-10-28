@@ -15,13 +15,5 @@ indent_size = 4
 indent_style = tab
 indent_size = 4
 
-[*.{html,js,css,less,vue}]
-indent_style = tab
-indent_size = 4
-
-[*.{yml,toml,json}]
-indent_style = space
-indent_size = 2
-
 [*.md]
 trim_trailing_whitespace = true

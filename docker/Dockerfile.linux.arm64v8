@@ -1,0 +1,18 @@
+FROM webhippie/alpine:latest AS build
+RUN apk add --no-cache ca-certificates mailcap
+
+FROM scratch
+
+LABEL maintainer="Thomas Boerger <thomas@webhippie.de>" \
+  org.label-schema.name="GitHub Exporter" \
+  org.label-schema.vendor="Thomas Boerger" \
+  org.label-schema.schema-version="1.0"
+
+EXPOSE 9504
+ENTRYPOINT ["/usr/bin/github_exporter"]
+HEALTHCHECK CMD ["/usr/bin/github_exporter", "health"]
+
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build /etc/mime.types /etc/
+
+COPY bin/github_exporter /usr/bin/github_exporter

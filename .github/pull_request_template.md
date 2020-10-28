@@ -1,7 +1,9 @@
-Please check the following:
+<!-- PLEASE READ BEFORE DELETING
 
-1. Make sure you are targeting the `master` branch, pull requests on release branches are only allowed for bug fixes.
-2. Read contributing guidelines: https://github.com/webhippie/github_exporter/blob/master/CONTRIBUTING.md
-3. Describe what your pull request does and which issue you're targeting (if any)
+Make sure to target the master branch, describe what your pull requests does and
+which issue you are solving (if any). Please read our contributing guidelines as
+well:
 
-**You MUST delete the content above including this line before posting, otherwise your pull request will be invalid.**
+  https://github.com/promhippie/github_exporter/blob/master/CONTRIBUTING.md
+
+-->
