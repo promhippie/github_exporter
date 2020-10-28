@@ -18,23 +18,6 @@ The following sections list the changes for unreleased.
    https://github.com/promhippie/github_exporter/issues/12
 
 
-# Changelog for 0.1.0
-
-The following sections list the changes for 0.1.0.
-
-## Summary
-
- * Chg #11: Initial release of basic version
-
-## Details
-
- * Change #11: Initial release of basic version
-
-   Just prepared an initial basic version which could be released to the public.
-
-   https://github.com/promhippie/github_exporter/issues/11
-
-
 # Changelog for 0.2.0
 
 The following sections list the changes for 0.2.0.
@@ -60,5 +43,22 @@ The following sections list the changes for 0.2.0.
    or not.
 
    https://github.com/promhippie/github_exporter/issues/2
+
+
+# Changelog for 0.1.0
+
+The following sections list the changes for 0.1.0.
+
+## Summary
+
+ * Chg #11: Initial release of basic version
+
+## Details
+
+ * Change #11: Initial release of basic version
+
+   Just prepared an initial basic version which could be released to the public.
+
+   https://github.com/promhippie/github_exporter/issues/11
 
 
