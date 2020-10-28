@@ -1,45 +1,196 @@
-GO := GO15VENDOREXPERIMENT=1 go
-PROMU := $(GOPATH)/bin/promu
-PKGS := $(shell $(GO) list ./... | grep -v /vendor/)
+include .bingo/Variables.mk
 
-PREFIX ?= $(shell pwd)
-BIN_DIR ?= $(shell pwd)
-DOCKER_IMAGE_NAME ?= github-exporter
-DOCKER_IMAGE_TAG ?= $(subst /,-,$(shell git rev-parse --abbrev-ref HEAD))
+SHELL := bash
+NAME := github_exporter
+IMPORT := github.com/promhippie/$(NAME)
+BIN := bin
+DIST := dist
 
-all: format build test
+ifeq ($(OS), Windows_NT)
+	EXECUTABLE := $(NAME).exe
+	UNAME := Windows
+else
+	EXECUTABLE := $(NAME)
+	UNAME := $(shell uname -s)
+endif
 
-style:
-	@echo ">> checking code style"
-	@! gofmt -d $(shell find . -path ./vendor -prune -o -name '*.go' -print) | grep '^'
+ifeq ($(UNAME), Darwin)
+	GOBUILD ?= CGO_ENABLED=0 go build -i
+else
+	GOBUILD ?= CGO_ENABLED=0 go build
+endif
 
-test:
-	@echo ">> running tests"
-	@$(GO) test -short $(PKGS)
+PACKAGES ?= $(shell go list ./...)
+SOURCES ?= $(shell find . -name "*.go" -type f -not -path "./node_modules/*")
+GENERATE ?= $(PACKAGES)
 
-format:
-	@echo ">> formatting code"
-	@$(GO) fmt $(PKGS)
+TAGS ?= netgo
 
+ifndef OUTPUT
+	ifneq ($(DRONE_TAG),)
+		OUTPUT ?= $(subst v,,$(DRONE_TAG))
+	else
+		OUTPUT ?= testing
+	endif
+endif
+
+ifndef VERSION
+	ifneq ($(DRONE_TAG),)
+		VERSION ?= $(subst v,,$(DRONE_TAG))
+	else
+		VERSION ?= $(shell git rev-parse --short HEAD)
+	endif
+endif
+
+ifndef DATE
+	DATE := $(shell date -u '+%Y%m%d')
+endif
+
+ifndef SHA
+	SHA := $(shell git rev-parse --short HEAD)
+endif
+
+LDFLAGS += -s -w -extldflags "-static" -X "$(IMPORT)/pkg/version.String=$(VERSION)" -X "$(IMPORT)/pkg/version.Revision=$(SHA)" -X "$(IMPORT)/pkg/version.Date=$(DATE)"
+GCFLAGS += all=-N -l
+
+.PHONY: all
+all: build
+
+.PHONY: sync
+sync:
+	go mod download
+
+.PHONY: clean
+clean:
+	go clean -i ./...
+	rm -rf $(BIN) $(DIST)
+
+.PHONY: fmt
+fmt:
+	gofmt -s -w $(SOURCES)
+
+.PHONY: vet
 vet:
-	@echo ">> vetting code"
-	@$(GO) vet $(PKGS)
+	go vet $(PACKAGES)
 
-build: promu
-	@echo ">> building binaries"
-	@$(PROMU) build --prefix $(PREFIX)
+.PHONY: staticcheck
+staticcheck: $(STATICCHECK)
+	$(STATICCHECK) -tags '$(TAGS)' $(PACKAGES)
 
-tarball: promu
-	@echo ">> building release tarball"
-	@$(PROMU) tarball $(BIN_DIR) --prefix $(PREFIX)
+.PHONY: lint
+lint: $(GOLINT)
+	for PKG in $(PACKAGES); do $(GOLINT) -set_exit_status $$PKG || exit 1; done;
 
-docker:
-	@echo ">> building docker image"
-	@docker build -t "$(DOCKER_IMAGE_NAME):$(DOCKER_IMAGE_TAG)" .
+.PHONY: generate
+generate:
+	go generate $(GENERATE)
 
-promu:
-	@which promu > /dev/null; if [ $$? -ne 0 ]; then \
-		$(GO) get -u github.com/prometheus/promu; \
-	fi
+.PHONY: changelog
+changelog: $(CALENS)
+	$(CALENS) >| CHANGELOG.md
 
-.PHONY: all style format build test vet tarball docker promu
+.PHONY: test
+test: $(GOVERAGE)
+	$(GOVERAGE) -v -coverprofile coverage.out $(PACKAGES)
+
+.PHONY: install
+install: $(SOURCES)
+	go install -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' ./cmd/$(NAME)
+
+.PHONY: build
+build: $(BIN)/$(EXECUTABLE)
+
+$(BIN)/$(EXECUTABLE): $(SOURCES)
+	$(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(BIN)/$(EXECUTABLE)-debug: $(SOURCES)
+	$(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -gcflags '$(GCFLAGS)' -o $@ ./cmd/$(NAME)
+
+.PHONY: release
+release: $(DIST) release-linux release-darwin release-windows release-reduce release-checksum
+
+$(DIST):
+	mkdir -p $(DIST)
+
+.PHONY: release-linux
+release-linux: $(DIST) \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-386 \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-amd64 \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-5 \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-6 \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-7 \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm64 \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64 \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mipsle \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64le
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-386:
+	GOOS=linux GOARCH=386 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-amd64:
+	GOOS=linux GOARCH=amd64 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-5:
+	GOOS=linux GOARCH=arm GOARM=5 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-6:
+	GOOS=linux GOARCH=arm GOARM=6 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-7:
+	GOOS=linux GOARCH=arm GOARM=7 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm64:
+	GOOS=linux GOARCH=arm64 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips:
+	GOOS=linux GOARCH=mips $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64:
+	GOOS=linux GOARCH=mips64 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mipsle:
+	GOOS=linux GOARCH=mipsle $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64le:
+	GOOS=linux GOARCH=mips64le $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+.PHONY: release-darwin
+release-darwin: $(DIST) \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-amd64
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-386:
+	GOOS=darwin GOARCH=386 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-amd64:
+	GOOS=darwin GOARCH=amd64 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+.PHONY: release-windows
+release-windows: $(DIST) \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-windows-4.0-386.exe \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-windows-4.0-amd64.exe
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-windows-4.0-386.exe:
+	GOOS=windows GOARCH=386 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-windows-4.0-amd64.exe:
+	GOOS=windows GOARCH=amd64 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+.PHONY: release-reduce
+release-reduce:
+	cd $(DIST); $(foreach file,$(wildcard $(DIST)/$(EXECUTABLE)-*),upx $(notdir $(file));)
+
+.PHONY: release-checksum
+release-checksum:
+	cd $(DIST); $(foreach file,$(wildcard $(DIST)/$(EXECUTABLE)-*),sha256sum $(notdir $(file)) > $(notdir $(file)).sha256;)
+
+.PHONY: release-finish
+release-finish: release-reduce release-checksum
+
+.PHONY: docs
+docs:
+	hugo -s docs/
+
+.PHONY: watch
+watch:
+	$(REFLEX) -c reflex.conf

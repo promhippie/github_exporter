@@ -1,0 +1,16 @@
+baseURL = "https://promhippie.github.io/github_exporter/"
+languageCode = "en-us"
+title = "GitHub Exporter"
+pygmentsUseClasses = true
+
+[blackfriday]
+  angledQuotes = true
+  fractions = false
+  plainIDAnchors = true
+  smartlists = true
+  extensions = ["hardLineBreak"]
+
+[params]
+  author = "Thomas Boerger"
+  description = "Export GitHub metrics for Prometheus"
+  keywords = "prometheus, exporter, github"
