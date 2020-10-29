@@ -434,6 +434,7 @@
 </span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>promhippie/github_exporter<span class="p">:</span>latest<span class="w">
 </span><span class="w">    </span>restart<span class="p">:</span><span class="w"> </span>always<span class="w">
 </span><span class="w">    </span>environment<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb<span class="w">
 </span><span class="w">      </span>-<span class="w"> </span>GITHUB_EXPORTER_LOG_PRETTY=<span class="kc">true</span><span class="w">
 </span><span class="w">      </span>-<span class="w"> </span>GITHUB_EXPORTER_ORG=promhippie</code></pre></div>
 
@@ -441,9 +442,10 @@
 
 <div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff">  hcloud-exporter:
 <span class="gd">-   image: promhippie/github_exporter:latest
-</span><span class="gd"></span><span class="gi">+   image: promhippie/github_exporter:0.1.0
+</span><span class="gd"></span><span class="gi">+   image: promhippie/github_exporter:1.0.0
 </span><span class="gi"></span>    restart: always
     environment:
+      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
       - GITHUB_EXPORTER_LOG_PRETTY=true
       - GITHUB_EXPORTER_ORG=promhippie
 </code></pre></div>
@@ -456,13 +458,38 @@
 <span class="gi">+   ports:
 </span><span class="gi">+     - 127.0.0.1:9504:9504
 </span><span class="gi"></span>    environment:
+      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
       - GITHUB_EXPORTER_LOG_PRETTY=true
       - GITHUB_EXPORTER_ORG=promhippie
 </code></pre></div>
 
 <p>Finally the exporter should be configured fine, let&rsquo;s start this stack with <a href="https://docs.docker.com/compose/">docker-compose</a>, you just need to execute <code>docker-compose up</code> within the directory where you have stored the <code>prometheus.yml</code> and <code>docker-compose.yml</code>.</p>
 
-<div class="highlight"><pre class="chroma"><code class="language-txt" data-lang="txt">TBD</code></pre></div>
+<div class="highlight"><pre class="chroma"><code class="language-txt" data-lang="txt">Creating network &#34;example_default&#34; with the default driver
+Creating volume &#34;example_prometheus&#34; with default driver
+Creating example_github_exporter_1 ... done
+Creating example_prometheus_1      ... done
+Attaching to example_github_exporter_1, example_prometheus_1
+github_exporter_1  | level=info ts=2020-10-29T07:15:08.8972594Z msg=&#34;Launching GitHub Exporter&#34; version=9f39482 revision=9f39482 date=20201028 go=go1.14.2
+github_exporter_1  | level=info ts=2020-10-29T07:15:08.8976418Z msg=&#34;Starting metrics server&#34; addr=0.0.0.0:9504
+prometheus_1       | level=info ts=2020-10-29T07:15:09.198Z caller=main.go:315 msg=&#34;No time or size retention was set so using the default time retention&#34; duration=15d
+prometheus_1       | level=info ts=2020-10-29T07:15:09.198Z caller=main.go:353 msg=&#34;Starting Prometheus&#34; version=&#34;(version=2.22.0, branch=HEAD, revision=0a7fdd3b76960808c3a91d92267c3d815c1bc354)&#34;
+prometheus_1       | level=info ts=2020-10-29T07:15:09.198Z caller=main.go:358 build_context=&#34;(go=go1.15.3, user=root@6321101b2c50, date=20201015-12:29:59)&#34;
+prometheus_1       | level=info ts=2020-10-29T07:15:09.198Z caller=main.go:359 host_details=&#34;(Linux 4.19.76-linuxkit #1 SMP Tue May 26 11:42:35 UTC 2020 x86_64 95702f475360 (none))&#34;
+prometheus_1       | level=info ts=2020-10-29T07:15:09.198Z caller=main.go:360 fd_limits=&#34;(soft=1048576, hard=1048576)&#34;
+prometheus_1       | level=info ts=2020-10-29T07:15:09.199Z caller=main.go:361 vm_limits=&#34;(soft=unlimited, hard=unlimited)&#34;
+prometheus_1       | level=info ts=2020-10-29T07:15:09.204Z caller=web.go:516 component=web msg=&#34;Start listening for connections&#34; address=0.0.0.0:9090
+prometheus_1       | level=info ts=2020-10-29T07:15:09.204Z caller=main.go:712 msg=&#34;Starting TSDB ...&#34;
+prometheus_1       | level=info ts=2020-10-29T07:15:09.208Z caller=head.go:642 component=tsdb msg=&#34;Replaying on-disk memory mappable chunks if any&#34;
+prometheus_1       | level=info ts=2020-10-29T07:15:09.208Z caller=head.go:656 component=tsdb msg=&#34;On-disk memory mappable chunks replay completed&#34; duration=9.5µs
+prometheus_1       | level=info ts=2020-10-29T07:15:09.208Z caller=head.go:662 component=tsdb msg=&#34;Replaying WAL, this may take a while&#34;
+prometheus_1       | level=info ts=2020-10-29T07:15:09.209Z caller=head.go:714 component=tsdb msg=&#34;WAL segment loaded&#34; segment=0 maxSegment=0
+prometheus_1       | level=info ts=2020-10-29T07:15:09.209Z caller=head.go:719 component=tsdb msg=&#34;WAL replay completed&#34; checkpoint_replay_duration=39.9µs wal_replay_duration=803µs total_replay_duration=923.1µs
+prometheus_1       | level=info ts=2020-10-29T07:15:09.210Z caller=main.go:732 fs_type=EXT4_SUPER_MAGIC
+prometheus_1       | level=info ts=2020-10-29T07:15:09.210Z caller=main.go:735 msg=&#34;TSDB started&#34;
+prometheus_1       | level=info ts=2020-10-29T07:15:09.210Z caller=main.go:861 msg=&#34;Loading configuration file&#34; filename=/etc/prometheus/prometheus.yml
+prometheus_1       | level=info ts=2020-10-29T07:15:09.214Z caller=main.go:892 msg=&#34;Completed loading of configuration file&#34; filename=/etc/prometheus/prometheus.yml totalDuration=3.5797ms remote_storage=8.9µs web_handler=7.4µs query_engine=7.5µs scrape=330.7µs scrape_sd=72.1µs notify=6.4µs notify_sd=10µs rules=8.2µs
+prometheus_1       | level=info ts=2020-10-29T07:15:09.214Z caller=main.go:684 msg=&#34;Server is ready to receive web requests.&#34;</code></pre></div>
 
 <p>That&rsquo;s all, the exporter should be up and running. Have fun with it and hopefully you will gather interesting metrics and never run into issues. You can access the exporter at <a href="http://localhost:9504/metrics">http://localhost:9504/metrics</a> and <a href="https://prometheus.io">Prometheus</a> at <a href="http://localhost:9090">http://localhost:9090</a>.</p>
 
