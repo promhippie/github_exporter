@@ -172,7 +172,6 @@ def docker(ctx, arch):
     agent = 'amd64'
     environment = {
       'GOARCH': 'arm64',
-      'GOARM': '8',
     }
 
   if ctx.build.event == 'pull_request':
