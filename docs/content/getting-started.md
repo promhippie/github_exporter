@@ -46,6 +46,7 @@ services:
     image: promhippie/github_exporter:latest
     restart: always
     environment:
+      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
       - GITHUB_EXPORTER_LOG_PRETTY=true
       - GITHUB_EXPORTER_ORG=promhippie
 {{< / highlight >}}
@@ -55,9 +56,10 @@ Since our `latest` Docker tag always refers to the `master` branch of the Git re
 {{< highlight diff >}}
   hcloud-exporter:
 -   image: promhippie/github_exporter:latest
-+   image: promhippie/github_exporter:0.1.0
++   image: promhippie/github_exporter:1.0.0
     restart: always
     environment:
+      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
       - GITHUB_EXPORTER_LOG_PRETTY=true
       - GITHUB_EXPORTER_ORG=promhippie
 {{< / highlight >}}
@@ -71,6 +73,7 @@ If you want to access the exporter directly you should bind it to a local port, 
 +   ports:
 +     - 127.0.0.1:9504:9504
     environment:
+      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
       - GITHUB_EXPORTER_LOG_PRETTY=true
       - GITHUB_EXPORTER_ORG=promhippie
 {{< / highlight >}}
@@ -78,7 +81,31 @@ If you want to access the exporter directly you should bind it to a local port, 
 Finally the exporter should be configured fine, let's start this stack with [docker-compose](https://docs.docker.com/compose/), you just need to execute `docker-compose up` within the directory where you have stored the `prometheus.yml` and `docker-compose.yml`.
 
 {{< highlight txt >}}
-TBD
+Creating network "example_default" with the default driver
+Creating volume "example_prometheus" with default driver
+Creating example_github_exporter_1 ... done
+Creating example_prometheus_1      ... done
+Attaching to example_github_exporter_1, example_prometheus_1
+github_exporter_1  | level=info ts=2020-10-29T07:15:08.8972594Z msg="Launching GitHub Exporter" version=9f39482 revision=9f39482 date=20201028 go=go1.14.2
+github_exporter_1  | level=info ts=2020-10-29T07:15:08.8976418Z msg="Starting metrics server" addr=0.0.0.0:9504
+prometheus_1       | level=info ts=2020-10-29T07:15:09.198Z caller=main.go:315 msg="No time or size retention was set so using the default time retention" duration=15d
+prometheus_1       | level=info ts=2020-10-29T07:15:09.198Z caller=main.go:353 msg="Starting Prometheus" version="(version=2.22.0, branch=HEAD, revision=0a7fdd3b76960808c3a91d92267c3d815c1bc354)"
+prometheus_1       | level=info ts=2020-10-29T07:15:09.198Z caller=main.go:358 build_context="(go=go1.15.3, user=root@6321101b2c50, date=20201015-12:29:59)"
+prometheus_1       | level=info ts=2020-10-29T07:15:09.198Z caller=main.go:359 host_details="(Linux 4.19.76-linuxkit #1 SMP Tue May 26 11:42:35 UTC 2020 x86_64 95702f475360 (none))"
+prometheus_1       | level=info ts=2020-10-29T07:15:09.198Z caller=main.go:360 fd_limits="(soft=1048576, hard=1048576)"
+prometheus_1       | level=info ts=2020-10-29T07:15:09.199Z caller=main.go:361 vm_limits="(soft=unlimited, hard=unlimited)"
+prometheus_1       | level=info ts=2020-10-29T07:15:09.204Z caller=web.go:516 component=web msg="Start listening for connections" address=0.0.0.0:9090
+prometheus_1       | level=info ts=2020-10-29T07:15:09.204Z caller=main.go:712 msg="Starting TSDB ..."
+prometheus_1       | level=info ts=2020-10-29T07:15:09.208Z caller=head.go:642 component=tsdb msg="Replaying on-disk memory mappable chunks if any"
+prometheus_1       | level=info ts=2020-10-29T07:15:09.208Z caller=head.go:656 component=tsdb msg="On-disk memory mappable chunks replay completed" duration=9.5µs
+prometheus_1       | level=info ts=2020-10-29T07:15:09.208Z caller=head.go:662 component=tsdb msg="Replaying WAL, this may take a while"
+prometheus_1       | level=info ts=2020-10-29T07:15:09.209Z caller=head.go:714 component=tsdb msg="WAL segment loaded" segment=0 maxSegment=0
+prometheus_1       | level=info ts=2020-10-29T07:15:09.209Z caller=head.go:719 component=tsdb msg="WAL replay completed" checkpoint_replay_duration=39.9µs wal_replay_duration=803µs total_replay_duration=923.1µs
+prometheus_1       | level=info ts=2020-10-29T07:15:09.210Z caller=main.go:732 fs_type=EXT4_SUPER_MAGIC
+prometheus_1       | level=info ts=2020-10-29T07:15:09.210Z caller=main.go:735 msg="TSDB started"
+prometheus_1       | level=info ts=2020-10-29T07:15:09.210Z caller=main.go:861 msg="Loading configuration file" filename=/etc/prometheus/prometheus.yml
+prometheus_1       | level=info ts=2020-10-29T07:15:09.214Z caller=main.go:892 msg="Completed loading of configuration file" filename=/etc/prometheus/prometheus.yml totalDuration=3.5797ms remote_storage=8.9µs web_handler=7.4µs query_engine=7.5µs scrape=330.7µs scrape_sd=72.1µs notify=6.4µs notify_sd=10µs rules=8.2µs
+prometheus_1       | level=info ts=2020-10-29T07:15:09.214Z caller=main.go:684 msg="Server is ready to receive web requests."
 {{< / highlight >}}
 
 That's all, the exporter should be up and running. Have fun with it and hopefully you will gather interesting metrics and never run into issues. You can access the exporter at [http://localhost:9504/metrics](http://localhost:9504/metrics) and [Prometheus](https://prometheus.io) at [http://localhost:9090](http://localhost:9090).
