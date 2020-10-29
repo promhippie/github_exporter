@@ -1,8 +1,8 @@
 ---
 excluded_paths:
-  - .bingo/
-  - changelog/
-  - docs/
+  - .bingo/**
+  - changelog/**
+  - docs/**
   - CHANGELOG.md
 
 ...
