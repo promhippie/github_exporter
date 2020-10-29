@@ -5,7 +5,6 @@
       ":automergeDigest"
   ],
   "enabledManagers": [
-      "dockerfile",
       "gomod",
       "droneci"
   ],
@@ -13,9 +12,6 @@
     "fileMatch": [
       "(^|/).drone.star$"
     ]
-  },
-  "dockerfile": {
-      "pinDigests": true
   },
   "gomod": {
       "postUpdateOptions": [
