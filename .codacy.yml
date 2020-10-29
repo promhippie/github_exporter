@@ -1,5 +1,5 @@
 ---
-excluded_paths:
+exclude_paths:
   - .bingo/**
   - changelog/**
   - docs/**
