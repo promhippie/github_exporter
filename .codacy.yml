@@ -1,0 +1,5 @@
+---
+excluded_paths:
+  - .bingo/**/*
+  - chngelog/**/*
+  - CHANGELOG.md
