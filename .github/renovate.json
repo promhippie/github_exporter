@@ -1,0 +1,28 @@
+{
+  "extends": [
+      "config:base",
+      ":automergeMinor",
+      ":automergeDigest"
+  ],
+  "enabledManagers": [
+      "dockerfile",
+      "gomod",
+      "droneci"
+  ],
+  "droneci": {
+    "fileMatch": [
+      "(^|/).drone.star$"
+    ]
+  },
+  "dockerfile": {
+      "pinDigests": true
+  },
+  "gomod": {
+      "postUpdateOptions": [
+          "gomodTidy"
+      ]
+  },
+  "labels": [
+      "renovate"
+  ]
+}
