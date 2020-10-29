@@ -150,19 +150,30 @@ def docker(ctx, arch):
 
   if arch == 'amd64':
     agent = 'amd64'
-    environment = {}
+    environment = {
+      'GOARCH': 'amd64',
+    }
 
   if arch == 'arm32v6':
-    agent = 'arm'
-    environment = {}
+    agent = 'amd64'
+    environment = {
+      'GOARCH': 'arm',
+      'GOARM': '6',
+    }
 
   if arch == 'arm32v7':
-    agent = 'arm'
-    environment = {}
+    agent = 'amd64'
+    environment = {
+      'GOARCH': 'arm',
+      'GOARM': '7',
+    }
 
   if arch == 'arm64v8':
-    agent = 'arm64'
-    environment = {}
+    agent = 'amd64'
+    environment = {
+      'GOARCH': 'arm64',
+      'GOARM': '8',
+    }
 
   if ctx.build.event == 'pull_request':
     docker = {
