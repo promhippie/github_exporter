@@ -2,6 +2,7 @@ package action
 
 import (
 	"context"
+	"crypto/tls"
 	"io"
 	"net/http"
 	"os"
@@ -31,11 +32,18 @@ func Server(cfg *config.Config, logger log.Logger) error {
 		"go", version.Go,
 	)
 
+	ctx := context.Background()
+	httpTransport := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: cfg.Server.TLSInsecure},
+	}
+	httpClient := &http.Client{Transport: httpTransport}
+	ctx = context.WithValue(ctx, oauth2.HTTPClient, httpClient)
+
 	client, err := github.NewEnterpriseClient(
 		cfg.Target.BaseURL,
 		cfg.Target.BaseURL,
 		oauth2.NewClient(
-			context.Background(),
+			ctx,
 			oauth2.StaticTokenSource(
 				&oauth2.Token{
 					AccessToken: cfg.Target.Token,

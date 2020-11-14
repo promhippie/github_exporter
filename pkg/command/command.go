@@ -60,6 +60,13 @@ func Run() error {
 				EnvVars:     []string{"GITHUB_EXPORTER_WEB_PATH"},
 				Destination: &cfg.Server.Path,
 			},
+			&cli.BoolFlag{
+				Name:        "tls.insecure",
+				Value:       false,
+				Usage:       "Skip host verify on TLS connection",
+				EnvVars:     []string{"GITHUB_EXPORTER_TLS_INSECURE"},
+				Destination: &cfg.Server.TLSInsecure,
+			},
 			&cli.DurationFlag{
 				Name:        "server.timeout",
 				Value:       10 * time.Second,
