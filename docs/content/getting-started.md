@@ -124,6 +124,9 @@ GITHUB_EXPORTER_WEB_ADDRESS
 GITHUB_EXPORTER_WEB_PATH
 : Path to bind the metrics server, defaults to `/metrics`
 
+GITHUB_EXPORTER_TLS_INSECURE
+: Skip host verify on TLS connection, defaults to `false`
+
 GITHUB_EXPORTER_REQUEST_TIMEOUT
 : Request to Github timeout, defaults to `5s`
 

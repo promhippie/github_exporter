@@ -123,6 +123,8 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 	mux.Use(middleware.Cache)
 
 	if cfg.Collector.Orgs {
+		level.Debug(logger).Log("msg", "Org collector registered")
+
 		registry.MustRegister(exporter.NewOrgCollector(
 			logger,
 			client,
@@ -133,6 +135,8 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 	}
 
 	if cfg.Collector.Repos {
+		level.Debug(logger).Log("msg", "Repo collector registered")
+
 		registry.MustRegister(exporter.NewRepoCollector(
 			logger,
 			client,
@@ -143,6 +147,8 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 	}
 
 	if cfg.Collector.Actions {
+		level.Debug(logger).Log("msg", "Action collector registered")
+
 		registry.MustRegister(exporter.NewActionCollector(
 			logger,
 			client,
@@ -153,6 +159,8 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 	}
 
 	if cfg.Collector.Packages {
+		level.Debug(logger).Log("msg", "Package collector registered")
+
 		registry.MustRegister(exporter.NewPackageCollector(
 			logger,
 			client,
@@ -163,6 +171,8 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 	}
 
 	if cfg.Collector.Storage {
+		level.Debug(logger).Log("msg", "Storage collector registered")
+
 		registry.MustRegister(exporter.NewStorageCollector(
 			logger,
 			client,
