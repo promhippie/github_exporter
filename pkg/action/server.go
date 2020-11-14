@@ -53,7 +53,7 @@ func Server(cfg *config.Config, logger log.Logger) error {
 	)
 
 	if err != nil {
-		level.Info(logger).Log(
+		level.Error(logger).Log(
 			"msg", "Failed to parse base URL",
 			"err", err,
 		)
