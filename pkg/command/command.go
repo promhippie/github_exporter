@@ -61,9 +61,16 @@ func Run() error {
 				Destination: &cfg.Server.Path,
 			},
 			&cli.DurationFlag{
+				Name:        "server.timeout",
+				Value:       10 * time.Second,
+				Usage:       "Timeout serving Prometheus /metrics endpoint",
+				EnvVars:     []string{"GITHUB_EXPORTER_SERVER_TIMEOUT"},
+				Destination: &cfg.Server.Timeout,
+			},
+			&cli.DurationFlag{
 				Name:        "request.timeout",
 				Value:       5 * time.Second,
-				Usage:       "Request timeout as duration",
+				Usage:       "Timeout requesting Github API",
 				EnvVars:     []string{"GITHUB_EXPORTER_REQUEST_TIMEOUT"},
 				Destination: &cfg.Target.Timeout,
 			},
