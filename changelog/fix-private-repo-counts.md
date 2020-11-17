@@ -1,5 +1,6 @@
 Fix: Handle private repos counts not available to non-organization member
-[#18](https://github.com/promhippie/github_exporter/issues/18)
 
-Bug fix the case where the account used to query Github API is not a member of a given
-organisation. The resulted in segfault before the fix
+Fix the case where the account used to query GitHub API is not a member of a
+given organisation, it resulted in a segfault.
+
+https://github.com/promhippie/github_exporter/pull/18
