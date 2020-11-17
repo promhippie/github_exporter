@@ -8,10 +8,9 @@ import (
 
 // Server defines the general server configuration.
 type Server struct {
-	Addr     string
-	Path     string
-	Timeout  time.Duration
-	Insecure bool
+	Addr    string
+	Path    string
+	Timeout time.Duration
 }
 
 // Logs defines the level and color for log configuration.
@@ -24,6 +23,7 @@ type Logs struct {
 type Target struct {
 	Token       string
 	BaseURL     string
+	Insecure    bool
 	Enterprises cli.StringSlice
 	Orgs        cli.StringSlice
 	Repos       cli.StringSlice

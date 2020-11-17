@@ -124,20 +124,20 @@ GITHUB_EXPORTER_WEB_ADDRESS
 GITHUB_EXPORTER_WEB_PATH
 : Path to bind the metrics server, defaults to `/metrics`
 
-GITHUB_EXPORTER_TLS_INSECURE
-: Skip host verify on TLS connection, defaults to `false`
+GITHUB_EXPORTER_WEB_TIMEOUT
+: Server metrics endpoint timeout, defaults to `10s`
 
 GITHUB_EXPORTER_REQUEST_TIMEOUT
 : Request to Github timeout, defaults to `5s`
-
-GITHUB_EXPORTER_SERVER_TIMEOUT
-: Server metrics endpoint timeout, defaults to `10s`
 
 GITHUB_EXPORTER_TOKEN
 : Access token for the GitHub API
 
 GITHUB_EXPORTER_BASE_URL
-: URL to access the GitHub API, defaults to `https://api.github.com/`
+: URL to access the GitHub Enterprise API
+
+GITHUB_EXPORTER_TLS_INSECURE
+: Skip TLS verification for GitHub Enterprise, defaults to `false`
 
 GITHUB_EXPORTER_ENTERPRISE
 : Enterprises to scrape metrics from, comma-separated list
