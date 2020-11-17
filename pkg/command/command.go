@@ -60,18 +60,11 @@ func Run() error {
 				EnvVars:     []string{"GITHUB_EXPORTER_WEB_PATH"},
 				Destination: &cfg.Server.Path,
 			},
-			&cli.BoolFlag{
-				Name:        "tls.insecure",
-				Value:       false,
-				Usage:       "Skip host verify on TLS connection",
-				EnvVars:     []string{"GITHUB_EXPORTER_TLS_INSECURE"},
-				Destination: &cfg.Server.Insecure,
-			},
 			&cli.DurationFlag{
-				Name:        "server.timeout",
+				Name:        "web.timeout",
 				Value:       10 * time.Second,
 				Usage:       "Server metrics endpoint timeout",
-				EnvVars:     []string{"GITHUB_EXPORTER_SERVER_TIMEOUT"},
+				EnvVars:     []string{"GITHUB_EXPORTER_WEB_TIMEOUT"},
 				Destination: &cfg.Server.Timeout,
 			},
 			&cli.DurationFlag{
@@ -90,10 +83,17 @@ func Run() error {
 			},
 			&cli.StringFlag{
 				Name:        "github.baseurl",
-				Value:       "https://api.github.com/",
-				Usage:       "URL to access the GitHub API",
+				Value:       "",
+				Usage:       "URL to access the GitHub Enterprise API",
 				EnvVars:     []string{"GITHUB_EXPORTER_BASE_URL"},
 				Destination: &cfg.Target.BaseURL,
+			},
+			&cli.BoolFlag{
+				Name:        "github.insecure",
+				Value:       false,
+				Usage:       "Skip TLS verification for GitHub Enterprise",
+				EnvVars:     []string{"GITHUB_EXPORTER_INSECURE"},
+				Destination: &cfg.Target.Insecure,
 			},
 			&cli.StringSliceFlag{
 				Name:        "github.enterprise",

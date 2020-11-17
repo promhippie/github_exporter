@@ -32,38 +32,57 @@ func Server(cfg *config.Config, logger log.Logger) error {
 		"go", version.Go,
 	)
 
-	ctx := context.WithValue(
-		context.Background(),
-		oauth2.HTTPClient,
-		&http.Client{
-			Transport: &http.Transport{
-				TLSClientConfig: &tls.Config{
-					InsecureSkipVerify: cfg.Server.Insecure,
-				},
-			},
-		},
+	var (
+		client *github.Client
 	)
 
-	client, err := github.NewEnterpriseClient(
-		cfg.Target.BaseURL,
-		cfg.Target.BaseURL,
-		oauth2.NewClient(
-			ctx,
-			oauth2.StaticTokenSource(
-				&oauth2.Token{
-					AccessToken: cfg.Target.Token,
-				},
-			),
-		),
-	)
-
-	if err != nil {
-		level.Error(logger).Log(
-			"msg", "Failed to parse base URL",
-			"err", err,
+	if cfg.Target.BaseURL != "" {
+		var (
+			err error
 		)
 
-		return err
+		client, err = github.NewEnterpriseClient(
+			cfg.Target.BaseURL,
+			cfg.Target.BaseURL,
+			oauth2.NewClient(
+				context.WithValue(
+					context.Background(),
+					oauth2.HTTPClient,
+					&http.Client{
+						Transport: &http.Transport{
+							TLSClientConfig: &tls.Config{
+								InsecureSkipVerify: cfg.Target.Insecure,
+							},
+						},
+					},
+				),
+				oauth2.StaticTokenSource(
+					&oauth2.Token{
+						AccessToken: cfg.Target.Token,
+					},
+				),
+			),
+		)
+
+		if err != nil {
+			level.Error(logger).Log(
+				"msg", "Failed to parse base URL",
+				"err", err,
+			)
+
+			return err
+		}
+	} else {
+		client = github.NewClient(
+			oauth2.NewClient(
+				context.Background(),
+				oauth2.StaticTokenSource(
+					&oauth2.Token{
+						AccessToken: cfg.Target.Token,
+					},
+				),
+			),
+		)
 	}
 
 	var gr run.Group
