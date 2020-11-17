@@ -32,7 +32,7 @@ The following sections list the changes for unreleased.
    In some cases it can be desirable to ignore certificate errors from the GitHub API - such as in the
    case of connecting to a private instance of GitHub Enterprise which uses a self-signed cert.
    This is exposed via the environment variable `GITHUB_EXPORTER_TLS_INSECURE` and the flag
-   `--tls.insecure`.
+   `--github.insecure`.
 
    https://github.com/promhippie/github_exporter/pull/19
 
@@ -40,9 +40,26 @@ The following sections list the changes for unreleased.
 
    When pulling a lot of data from the GitHub API, in some cases the default 10s timeout on the
    `/metrics` endpoint can be insufficient. This option allows the timeout to be configured via
-   `GITHUB_EXPORTER_SERVER_TIMEOUT`
+   `GITHUB_EXPORTER_WEB_TIMEOUT` or `--web.timeout`
 
    https://github.com/promhippie/github_exporter/pull/20
+
+
+# Changelog for 0.1.0
+
+The following sections list the changes for 0.1.0.
+
+## Summary
+
+ * Chg #11: Initial release of basic version
+
+## Details
+
+ * Change #11: Initial release of basic version
+
+   Just prepared an initial basic version which could be released to the public.
+
+   https://github.com/promhippie/github_exporter/issues/11
 
 
 # Changelog for 0.2.0
@@ -70,22 +87,5 @@ The following sections list the changes for 0.2.0.
    or not.
 
    https://github.com/promhippie/github_exporter/issues/2
-
-
-# Changelog for 0.1.0
-
-The following sections list the changes for 0.1.0.
-
-## Summary
-
- * Chg #11: Initial release of basic version
-
-## Details
-
- * Change #11: Initial release of basic version
-
-   Just prepared an initial basic version which could be released to the public.
-
-   https://github.com/promhippie/github_exporter/issues/11
 
 
