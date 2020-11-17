@@ -60,7 +60,7 @@ func Server(cfg *config.Config, logger log.Logger) error {
 			Addr:         cfg.Server.Addr,
 			Handler:      handler(cfg, logger, client),
 			ReadTimeout:  5 * time.Second,
-			WriteTimeout: 10 * time.Second,
+			WriteTimeout: cfg.Server.Timeout,
 		}
 
 		gr.Add(func() error {

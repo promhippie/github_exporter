@@ -125,7 +125,10 @@ GITHUB_EXPORTER_WEB_PATH
 : Path to bind the metrics server, defaults to `/metrics`
 
 GITHUB_EXPORTER_REQUEST_TIMEOUT
-: Request timeout as duration, defaults to `5s`
+: Request to Github timeout, defaults to `5s`
+
+GITHUB_EXPORTER_SERVER_TIMEOUT
+: Prometheus /metrics endpoint timeout, defaults to `10s`
 
 GITHUB_EXPORTER_TOKEN
 : Access token for the GitHub API

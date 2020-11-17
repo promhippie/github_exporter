@@ -8,8 +8,9 @@ import (
 
 // Server defines the general server configuration.
 type Server struct {
-	Addr string
-	Path string
+	Addr    string
+	Path    string
+	Timeout time.Duration
 }
 
 // Logs defines the level and color for log configuration.
