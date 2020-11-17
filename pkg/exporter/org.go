@@ -2,6 +2,7 @@ package exporter
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/go-kit/kit/log"
@@ -11,7 +12,7 @@ import (
 	"github.com/promhippie/github_exporter/pkg/config"
 )
 
-// OrgCollector collects metrics about the servers.
+// OrgCollector collects metrics about organizations
 type OrgCollector struct {
 	client   *github.Client
 	logger   log.Logger
@@ -128,9 +129,82 @@ func (c *OrgCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.Updated
 }
 
+// Consume the full list of orgs from the API page by page
+func fetchAllOrgs(c *OrgCollector) []string {
+	var orgNames []string
+
+	ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
+	defer cancel()
+
+	var lastSeen int64 = 0
+	var errorCount int = 0
+
+	for {
+		var params *github.OrganizationsListOptions
+
+		// paging is done via the API ?since parameter
+		if lastSeen > 0 {
+			params = &github.OrganizationsListOptions{Since: lastSeen}
+		} else {
+			params = nil
+		}
+
+		orgs, _, err := c.client.Organizations.ListAll(ctx, params)
+		if err != nil {
+			errorCount++
+
+			level.Error(c.logger).Log(
+				"msg", fmt.Sprintf("Failed to list orgs %d", errorCount),
+				"err", err,
+			)
+			c.failures.WithLabelValues("org").Inc()
+
+			if errorCount >= 3 {
+				break
+			}
+			continue
+		}
+
+		if len(orgs) == 0 {
+			break
+		}
+
+		// extract array of string Organization.Login
+		names := make([]string, len(orgs))
+		for i := 0; i < len(orgs); i++ {
+			names[i] = *orgs[i].Login
+		}
+		orgNames = append(orgNames, names...)
+
+		// track last seen Organization.ID for paging
+		lastSeen = *orgs[len(orgs)-1].ID
+	}
+
+	return orgNames
+}
+
 // Collect is called by the Prometheus registry when collecting metrics.
 func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
-	for _, name := range c.config.Orgs.Value() {
+	var orgNames []string
+	var err error
+
+	// fetch ALL github orgs, or just the few supplied in config.Orgs
+	if c.config.Orgs.Value()[0] == "*" {
+		orgNames = fetchAllOrgs(c)
+	} else {
+		orgNames = c.config.Orgs.Value()
+	}
+
+	if len(orgNames) == 0 {
+		level.Error(c.logger).Log(
+			"msg", "Aborted scrape as failed to fetch list of orgs!",
+			"err", err,
+		)
+		c.failures.WithLabelValues("org").Inc()
+		return
+	}
+
+	for _, name := range orgNames {
 		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
 		defer cancel()
 
@@ -149,6 +223,7 @@ func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
 			continue
 		}
 
+		level.Info(c.logger).Log("org", name)
 		labels := []string{
 			name,
 		}
@@ -240,4 +315,6 @@ func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
 			labels...,
 		)
 	}
+
+	level.Info(c.logger).Log("total", len(orgNames))
 }
