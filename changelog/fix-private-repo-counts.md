@@ -1,4 +1,4 @@
-Fix: Handle private repos counts not available to non-organization member
+Bugfix: Handle private repos counts not available to non-organization member
 
 Fix the case where the account used to query GitHub API is not a member of a
 given organisation, it resulted in a segfault.
