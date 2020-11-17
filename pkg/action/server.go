@@ -32,12 +32,17 @@ func Server(cfg *config.Config, logger log.Logger) error {
 		"go", version.Go,
 	)
 
-	ctx := context.Background()
-	httpTransport := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: cfg.Server.TLSInsecure},
-	}
-	httpClient := &http.Client{Transport: httpTransport}
-	ctx = context.WithValue(ctx, oauth2.HTTPClient, httpClient)
+	ctx := context.WithValue(
+		context.Background(),
+		oauth2.HTTPClient,
+		&http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					InsecureSkipVerify: cfg.Server.Insecure,
+				},
+			},
+		},
+	)
 
 	client, err := github.NewEnterpriseClient(
 		cfg.Target.BaseURL,
@@ -123,7 +128,9 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 	mux.Use(middleware.Cache)
 
 	if cfg.Collector.Orgs {
-		level.Debug(logger).Log("msg", "Org collector registered")
+		level.Debug(logger).Log(
+			"msg", "Org collector registered",
+		)
 
 		registry.MustRegister(exporter.NewOrgCollector(
 			logger,
@@ -135,7 +142,9 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 	}
 
 	if cfg.Collector.Repos {
-		level.Debug(logger).Log("msg", "Repo collector registered")
+		level.Debug(logger).Log(
+			"msg", "Repo collector registered",
+		)
 
 		registry.MustRegister(exporter.NewRepoCollector(
 			logger,
@@ -147,7 +156,9 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 	}
 
 	if cfg.Collector.Actions {
-		level.Debug(logger).Log("msg", "Action collector registered")
+		level.Debug(logger).Log(
+			"msg", "Action collector registered",
+		)
 
 		registry.MustRegister(exporter.NewActionCollector(
 			logger,
@@ -159,7 +170,9 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 	}
 
 	if cfg.Collector.Packages {
-		level.Debug(logger).Log("msg", "Package collector registered")
+		level.Debug(logger).Log(
+			"msg", "Package collector registered",
+		)
 
 		registry.MustRegister(exporter.NewPackageCollector(
 			logger,
@@ -171,7 +184,9 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 	}
 
 	if cfg.Collector.Storage {
-		level.Debug(logger).Log("msg", "Storage collector registered")
+		level.Debug(logger).Log(
+			"msg", "Storage collector registered",
+		)
 
 		registry.MustRegister(exporter.NewStorageCollector(
 			logger,

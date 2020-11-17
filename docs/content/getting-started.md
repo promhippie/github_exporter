@@ -131,7 +131,7 @@ GITHUB_EXPORTER_REQUEST_TIMEOUT
 : Request to Github timeout, defaults to `5s`
 
 GITHUB_EXPORTER_SERVER_TIMEOUT
-: Prometheus /metrics endpoint timeout, defaults to `10s`
+: Server metrics endpoint timeout, defaults to `10s`
 
 GITHUB_EXPORTER_TOKEN
 : Access token for the GitHub API

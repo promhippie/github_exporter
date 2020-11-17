@@ -4,9 +4,19 @@ The following sections list the changes for unreleased.
 
 ## Summary
 
+ * Fix #18: Handle private repos counts not available to non-organization member
  * Chg #12: Refactor structure and integrate more metrics
+ * Enh #19: Allow insecure TLS via CLI flag
+ * Enh #20: Add flag to set /metrics endpoint request timeout
 
 ## Details
+
+ * Bugfix #18: Handle private repos counts not available to non-organization member
+
+   Fix the case where the account used to query GitHub API is not a member of a given organisation, it
+   resulted in a segfault.
+
+   https://github.com/promhippie/github_exporter/pull/18
 
  * Change #12: Refactor structure and integrate more metrics
 
@@ -16,6 +26,23 @@ The following sections list the changes for unreleased.
    [#10](https://github.com/promhippie/github_exporter/issues/10).
 
    https://github.com/promhippie/github_exporter/issues/12
+
+ * Enhancement #19: Allow insecure TLS via CLI flag
+
+   In some cases it can be desirable to ignore certificate errors from the GitHub API - such as in the
+   case of connecting to a private instance of GitHub Enterprise which uses a self-signed cert.
+   This is exposed via the environment variable `GITHUB_EXPORTER_TLS_INSECURE` and the flag
+   `--tls.insecure`.
+
+   https://github.com/promhippie/github_exporter/pull/19
+
+ * Enhancement #20: Add flag to set /metrics endpoint request timeout
+
+   When pulling a lot of data from the GitHub API, in some cases the default 10s timeout on the
+   `/metrics` endpoint can be insufficient. This option allows the timeout to be configured via
+   `GITHUB_EXPORTER_SERVER_TIMEOUT`
+
+   https://github.com/promhippie/github_exporter/pull/20
 
 
 # Changelog for 0.2.0
