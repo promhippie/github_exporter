@@ -208,19 +208,23 @@ func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
 			)
 		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.PrivateReposTotal,
-			prometheus.GaugeValue,
-			float64(*record.TotalPrivateRepos),
-			labels...,
-		)
+		if record.TotalPrivateRepos != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.PrivateReposTotal,
+				prometheus.GaugeValue,
+				float64(*record.TotalPrivateRepos),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.PrivateReposOwned,
-			prometheus.GaugeValue,
-			float64(*record.OwnedPrivateRepos),
-			labels...,
-		)
+		if record.OwnedPrivateRepos != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.PrivateReposOwned,
+				prometheus.GaugeValue,
+				float64(*record.OwnedPrivateRepos),
+				labels...,
+			)
+		}
 
 		ch <- prometheus.MustNewConstMetric(
 			c.Created,
