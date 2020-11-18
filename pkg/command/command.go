@@ -151,6 +151,13 @@ func Run() error {
 				EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_STORAGE"},
 				Destination: &cfg.Collector.Storage,
 			},
+			&cli.BoolFlag{
+				Name:        "collector.adminstats",
+				Value:       false,
+				Usage:       "Enable collector for GHE administrator stats",
+				EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_ADMINSTATS"},
+				Destination: &cfg.Collector.AdminStats,
+			},
 		},
 		Commands: []*cli.Command{
 			Health(cfg),
