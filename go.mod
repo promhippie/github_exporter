@@ -10,5 +10,5 @@ require (
 	github.com/oklog/run v1.1.0
 	github.com/prometheus/client_golang v1.8.0
 	github.com/urfave/cli/v2 v2.3.0
-	golang.org/x/oauth2 v0.0.0-20201203001011-0b49973bad19
+	golang.org/x/oauth2 v0.0.0-20201207163604-931764155e3f
 )
