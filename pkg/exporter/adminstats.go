@@ -67,7 +67,7 @@ type AdminStatsCollector struct {
 
 // NewAdminStatsCollector returns a new AdminStatsCollector.
 func NewAdminStatsCollector(logger log.Logger, client *github.Client, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *AdminStatsCollector {
-	failures.WithLabelValues("org").Add(0)
+	failures.WithLabelValues("adminstats").Add(0)
 
 	return &AdminStatsCollector{
 		client:   client,
