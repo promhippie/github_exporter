@@ -34,12 +34,6 @@ $(GOLINT): .bingo/golint.mod
 	@echo "(re)installing $(GOBIN)/golint-v0.0.0-20200302205851-738671d3881b"
 	@cd .bingo && $(GO) build -modfile=golint.mod -o=$(GOBIN)/golint-v0.0.0-20200302205851-738671d3881b "golang.org/x/lint/golint"
 
-GOVERAGE := $(GOBIN)/goverage-v0.0.0-20180129164344-eec3514a20b5
-$(GOVERAGE): .bingo/goverage.mod
-	@# Install binary/ries using Go 1.14+ build command. This is using bwplotka/bingo-controlled, separate go module with pinned dependencies.
-	@echo "(re)installing $(GOBIN)/goverage-v0.0.0-20180129164344-eec3514a20b5"
-	@cd .bingo && $(GO) build -modfile=goverage.mod -o=$(GOBIN)/goverage-v0.0.0-20180129164344-eec3514a20b5 "github.com/haya14busa/goverage"
-
 REFLEX := $(GOBIN)/reflex-v0.3.0
 $(REFLEX): .bingo/reflex.mod
 	@# Install binary/ries using Go 1.14+ build command. This is using bwplotka/bingo-controlled, separate go module with pinned dependencies.
