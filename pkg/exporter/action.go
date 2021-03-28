@@ -65,6 +65,16 @@ func NewActionCollector(logger log.Logger, client *github.Client, failures *prom
 	}
 }
 
+// Metrics simply returns the list metric descriptors for generating a documentation.
+func (c *ActionCollector) Metrics() []*prometheus.Desc {
+	return []*prometheus.Desc{
+		c.MinutesUsed,
+		c.MinutesUsedBreakdown,
+		c.PaidMinutesUsed,
+		c.IncludedMinutes,
+	}
+}
+
 // Describe sends the super-set of all possible descriptors of metrics collected by this Collector.
 func (c *ActionCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.MinutesUsed

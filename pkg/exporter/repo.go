@@ -184,6 +184,33 @@ func NewRepoCollector(logger log.Logger, client *github.Client, failures *promet
 	}
 }
 
+// Metrics simply returns the list metric descriptors for generating a documentation.
+func (c *RepoCollector) Metrics() []*prometheus.Desc {
+	return []*prometheus.Desc{
+		c.Forked,
+		c.Forks,
+		c.Network,
+		c.Issues,
+		c.Stargazers,
+		c.Subscribers,
+		c.Watchers,
+		c.Size,
+		c.AllowRebaseMerge,
+		c.AllowSquashMerge,
+		c.AllowMergeCommit,
+		c.Archived,
+		c.Private,
+		c.HasIssues,
+		c.HasWiki,
+		c.HasPages,
+		c.HasProjects,
+		c.HasDownloads,
+		c.Pushed,
+		c.Created,
+		c.Updated,
+	}
+}
+
 // Describe sends the super-set of all possible descriptors of metrics collected by this Collector.
 func (c *RepoCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.Forked
