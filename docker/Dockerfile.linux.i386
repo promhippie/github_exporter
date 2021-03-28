@@ -1,12 +1,12 @@
-FROM webhippie/alpine:latest AS build
+FROM webhippie/alpine:latest-amd64 AS build
 RUN apk add --no-cache ca-certificates mailcap
 
 FROM scratch
 
 LABEL maintainer="Thomas Boerger <thomas@webhippie.de>" \
-  org.label-schema.name="GitHub Exporter" \
-  org.label-schema.vendor="Thomas Boerger" \
-  org.label-schema.schema-version="1.0"
+  org.opencontainers.image.title="GitHub Exporter" \
+  org.opencontainers.image.documentation="https://promhippie.github.io/github_exporter/" \
+  org.opencontainers.image.vendor="Thomas Boerger"
 
 EXPOSE 9504
 ENTRYPOINT ["/usr/bin/github_exporter"]
