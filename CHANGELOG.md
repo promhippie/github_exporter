@@ -1,3 +1,40 @@
+# Changelog for unreleased
+
+The following sections list the changes for unreleased.
+
+## Summary
+
+ * Chg #45: Change docker image name
+ * Chg #42: Drop darwin/386 release builds
+ * Chg #46: Generate metrics documentation
+
+## Details
+
+ * Change #45: Change docker image name
+
+   We should use the same docker image name as all the other exporters within this organization. So
+   we renamed the image from `promhippie/github_exporter` to `promhippie/github-exporter`
+   to have the same naming convention as for the other exporters.
+
+   https://github.com/promhippie/github_exporter/issues/45
+
+ * Change #42: Drop darwin/386 release builds
+
+   We dropped the build of 386 builds on Darwin as this architecture is not supported by current Go
+   versions anymore.
+
+   https://github.com/promhippie/github_exporter/issues/42
+
+ * Change #46: Generate metrics documentation
+
+   We have added a script to automatically generate the available metrics within the
+   documentation to prevent any documentation gaps. Within the `hack/` folder we got a small Go
+   script which parses the available collectors and updates the documentation partial based on
+   that.
+
+   https://github.com/promhippie/github_exporter/issues/46
+
+
 # Changelog for 1.0.1
 
 The following sections list the changes for 1.0.1.
