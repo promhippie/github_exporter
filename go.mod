@@ -3,7 +3,7 @@ module github.com/promhippie/github_exporter
 go 1.14
 
 require (
-	github.com/go-chi/chi v1.5.4
+	github.com/go-chi/chi/v5 v5.0.2
 	github.com/go-kit/kit v0.10.0
 	github.com/google/go-github/v32 v32.1.0
 	github.com/joho/godotenv v1.3.0
