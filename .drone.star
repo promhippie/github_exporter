@@ -36,6 +36,7 @@ def testing(ctx):
         'image': 'webhippie/golang:1.16',
         'pull': 'always',
         'commands': [
+          'ls -ali',
           'make generate',
         ],
         'volumes': [
