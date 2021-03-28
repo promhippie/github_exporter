@@ -9,7 +9,7 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/google/go-github/v32/github"
@@ -32,8 +32,15 @@ func Server(cfg *config.Config, logger log.Logger) error {
 		"go", version.Go,
 	)
 
-	var (
-		client *github.Client
+	client := github.NewClient(
+		oauth2.NewClient(
+			context.Background(),
+			oauth2.StaticTokenSource(
+				&oauth2.Token{
+					AccessToken: cfg.Target.Token,
+				},
+			),
+		),
 	)
 
 	if cfg.Target.BaseURL != "" {
@@ -72,17 +79,6 @@ func Server(cfg *config.Config, logger log.Logger) error {
 
 			return err
 		}
-	} else {
-		client = github.NewClient(
-			oauth2.NewClient(
-				context.Background(),
-				oauth2.StaticTokenSource(
-					&oauth2.Token{
-						AccessToken: cfg.Target.Token,
-					},
-				),
-			),
-		)
 	}
 
 	var gr run.Group
