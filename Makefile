@@ -90,8 +90,8 @@ changelog: $(CALENS)
 	$(CALENS) >| CHANGELOG.md
 
 .PHONY: test
-test: $(GOVERAGE)
-	$(GOVERAGE) -v -coverprofile coverage.out $(PACKAGES)
+test:
+	go test -coverprofile coverage.out $(PACKAGES)
 
 .PHONY: install
 install: $(SOURCES)
@@ -158,9 +158,6 @@ $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64le:
 .PHONY: release-darwin
 release-darwin: $(DIST) \
 	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-amd64
-
-$(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-386:
-	GOOS=darwin GOARCH=386 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-amd64:
 	GOOS=darwin GOARCH=amd64 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
