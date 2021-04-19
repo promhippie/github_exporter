@@ -1,3 +1,22 @@
+# Changelog for 1.0.1
+
+The following sections list the changes for 1.0.1.
+
+## Summary
+
+ * Fix #49: Fixed pointer references within exporters
+
+## Details
+
+ * Bugfix #49: Fixed pointer references within exporters
+
+   So far we directly accessed common attributes on repos within the collectors, but as there
+   could be corner cases where some attribute could be missing we add conditions to make sure only
+   set values are getting called.
+
+   https://github.com/promhippie/github_exporter/issues/49
+
+
 # Changelog for 1.0.0
 
 The following sections list the changes for 1.0.0.
