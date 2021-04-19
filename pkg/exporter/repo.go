@@ -249,131 +249,167 @@ func (c *RepoCollector) Collect(ch chan<- prometheus.Metric) {
 			repo,
 		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.Forked,
-			prometheus.GaugeValue,
-			boolToFloat64(*record.Fork),
-			labels...,
-		)
+		if record.Fork != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.Forked,
+				prometheus.GaugeValue,
+				boolToFloat64(*record.Fork),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.Forks,
-			prometheus.GaugeValue,
-			float64(*record.ForksCount),
-			labels...,
-		)
+		if record.ForksCount != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.Forks,
+				prometheus.GaugeValue,
+				float64(*record.ForksCount),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.Network,
-			prometheus.GaugeValue,
-			float64(*record.NetworkCount),
-			labels...,
-		)
+		if record.NetworkCount != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.Network,
+				prometheus.GaugeValue,
+				float64(*record.NetworkCount),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.Issues,
-			prometheus.GaugeValue,
-			float64(*record.OpenIssuesCount),
-			labels...,
-		)
+		if record.OpenIssuesCount != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.Issues,
+				prometheus.GaugeValue,
+				float64(*record.OpenIssuesCount),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.Stargazers,
-			prometheus.GaugeValue,
-			float64(*record.StargazersCount),
-			labels...,
-		)
+		if record.StargazersCount != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.Stargazers,
+				prometheus.GaugeValue,
+				float64(*record.StargazersCount),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.Subscribers,
-			prometheus.GaugeValue,
-			float64(*record.SubscribersCount),
-			labels...,
-		)
+		if record.SubscribersCount != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.Subscribers,
+				prometheus.GaugeValue,
+				float64(*record.SubscribersCount),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.Watchers,
-			prometheus.GaugeValue,
-			float64(*record.WatchersCount),
-			labels...,
-		)
+		if record.WatchersCount != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.Watchers,
+				prometheus.GaugeValue,
+				float64(*record.WatchersCount),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.Size,
-			prometheus.GaugeValue,
-			float64(*record.Size),
-			labels...,
-		)
+		if record.Size != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.Size,
+				prometheus.GaugeValue,
+				float64(*record.Size),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.AllowRebaseMerge,
-			prometheus.GaugeValue,
-			boolToFloat64(*record.AllowRebaseMerge),
-			labels...,
-		)
+		if record.AllowRebaseMerge != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.AllowRebaseMerge,
+				prometheus.GaugeValue,
+				boolToFloat64(*record.AllowRebaseMerge),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.AllowSquashMerge,
-			prometheus.GaugeValue,
-			boolToFloat64(*record.AllowSquashMerge),
-			labels...,
-		)
+		if record.AllowSquashMerge != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.AllowSquashMerge,
+				prometheus.GaugeValue,
+				boolToFloat64(*record.AllowSquashMerge),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.AllowMergeCommit,
-			prometheus.GaugeValue,
-			boolToFloat64(*record.AllowMergeCommit),
-			labels...,
-		)
+		if record.AllowMergeCommit != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.AllowMergeCommit,
+				prometheus.GaugeValue,
+				boolToFloat64(*record.AllowMergeCommit),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.Archived,
-			prometheus.GaugeValue,
-			boolToFloat64(*record.Archived),
-			labels...,
-		)
+		if record.Archived != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.Archived,
+				prometheus.GaugeValue,
+				boolToFloat64(*record.Archived),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.Private,
-			prometheus.GaugeValue,
-			boolToFloat64(*record.Private),
-			labels...,
-		)
+		if record.Private != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.Private,
+				prometheus.GaugeValue,
+				boolToFloat64(*record.Private),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.HasIssues,
-			prometheus.GaugeValue,
-			boolToFloat64(*record.HasIssues),
-			labels...,
-		)
+		if record.HasIssues != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.HasIssues,
+				prometheus.GaugeValue,
+				boolToFloat64(*record.HasIssues),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.HasWiki,
-			prometheus.GaugeValue,
-			boolToFloat64(*record.HasWiki),
-			labels...,
-		)
+		if record.HasWiki != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.HasWiki,
+				prometheus.GaugeValue,
+				boolToFloat64(*record.HasWiki),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.HasPages,
-			prometheus.GaugeValue,
-			boolToFloat64(*record.HasPages),
-			labels...,
-		)
+		if record.HasPages != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.HasPages,
+				prometheus.GaugeValue,
+				boolToFloat64(*record.HasPages),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.HasProjects,
-			prometheus.GaugeValue,
-			boolToFloat64(*record.HasProjects),
-			labels...,
-		)
+		if record.HasProjects != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.HasProjects,
+				prometheus.GaugeValue,
+				boolToFloat64(*record.HasProjects),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.HasDownloads,
-			prometheus.GaugeValue,
-			boolToFloat64(*record.HasDownloads),
-			labels...,
-		)
+		if record.HasDownloads != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.HasDownloads,
+				prometheus.GaugeValue,
+				boolToFloat64(*record.HasDownloads),
+				labels...,
+			)
+		}
 
 		ch <- prometheus.MustNewConstMetric(
 			c.Pushed,
