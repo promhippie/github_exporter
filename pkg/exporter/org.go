@@ -153,19 +153,23 @@ func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
 			name,
 		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.PublicRepos,
-			prometheus.GaugeValue,
-			float64(*record.PublicRepos),
-			labels...,
-		)
+		if record.PublicRepos != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.PublicRepos,
+				prometheus.GaugeValue,
+				float64(*record.PublicRepos),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.PublicGists,
-			prometheus.GaugeValue,
-			float64(*record.PublicGists),
-			labels...,
-		)
+		if record.PublicGists != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.PublicGists,
+				prometheus.GaugeValue,
+				float64(*record.PublicGists),
+				labels...,
+			)
+		}
 
 		if record.PrivateGists != nil {
 			ch <- prometheus.MustNewConstMetric(
@@ -176,19 +180,23 @@ func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
 			)
 		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.Followers,
-			prometheus.GaugeValue,
-			float64(*record.Followers),
-			labels...,
-		)
+		if record.Followers != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.Followers,
+				prometheus.GaugeValue,
+				float64(*record.Followers),
+				labels...,
+			)
+		}
 
-		ch <- prometheus.MustNewConstMetric(
-			c.Following,
-			prometheus.GaugeValue,
-			float64(*record.Following),
-			labels...,
-		)
+		if record.Following != nil {
+			ch <- prometheus.MustNewConstMetric(
+				c.Following,
+				prometheus.GaugeValue,
+				float64(*record.Following),
+				labels...,
+			)
+		}
 
 		if record.Collaborators != nil {
 			ch <- prometheus.MustNewConstMetric(
