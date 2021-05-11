@@ -1,26 +1,41 @@
 {
     "extends": [
         "config:base",
+        ":dependencyDashboard",
         ":automergeMinor",
-        ":automergeDigest",
-        "docker:enableMajor",
-        "docker:pinDigests"
+        ":automergeDigest"
     ],
     "enabledManagers": [
-        "gomod",
         "dockerfile",
-        "droneci"
+        "gomod"
     ],
-    "droneci": {
-        "fileMatch": [
-            "(^|/).drone.star$"
-        ]
+    "dockerfile": {
+        "pinDigests": true
     },
     "gomod": {
         "postUpdateOptions": [
+            "gomodUpdateImportPaths",
             "gomodTidy"
         ]
     },
+    "packageRules": [{
+        "description": "Automerge digest updates",
+        "groupName": "docker digests",
+        "matchDatasources": [
+            "docker"
+        ],
+        "matchUpdateTypes": [
+            "pin",
+            "digest",
+            "major",
+            "minor",
+            "patch"
+        ],
+        "automerge": true
+    }],
+    "ignoreDeps": [
+        "github.com/prometheus/prometheus"
+    ],
     "labels": [
         "renovate"
     ]
