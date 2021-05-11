@@ -12,11 +12,6 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-var (
-	// ErrMissingGithubToken defines the error if github.token is empty.
-	ErrMissingGithubToken = `Missing required github.token`
-)
-
 // Run parses the command line arguments and executes the program.
 func Run() error {
 	cfg := config.Load()
@@ -160,10 +155,10 @@ func Run() error {
 
 			if cfg.Target.Token == "" {
 				level.Error(logger).Log(
-					"msg", ErrMissingGithubToken,
+					"msg", "Missing required github.token",
 				)
 
-				return fmt.Errorf(ErrMissingGithubToken)
+				return fmt.Errorf("missing required github.token")
 			}
 
 			return action.Server(cfg, logger)

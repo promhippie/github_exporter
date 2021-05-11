@@ -33,9 +33,10 @@ def testing(ctx):
     'steps': [
       {
         'name': 'generate',
-        'image': 'webhippie/golang:1.14',
+        'image': 'webhippie/golang:1.16',
         'pull': 'always',
         'commands': [
+          'ls -ali',
           'make generate',
         ],
         'volumes': [
@@ -47,7 +48,7 @@ def testing(ctx):
       },
       {
         'name': 'vet',
-        'image': 'webhippie/golang:1.14',
+        'image': 'webhippie/golang:1.16',
         'pull': 'always',
         'commands': [
           'make vet',
@@ -61,7 +62,7 @@ def testing(ctx):
       },
       {
         'name': 'staticcheck',
-        'image': 'webhippie/golang:1.14',
+        'image': 'webhippie/golang:1.16',
         'pull': 'always',
         'commands': [
           'make staticcheck',
@@ -75,7 +76,7 @@ def testing(ctx):
       },
       {
         'name': 'lint',
-        'image': 'webhippie/golang:1.14',
+        'image': 'webhippie/golang:1.16',
         'pull': 'always',
         'commands': [
           'make lint',
@@ -89,7 +90,7 @@ def testing(ctx):
       },
       {
         'name': 'build',
-        'image': 'webhippie/golang:1.14',
+        'image': 'webhippie/golang:1.16',
         'pull': 'always',
         'commands': [
           'make build',
@@ -103,7 +104,7 @@ def testing(ctx):
       },
       {
         'name': 'test',
-        'image': 'webhippie/golang:1.14',
+        'image': 'webhippie/golang:1.16',
         'pull': 'always',
         'commands': [
           'make test',
@@ -179,7 +180,7 @@ def docker(ctx, arch):
       'dry_run': True,
       'tags': 'linux-%s' % (arch),
       'dockerfile': 'docker/Dockerfile.linux.%s' % (arch),
-      'repo': ctx.repo.slug,
+      'repo': ctx.repo.slug.replace('_', '-'),
     }
   else:
     docker = {
@@ -192,7 +193,7 @@ def docker(ctx, arch):
       'auto_tag': True,
       'auto_tag_suffix': 'linux-%s' % (arch),
       'dockerfile': 'docker/Dockerfile.linux.%s' % (arch),
-      'repo': ctx.repo.slug,
+      'repo': ctx.repo.slug.replace('_', '-'),
     }
 
   return {
@@ -205,23 +206,8 @@ def docker(ctx, arch):
     },
     'steps': [
       {
-        'name': 'version',
-        'image': 'webhippie/golang:1.14',
-        'pull': 'always',
-        'environment': environment,
-        'commands': [
-          'go env',
-        ],
-        'volumes': [
-          {
-            'name': 'gopath',
-            'path': '/srv/app',
-          },
-        ],
-      },
-      {
         'name': 'generate',
-        'image': 'webhippie/golang:1.14',
+        'image': 'webhippie/golang:1.16',
         'pull': 'always',
         'environment': environment,
         'commands': [
@@ -236,7 +222,7 @@ def docker(ctx, arch):
       },
       {
         'name': 'build',
-        'image': 'webhippie/golang:1.14',
+        'image': 'webhippie/golang:1.16',
         'pull': 'always',
         'environment': environment,
         'commands': [
@@ -286,7 +272,7 @@ def binary(ctx, name):
     'steps': [
       {
         'name': 'generate',
-        'image': 'webhippie/golang:1.14',
+        'image': 'webhippie/golang:1.16',
         'pull': 'always',
         'commands': [
           'make generate',
@@ -300,7 +286,7 @@ def binary(ctx, name):
       },
       {
         'name': 'build',
-        'image': 'webhippie/golang:1.14',
+        'image': 'webhippie/golang:1.16',
         'pull': 'always',
         'commands': [
           'make release-%s' % (name),
@@ -314,7 +300,7 @@ def binary(ctx, name):
       },
       {
         'name': 'finish',
-        'image': 'webhippie/golang:1.14',
+        'image': 'webhippie/golang:1.16',
         'pull': 'always',
         'commands': [
           'make release-finish',
@@ -460,6 +446,14 @@ def docs(ctx):
     },
     'steps': [
       {
+        'name': 'metrics',
+        'image': 'webhippie/golang:1.16',
+        'pull': 'always',
+        'commands': [
+          'make metrics',
+        ],
+      },
+      {
         'name': 'generate',
         'image': 'webhippie/hugo:latest',
         'pull': 'always',
@@ -536,7 +530,7 @@ def changelog(ctx):
       },
       {
         'name': 'generate',
-        'image': 'webhippie/golang:1.14',
+        'image': 'webhippie/golang:1.16',
         'pull': 'always',
         'commands': [
           'make changelog',
@@ -544,7 +538,7 @@ def changelog(ctx):
       },
       {
         'name': 'changes',
-        'image': 'webhippie/golang:1.14',
+        'image': 'webhippie/golang:1.16',
         'pull': 'always',
         'commands': [
           'git diff CHANGELOG.md',
@@ -612,7 +606,7 @@ def readme(ctx):
             'from_secret': 'docker_password',
           },
           'DOCKERHUB_REPO_PREFIX': ctx.repo.namespace,
-          'DOCKERHUB_REPO_NAME': ctx.repo.name,
+          'DOCKERHUB_REPO_NAME': ctx.repo.name.replace('_', '-'),
           'SHORT_DESCRIPTION': description,
           'README_PATH': 'README.md',
         },

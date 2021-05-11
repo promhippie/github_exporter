@@ -113,6 +113,23 @@ func NewOrgCollector(logger log.Logger, client *github.Client, failures *prometh
 	}
 }
 
+// Metrics simply returns the list metric descriptors for generating a documentation.
+func (c *OrgCollector) Metrics() []*prometheus.Desc {
+	return []*prometheus.Desc{
+		c.PublicRepos,
+		c.PublicGists,
+		c.PrivateGists,
+		c.Followers,
+		c.Following,
+		c.Collaborators,
+		c.DiskUsage,
+		c.PrivateReposTotal,
+		c.PrivateReposOwned,
+		c.Created,
+		c.Updated,
+	}
+}
+
 // Describe sends the super-set of all possible descriptors of metrics collected by this Collector.
 func (c *OrgCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.PublicRepos

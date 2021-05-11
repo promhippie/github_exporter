@@ -58,6 +58,15 @@ func NewPackageCollector(logger log.Logger, client *github.Client, failures *pro
 	}
 }
 
+// Metrics simply returns the list metric descriptors for generating a documentation.
+func (c *PackageCollector) Metrics() []*prometheus.Desc {
+	return []*prometheus.Desc{
+		c.BandwidthUsed,
+		c.BandwidthPaid,
+		c.BandwidthIncluded,
+	}
+}
+
 // Describe sends the super-set of all possible descriptors of metrics collected by this Collector.
 func (c *PackageCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.BandwidthUsed

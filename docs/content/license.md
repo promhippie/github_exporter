@@ -5,4 +5,4 @@ anchor: "license"
 weight: 30
 ---
 
-This project is licensed under the [Apache 2.0](https://github.com/promhippie/hcloud_exporter/blob/master/LICENSE) license. For the license of the used libraries you have to check the respective sources.
+This project is licensed under the [Apache 2.0](https://github.com/promhippie/github_exporter/blob/master/LICENSE) license. For the license of the used libraries you have to check the respective sources.

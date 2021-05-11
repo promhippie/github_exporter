@@ -1,0 +1,1 @@
+{{- $file := printf "/partials/%s" (.Get 0) -}}{{- $file | readFile | markdownify -}}
