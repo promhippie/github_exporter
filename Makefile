@@ -14,12 +14,7 @@ else
 	UNAME := $(shell uname -s)
 endif
 
-ifeq ($(UNAME), Darwin)
-	GOBUILD ?= CGO_ENABLED=0 go build -i
-else
-	GOBUILD ?= CGO_ENABLED=0 go build
-endif
-
+GOBUILD ?= CGO_ENABLED=0 go build
 PACKAGES ?= $(shell go list ./...)
 SOURCES ?= $(shell find . -name "*.go" -type f -not -path "./node_modules/*")
 GENERATE ?= $(PACKAGES)
@@ -187,6 +182,10 @@ release-finish: release-reduce release-checksum
 .PHONY: docs
 docs:
 	hugo -s docs/
+
+.PHONY: envvars
+envvars:
+	go run hack/generate-envvars-docs.go
 
 .PHONY: metrics
 metrics:
