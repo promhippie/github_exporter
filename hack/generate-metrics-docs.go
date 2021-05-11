@@ -12,7 +12,7 @@ import (
 	"github.com/promhippie/github_exporter/pkg/exporter"
 )
 
-type Metric struct {
+type metric struct {
 	Name   string
 	Help   string
 	Labels []string
@@ -55,22 +55,22 @@ func main() {
 		exporter.NewStorageCollector(nil, nil, failures, nil, config.Load().Target).Metrics()...,
 	)
 
-	metrics := make([]Metric, 0)
+	metrics := make([]metric, 0)
 
-	metrics = append(metrics, Metric{
+	metrics = append(metrics, metric{
 		Name:   "github_request_duration_seconds",
 		Help:   "Histogram of latencies for requests to the api per collector",
 		Labels: []string{"collector"},
 	})
 
-	metrics = append(metrics, Metric{
+	metrics = append(metrics, metric{
 		Name:   "github_request_failures_total",
 		Help:   "Total number of failed requests to the api per collector",
 		Labels: []string{"collector"},
 	})
 
 	for _, desc := range collectors {
-		metric := Metric{
+		m := metric{
 			Name:   reflect.ValueOf(desc).Elem().FieldByName("fqName").String(),
 			Help:   reflect.ValueOf(desc).Elem().FieldByName("help").String(),
 			Labels: make([]string, 0),
@@ -79,10 +79,10 @@ func main() {
 		labels := reflect.ValueOf(desc).Elem().FieldByName("variableLabels")
 
 		for i := 0; i < labels.Len(); i++ {
-			metric.Labels = append(metric.Labels, labels.Index(i).String())
+			m.Labels = append(m.Labels, labels.Index(i).String())
 		}
 
-		metrics = append(metrics, metric)
+		metrics = append(metrics, m)
 	}
 
 	sort.SliceStable(metrics, func(i, j int) bool {
@@ -99,22 +99,22 @@ func main() {
 	defer f.Close()
 
 	last := metrics[len(metrics)-1]
-	for _, metric := range metrics {
+	for _, m := range metrics {
 		f.WriteString(fmt.Sprintf(
 			"%s{%s}\n",
-			metric.Name,
+			m.Name,
 			strings.Join(
-				metric.Labels,
+				m.Labels,
 				", ",
 			),
 		))
 
 		f.WriteString(fmt.Sprintf(
 			": %s\n",
-			metric.Help,
+			m.Help,
 		))
 
-		if metric.Name != last.Name {
+		if m.Name != last.Name {
 			f.WriteString("\n")
 		}
 	}
