@@ -446,6 +446,14 @@ def docs(ctx):
     },
     'steps': [
       {
+        'name': 'metrics',
+        'image': 'webhippie/golang:1.16',
+        'pull': 'always',
+        'commands': [
+          'make metrics',
+        ],
+      },
+      {
         'name': 'generate',
         'image': 'webhippie/hugo:latest',
         'pull': 'always',

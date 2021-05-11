@@ -188,6 +188,10 @@ release-finish: release-reduce release-checksum
 docs:
 	hugo -s docs/
 
+.PHONY: metrics
+metrics:
+	go run hack/generate-metrics-docs.go
+
 .PHONY: watch
 watch:
 	$(REFLEX) -c reflex.conf
