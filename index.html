@@ -479,7 +479,7 @@
 <dd>Server metrics endpoint timeout, defaults to <code>10s</code><br />
 <br /></dd>
 <dt>GITHUB_EXPORTER_REQUEST_TIMEOUT<br /></dt>
-<dd>Request to Github timeout, defaults to <code>5s</code><br />
+<dd>Timeout requesting GitHub API, defaults to <code>5s</code><br />
 <br /></dd>
 <dt>GITHUB_EXPORTER_TOKEN<br /></dt>
 <dd>Access token for the GitHub API<br />
@@ -487,33 +487,32 @@
 <dt>GITHUB_EXPORTER_BASE_URL<br /></dt>
 <dd>URL to access the GitHub Enterprise API<br />
 <br /></dd>
-<dt>GITHUB_EXPORTER_TLS_INSECURE<br /></dt>
+<dt>GITHUB_EXPORTER_INSECURE<br /></dt>
 <dd>Skip TLS verification for GitHub Enterprise, defaults to <code>false</code><br />
 <br /></dd>
-<dt>GITHUB_EXPORTER_ENTERPRISE<br /></dt>
+<dt>GITHUB_EXPORTER_ENTERPRISE, GITHUB_EXPORTER_ENTERPRISES<br /></dt>
 <dd>Enterprises to scrape metrics from, comma-separated list<br />
 <br /></dd>
-<dt>GITHUB_EXPORTER_ORG<br /></dt>
+<dt>GITHUB_EXPORTER_ORG, GITHUB_EXPORTER_ORGS<br /></dt>
 <dd>Organizations to scrape metrics from, comma-separated list<br />
 <br /></dd>
-<dt>GITHUB_EXPORTER_REPO<br /></dt>
+<dt>GITHUB_EXPORTER_REPO, GITHUB_EXPORTER_REPOS<br /></dt>
 <dd>Repositories to scrape metrics from, comma-separated list<br />
 <br /></dd>
 <dt>GITHUB_EXPORTER_COLLECTOR_ORGS<br /></dt>
-<dd>Enable collector for orgs, defaults to  <code>true</code><br />
+<dd>Enable collector for orgs, defaults to <code>true</code><br />
 <br /></dd>
 <dt>GITHUB_EXPORTER_COLLECTOR_REPOS<br /></dt>
 <dd>Enable collector for repos, defaults to <code>true</code><br />
 <br /></dd>
 <dt>GITHUB_EXPORTER_COLLECTOR_ACTIONS<br /></dt>
-<dd>Enable collector for actions, defaults to  <code>false</code><br />
+<dd>Enable collector for actions, defaults to <code>false</code><br />
 <br /></dd>
 <dt>GITHUB_EXPORTER_COLLECTOR_PACKAGES<br /></dt>
-<dd>Enable collector for packages, defaults to  <code>false</code><br />
+<dd>Enable collector for packages, defaults to <code>false</code><br />
 <br /></dd>
 <dt>GITHUB_EXPORTER_COLLECTOR_STORAGE<br /></dt>
-<dd>Enable collector for storage, defaults to  <code>false</code><br />
-<br /></dd>
+<dd>Enable collector for storage, defaults to <code>false</code><br /></dd>
 </dl>
 
 <h2 id="metrics">Metrics</h2>
