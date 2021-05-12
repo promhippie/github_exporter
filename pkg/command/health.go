@@ -14,15 +14,7 @@ func Health(cfg *config.Config) *cli.Command {
 	return &cli.Command{
 		Name:  "health",
 		Usage: "Perform health checks",
-		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:        "web.address",
-				Value:       "0.0.0.0:9504",
-				Usage:       "Address to bind the metrics server",
-				EnvVars:     []string{"GITHUB_EXPORTER_WEB_ADDRESS"},
-				Destination: &cfg.Server.Addr,
-			},
-		},
+		Flags: HealthFlags(cfg),
 		Action: func(c *cli.Context) error {
 			logger := setupLogger(cfg)
 
@@ -55,6 +47,19 @@ func Health(cfg *config.Config) *cli.Command {
 			}
 
 			return nil
+		},
+	}
+}
+
+// HealthFlags defines the available health flags.
+func HealthFlags(cfg *config.Config) []cli.Flag {
+	return []cli.Flag{
+		&cli.StringFlag{
+			Name:        "web.address",
+			Value:       "0.0.0.0:9504",
+			Usage:       "Address to bind the metrics server",
+			EnvVars:     []string{"GITHUB_EXPORTER_WEB_ADDRESS"},
+			Destination: &cfg.Server.Addr,
 		},
 	}
 }
