@@ -28,7 +28,9 @@ type ActionCollector struct {
 
 // NewActionCollector returns a new ActionCollector.
 func NewActionCollector(logger log.Logger, client *github.Client, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *ActionCollector {
-	failures.WithLabelValues("action").Add(0)
+	if failures != nil {
+		failures.WithLabelValues("action").Add(0)
+	}
 
 	labels := []string{"type", "name"}
 	return &ActionCollector{

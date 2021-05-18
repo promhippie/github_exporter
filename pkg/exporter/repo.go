@@ -45,7 +45,9 @@ type RepoCollector struct {
 
 // NewRepoCollector returns a new RepoCollector.
 func NewRepoCollector(logger log.Logger, client *github.Client, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *RepoCollector {
-	failures.WithLabelValues("repo").Add(0)
+	if failures != nil {
+		failures.WithLabelValues("repo").Add(0)
+	}
 
 	labels := []string{"owner", "name"}
 	return &RepoCollector{
