@@ -43,7 +43,7 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
 
   github_exporter:
-    image: promhippie/github_exporter:latest
+    image: promhippie/github-exporter:latest
     restart: always
     environment:
       - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
@@ -51,12 +51,12 @@ services:
       - GITHUB_EXPORTER_ORG=promhippie
 {{< / highlight >}}
 
-Since our `latest` Docker tag always refers to the `master` branch of the Git repository you should always use some fixed version. You can see all available tags at our [DockerHub repository](https://hub.docker.com/r/promhippie/github_exporter/tags/), there you will see that we also provide a manifest, you can easily start the exporter on various architectures without any change to the image name. You should apply a change like this to the `docker-compose.yml`:
+Since our `latest` Docker tag always refers to the `master` branch of the Git repository you should always use some fixed version. You can see all available tags at our [DockerHub repository](https://hub.docker.com/r/promhippie/github-exporter/tags/), there you will see that we also provide a manifest, you can easily start the exporter on various architectures without any change to the image name. You should apply a change like this to the `docker-compose.yml`:
 
 {{< highlight diff >}}
-  hcloud-exporter:
--   image: promhippie/github_exporter:latest
-+   image: promhippie/github_exporter:1.0.0
+  github_exporter:
+-   image: promhippie/github-exporter:latest
++   image: promhippie/github-exporter:1.0.0
     restart: always
     environment:
       - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
@@ -68,7 +68,7 @@ If you want to access the exporter directly you should bind it to a local port, 
 
 {{< highlight diff >}}
   hcloud-exporter:
-    image: promhippie/github_exporter:latest
+    image: promhippie/github-exporter:latest
     restart: always
 +   ports:
 +     - 127.0.0.1:9504:9504
