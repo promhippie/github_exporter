@@ -424,18 +424,18 @@
 </span><span class="w">      </span>-<span class="w"> </span>./prometheus.yml<span class="p">:</span>/etc/prometheus/prometheus.yml<span class="w">
 </span><span class="w">
 </span><span class="w">  </span>github_exporter<span class="p">:</span><span class="w">
-</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>promhippie/github_exporter<span class="p">:</span>latest<span class="w">
+</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>promhippie/github-exporter<span class="p">:</span>latest<span class="w">
 </span><span class="w">    </span>restart<span class="p">:</span><span class="w"> </span>always<span class="w">
 </span><span class="w">    </span>environment<span class="p">:</span><span class="w">
 </span><span class="w">      </span>-<span class="w"> </span>GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb<span class="w">
 </span><span class="w">      </span>-<span class="w"> </span>GITHUB_EXPORTER_LOG_PRETTY=<span class="kc">true</span><span class="w">
 </span><span class="w">      </span>-<span class="w"> </span>GITHUB_EXPORTER_ORG=promhippie</code></pre></div>
 
-<p>Since our <code>latest</code> Docker tag always refers to the <code>master</code> branch of the Git repository you should always use some fixed version. You can see all available tags at our <a href="https://hub.docker.com/r/promhippie/github_exporter/tags/">DockerHub repository</a>, there you will see that we also provide a manifest, you can easily start the exporter on various architectures without any change to the image name. You should apply a change like this to the <code>docker-compose.yml</code>:</p>
+<p>Since our <code>latest</code> Docker tag always refers to the <code>master</code> branch of the Git repository you should always use some fixed version. You can see all available tags at our <a href="https://hub.docker.com/r/promhippie/github-exporter/tags/">DockerHub repository</a>, there you will see that we also provide a manifest, you can easily start the exporter on various architectures without any change to the image name. You should apply a change like this to the <code>docker-compose.yml</code>:</p>
 
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff">  hcloud-exporter:
-<span class="gd">-   image: promhippie/github_exporter:latest
-</span><span class="gd"></span><span class="gi">+   image: promhippie/github_exporter:1.0.0
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff">  github_exporter:
+<span class="gd">-   image: promhippie/github-exporter:latest
+</span><span class="gd"></span><span class="gi">+   image: promhippie/github-exporter:1.0.0
 </span><span class="gi"></span>    restart: always
     environment:
       - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
@@ -446,7 +446,7 @@
 <p>If you want to access the exporter directly you should bind it to a local port, otherwise only <a href="https://prometheus.io">Prometheus</a> will have access to the exporter. For debugging purpose or just to discover all available metrics directly you can apply this change to your <code>docker-compose.yml</code>, after that you can access it directly at <a href="http://localhost:9504/metrics">http://localhost:9504/metrics</a>:</p>
 
 <div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff">  hcloud-exporter:
-    image: promhippie/github_exporter:latest
+    image: promhippie/github-exporter:latest
     restart: always
 <span class="gi">+   ports:
 </span><span class="gi">+     - 127.0.0.1:9504:9504
