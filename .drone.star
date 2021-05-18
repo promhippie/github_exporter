@@ -132,6 +132,9 @@ def testing(ctx):
         'temp': {},
       },
     ],
+    'image_pull_secrets': [
+      'docker_config',
+    ],
     'trigger': {
       'ref': [
         'refs/heads/master',
@@ -176,6 +179,12 @@ def docker(ctx, arch):
 
   if ctx.build.event == 'pull_request':
     docker = {
+      'username': {
+        'from_secret': 'pr_username',
+      },
+      'password': {
+        'from_secret': 'pr_password',
+      },
       'dry_run': True,
       'tags': 'linux-%s' % (arch),
       'dockerfile': 'docker/Dockerfile.linux.%s' % (arch),
@@ -246,6 +255,9 @@ def docker(ctx, arch):
         'name': 'gopath',
         'temp': {},
       },
+    ],
+    'image_pull_secrets': [
+      'docker_config',
     ],
     'depends_on': [
       'testing',
@@ -378,6 +390,9 @@ def binary(ctx, name):
         'temp': {},
       },
     ],
+    'image_pull_secrets': [
+      'docker_config',
+    ],
     'depends_on': [
       'testing',
     ],
@@ -416,6 +431,9 @@ def manifest(ctx):
           'ignore_missing': True,
         },
       },
+    ],
+    'image_pull_secrets': [
+      'docker_config',
     ],
     'depends_on': [
       'amd64',
@@ -490,6 +508,9 @@ def docs(ctx):
           }
         },
       },
+    ],
+    'image_pull_secrets': [
+      'docker_config',
     ],
     'depends_on': [
       'manifest',
@@ -597,6 +618,9 @@ def changelog(ctx):
         },
       },
     ],
+    'image_pull_secrets': [
+      'docker_config',
+    ],
     'depends_on': [
       'manifest',
     ],
@@ -635,6 +659,9 @@ def readme(ctx):
         },
       },
     ],
+    'image_pull_secrets': [
+      'docker_config',
+    ],
     'depends_on': [
       'manifest',
     ],
@@ -668,6 +695,9 @@ def badges(ctx):
           },
         },
       },
+    ],
+    'image_pull_secrets': [
+      'docker_config',
     ],
     'depends_on': [
       'manifest',
@@ -709,6 +739,9 @@ def notify(ctx):
           },
         },
       },
+    ],
+    'image_pull_secrets': [
+      'docker_config',
     ],
     'depends_on': [
       'docs',
