@@ -152,10 +152,14 @@ $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64le:
 
 .PHONY: release-darwin
 release-darwin: $(DIST) \
-	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-amd64
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-amd64 \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-arm64
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-amd64:
 	GOOS=darwin GOARCH=amd64 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-arm64:
+	GOOS=darwin GOARCH=arm64 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 .PHONY: release-windows
 release-windows: $(DIST) \

@@ -27,7 +27,9 @@ type PackageCollector struct {
 
 // NewPackageCollector returns a new PackageCollector.
 func NewPackageCollector(logger log.Logger, client *github.Client, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *PackageCollector {
-	failures.WithLabelValues("package").Add(0)
+	if failures != nil {
+		failures.WithLabelValues("package").Add(0)
+	}
 
 	labels := []string{"type", "name"}
 	return &PackageCollector{

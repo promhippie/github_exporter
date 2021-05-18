@@ -34,7 +34,9 @@ type OrgCollector struct {
 
 // NewOrgCollector returns a new OrgCollector.
 func NewOrgCollector(logger log.Logger, client *github.Client, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *OrgCollector {
-	failures.WithLabelValues("org").Add(0)
+	if failures != nil {
+		failures.WithLabelValues("org").Add(0)
+	}
 
 	labels := []string{"name"}
 	return &OrgCollector{

@@ -21,40 +21,31 @@ type metric struct {
 }
 
 func main() {
-	failures := prometheus.NewCounterVec(
-		prometheus.CounterOpts{
-			Namespace: "dummy",
-			Name:      "request_failures_total",
-			Help:      "Total number of failed requests to the api per collector.",
-		},
-		[]string{"collector"},
-	)
-
 	collectors := make([]*prometheus.Desc, 0)
 
 	collectors = append(
 		collectors,
-		exporter.NewOrgCollector(nil, nil, failures, nil, config.Load().Target).Metrics()...,
+		exporter.NewOrgCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 
 	collectors = append(
 		collectors,
-		exporter.NewRepoCollector(nil, nil, failures, nil, config.Load().Target).Metrics()...,
+		exporter.NewRepoCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 
 	collectors = append(
 		collectors,
-		exporter.NewActionCollector(nil, nil, failures, nil, config.Load().Target).Metrics()...,
+		exporter.NewActionCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 
 	collectors = append(
 		collectors,
-		exporter.NewPackageCollector(nil, nil, failures, nil, config.Load().Target).Metrics()...,
+		exporter.NewPackageCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 
 	collectors = append(
 		collectors,
-		exporter.NewStorageCollector(nil, nil, failures, nil, config.Load().Target).Metrics()...,
+		exporter.NewStorageCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 
 	metrics := make([]metric, 0)

@@ -27,7 +27,9 @@ type StorageCollector struct {
 
 // NewStorageCollector returns a new StorageCollector.
 func NewStorageCollector(logger log.Logger, client *github.Client, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *StorageCollector {
-	failures.WithLabelValues("storage").Add(0)
+	if failures != nil {
+		failures.WithLabelValues("storage").Add(0)
+	}
 
 	labels := []string{"type", "name"}
 	return &StorageCollector{
