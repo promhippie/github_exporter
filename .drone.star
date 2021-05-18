@@ -36,7 +36,6 @@ def testing(ctx):
         'image': 'webhippie/golang:1.16',
         'pull': 'always',
         'commands': [
-          'ls -ali',
           'make generate',
         ],
         'volumes': [
@@ -537,6 +536,22 @@ def changelog(ctx):
         },
       },
       {
+        'name': 'metrics',
+        'image': 'webhippie/golang:1.16',
+        'pull': 'always',
+        'commands': [
+          'make metrics',
+        ],
+      },
+      {
+        'name': 'envvars',
+        'image': 'webhippie/golang:1.16',
+        'pull': 'always',
+        'commands': [
+          'make envvars',
+        ],
+      },
+      {
         'name': 'generate',
         'image': 'webhippie/golang:1.16',
         'pull': 'always',
@@ -561,7 +576,7 @@ def changelog(ctx):
             'commit',
             'push',
           ],
-          'message': 'Automated changelog update [skip ci]',
+          'message': 'Automated changelog and docs update [skip ci]',
           'branch': 'master',
           'author_email': 'drone@webhippie.de',
           'author_name': 'Drone',
