@@ -209,21 +209,21 @@ func (c *ActionCollector) Collect(ch chan<- prometheus.Metric) {
 		ch <- prometheus.MustNewConstMetric(
 			c.MinutesUsed,
 			prometheus.GaugeValue,
-			float64(record.TotalMinutesUsed),
+			record.TotalMinutesUsed,
 			labels...,
 		)
 
 		ch <- prometheus.MustNewConstMetric(
 			c.PaidMinutesUsed,
 			prometheus.GaugeValue,
-			float64(record.TotalPaidMinutesUsed),
+			record.TotalPaidMinutesUsed,
 			labels...,
 		)
 
 		ch <- prometheus.MustNewConstMetric(
 			c.IncludedMinutes,
 			prometheus.GaugeValue,
-			float64(record.IncludedMinutes),
+			record.IncludedMinutes,
 			labels...,
 		)
 
@@ -231,7 +231,7 @@ func (c *ActionCollector) Collect(ch chan<- prometheus.Metric) {
 			ch <- prometheus.MustNewConstMetric(
 				c.MinutesUsedBreakdown,
 				prometheus.GaugeValue,
-				float64(value),
+				value,
 				append(labels, os)...,
 			)
 		}
@@ -239,8 +239,8 @@ func (c *ActionCollector) Collect(ch chan<- prometheus.Metric) {
 }
 
 type actionReponse struct {
-	TotalMinutesUsed     int            `json:"total_minutes_used"`
-	TotalPaidMinutesUsed int            `json:"total_paid_minutes_used"`
-	IncludedMinutes      int            `json:"included_minutes"`
-	MinutesUsedBreakdown map[string]int `json:"minutes_used_breakdown"`
+	TotalMinutesUsed     float64            `json:"total_minutes_used"`
+	TotalPaidMinutesUsed float64            `json:"total_paid_minutes_used"`
+	IncludedMinutes      float64            `json:"included_minutes"`
+	MinutesUsedBreakdown map[string]float64 `json:"minutes_used_breakdown"`
 }
