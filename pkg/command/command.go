@@ -98,6 +98,13 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			EnvVars:     []string{"GITHUB_EXPORTER_WEB_TIMEOUT"},
 			Destination: &cfg.Server.Timeout,
 		},
+		&cli.StringFlag{
+			Name:        "web.config",
+			Value:       "",
+			Usage:       "Path to web-config file",
+			EnvVars:     []string{"GITHUB_EXPORTER_WEB_CONFIG"},
+			Destination: &cfg.Server.Web,
+		},
 		&cli.DurationFlag{
 			Name:        "request.timeout",
 			Value:       5 * time.Second,
