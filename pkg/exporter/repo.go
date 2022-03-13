@@ -10,6 +10,7 @@ import (
 	"github.com/google/go-github/v35/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
+	"github.com/ryanuber/go-glob"
 )
 
 // RepoCollector collects metrics about the servers.
@@ -259,12 +260,12 @@ func (c *RepoCollector) Collect(ch chan<- prometheus.Metric) {
 		defer cancel()
 
 		now := time.Now()
-		record, _, err := c.client.Repositories.Get(ctx, owner, repo)
+		records, err := c.reposByOwnerAndName(ctx, owner, repo)
 		c.duration.WithLabelValues("repo").Observe(time.Since(now).Seconds())
 
 		if err != nil {
 			level.Error(c.logger).Log(
-				"msg", "Failed to fetch repo",
+				"msg", "Failed to fetch repos",
 				"name", name,
 				"err", err,
 			)
@@ -273,194 +274,249 @@ func (c *RepoCollector) Collect(ch chan<- prometheus.Metric) {
 			continue
 		}
 
-		labels := []string{
-			owner,
-			repo,
-		}
+		for _, record := range records {
+			if !glob.Glob(name, *record.FullName) {
+				continue
+			}
 
-		if record.Fork != nil {
+			labels := []string{
+				owner,
+				*record.Name,
+			}
+
+			if record.Fork != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.Forked,
+					prometheus.GaugeValue,
+					boolToFloat64(*record.Fork),
+					labels...,
+				)
+			}
+
+			if record.ForksCount != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.Forks,
+					prometheus.GaugeValue,
+					float64(*record.ForksCount),
+					labels...,
+				)
+			}
+
+			if record.NetworkCount != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.Network,
+					prometheus.GaugeValue,
+					float64(*record.NetworkCount),
+					labels...,
+				)
+			}
+
+			if record.OpenIssuesCount != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.Issues,
+					prometheus.GaugeValue,
+					float64(*record.OpenIssuesCount),
+					labels...,
+				)
+			}
+
+			if record.StargazersCount != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.Stargazers,
+					prometheus.GaugeValue,
+					float64(*record.StargazersCount),
+					labels...,
+				)
+			}
+
+			if record.SubscribersCount != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.Subscribers,
+					prometheus.GaugeValue,
+					float64(*record.SubscribersCount),
+					labels...,
+				)
+			}
+
+			if record.WatchersCount != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.Watchers,
+					prometheus.GaugeValue,
+					float64(*record.WatchersCount),
+					labels...,
+				)
+			}
+
+			if record.Size != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.Size,
+					prometheus.GaugeValue,
+					float64(*record.Size),
+					labels...,
+				)
+			}
+
+			if record.AllowRebaseMerge != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.AllowRebaseMerge,
+					prometheus.GaugeValue,
+					boolToFloat64(*record.AllowRebaseMerge),
+					labels...,
+				)
+			}
+
+			if record.AllowSquashMerge != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.AllowSquashMerge,
+					prometheus.GaugeValue,
+					boolToFloat64(*record.AllowSquashMerge),
+					labels...,
+				)
+			}
+
+			if record.AllowMergeCommit != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.AllowMergeCommit,
+					prometheus.GaugeValue,
+					boolToFloat64(*record.AllowMergeCommit),
+					labels...,
+				)
+			}
+
+			if record.Archived != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.Archived,
+					prometheus.GaugeValue,
+					boolToFloat64(*record.Archived),
+					labels...,
+				)
+			}
+
+			if record.Private != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.Private,
+					prometheus.GaugeValue,
+					boolToFloat64(*record.Private),
+					labels...,
+				)
+			}
+
+			if record.HasIssues != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.HasIssues,
+					prometheus.GaugeValue,
+					boolToFloat64(*record.HasIssues),
+					labels...,
+				)
+			}
+
+			if record.HasWiki != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.HasWiki,
+					prometheus.GaugeValue,
+					boolToFloat64(*record.HasWiki),
+					labels...,
+				)
+			}
+
+			if record.HasPages != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.HasPages,
+					prometheus.GaugeValue,
+					boolToFloat64(*record.HasPages),
+					labels...,
+				)
+			}
+
+			if record.HasProjects != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.HasProjects,
+					prometheus.GaugeValue,
+					boolToFloat64(*record.HasProjects),
+					labels...,
+				)
+			}
+
+			if record.HasDownloads != nil {
+				ch <- prometheus.MustNewConstMetric(
+					c.HasDownloads,
+					prometheus.GaugeValue,
+					boolToFloat64(*record.HasDownloads),
+					labels...,
+				)
+			}
+
 			ch <- prometheus.MustNewConstMetric(
-				c.Forked,
+				c.Pushed,
 				prometheus.GaugeValue,
-				boolToFloat64(*record.Fork),
+				float64(record.PushedAt.Unix()),
+				labels...,
+			)
+
+			ch <- prometheus.MustNewConstMetric(
+				c.Created,
+				prometheus.GaugeValue,
+				float64(record.CreatedAt.Unix()),
+				labels...,
+			)
+
+			ch <- prometheus.MustNewConstMetric(
+				c.Updated,
+				prometheus.GaugeValue,
+				float64(record.UpdatedAt.Unix()),
 				labels...,
 			)
 		}
-
-		if record.ForksCount != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.Forks,
-				prometheus.GaugeValue,
-				float64(*record.ForksCount),
-				labels...,
-			)
-		}
-
-		if record.NetworkCount != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.Network,
-				prometheus.GaugeValue,
-				float64(*record.NetworkCount),
-				labels...,
-			)
-		}
-
-		if record.OpenIssuesCount != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.Issues,
-				prometheus.GaugeValue,
-				float64(*record.OpenIssuesCount),
-				labels...,
-			)
-		}
-
-		if record.StargazersCount != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.Stargazers,
-				prometheus.GaugeValue,
-				float64(*record.StargazersCount),
-				labels...,
-			)
-		}
-
-		if record.SubscribersCount != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.Subscribers,
-				prometheus.GaugeValue,
-				float64(*record.SubscribersCount),
-				labels...,
-			)
-		}
-
-		if record.WatchersCount != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.Watchers,
-				prometheus.GaugeValue,
-				float64(*record.WatchersCount),
-				labels...,
-			)
-		}
-
-		if record.Size != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.Size,
-				prometheus.GaugeValue,
-				float64(*record.Size),
-				labels...,
-			)
-		}
-
-		if record.AllowRebaseMerge != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.AllowRebaseMerge,
-				prometheus.GaugeValue,
-				boolToFloat64(*record.AllowRebaseMerge),
-				labels...,
-			)
-		}
-
-		if record.AllowSquashMerge != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.AllowSquashMerge,
-				prometheus.GaugeValue,
-				boolToFloat64(*record.AllowSquashMerge),
-				labels...,
-			)
-		}
-
-		if record.AllowMergeCommit != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.AllowMergeCommit,
-				prometheus.GaugeValue,
-				boolToFloat64(*record.AllowMergeCommit),
-				labels...,
-			)
-		}
-
-		if record.Archived != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.Archived,
-				prometheus.GaugeValue,
-				boolToFloat64(*record.Archived),
-				labels...,
-			)
-		}
-
-		if record.Private != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.Private,
-				prometheus.GaugeValue,
-				boolToFloat64(*record.Private),
-				labels...,
-			)
-		}
-
-		if record.HasIssues != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.HasIssues,
-				prometheus.GaugeValue,
-				boolToFloat64(*record.HasIssues),
-				labels...,
-			)
-		}
-
-		if record.HasWiki != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.HasWiki,
-				prometheus.GaugeValue,
-				boolToFloat64(*record.HasWiki),
-				labels...,
-			)
-		}
-
-		if record.HasPages != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.HasPages,
-				prometheus.GaugeValue,
-				boolToFloat64(*record.HasPages),
-				labels...,
-			)
-		}
-
-		if record.HasProjects != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.HasProjects,
-				prometheus.GaugeValue,
-				boolToFloat64(*record.HasProjects),
-				labels...,
-			)
-		}
-
-		if record.HasDownloads != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.HasDownloads,
-				prometheus.GaugeValue,
-				boolToFloat64(*record.HasDownloads),
-				labels...,
-			)
-		}
-
-		ch <- prometheus.MustNewConstMetric(
-			c.Pushed,
-			prometheus.GaugeValue,
-			float64(record.PushedAt.Unix()),
-			labels...,
-		)
-
-		ch <- prometheus.MustNewConstMetric(
-			c.Created,
-			prometheus.GaugeValue,
-			float64(record.CreatedAt.Unix()),
-			labels...,
-		)
-
-		ch <- prometheus.MustNewConstMetric(
-			c.Updated,
-			prometheus.GaugeValue,
-			float64(record.UpdatedAt.Unix()),
-			labels...,
-		)
 	}
+}
+
+func (c *RepoCollector) reposByOwnerAndName(ctx context.Context, owner, repo string) ([]*github.Repository, error) {
+	if strings.Contains(repo, "*") {
+		opts := &github.RepositoryListOptions{
+			ListOptions: github.ListOptions{
+				PerPage: 50,
+			},
+		}
+
+		var (
+			result []*github.Repository
+		)
+
+		for {
+			repos, resp, err := c.client.Repositories.List(
+				ctx,
+				owner,
+				opts,
+			)
+
+			if err != nil {
+				return nil, err
+			}
+
+			result = append(
+				result,
+				repos...,
+			)
+
+			if resp.NextPage == 0 {
+				break
+			}
+
+			opts.Page = resp.NextPage
+		}
+
+		return result, nil
+	}
+
+	res, _, err := c.client.Repositories.Get(ctx, owner, repo)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return []*github.Repository{
+		res,
+	}, nil
 }
 
 func boolToFloat64(val bool) float64 {

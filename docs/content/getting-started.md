@@ -62,6 +62,7 @@ Since our `latest` Docker tag always refers to the `master` branch of the Git re
       - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
       - GITHUB_EXPORTER_LOG_PRETTY=true
       - GITHUB_EXPORTER_ORG=promhippie
+      - GITHUB_EXPORTER_REPO=promhippie/example
 {{< / highlight >}}
 
 If you want to access the exporter directly you should bind it to a local port, otherwise only [Prometheus](https://prometheus.io) will have access to the exporter. For debugging purpose or just to discover all available metrics directly you can apply this change to your `docker-compose.yml`, after that you can access it directly at [http://localhost:9504/metrics](http://localhost:9504/metrics):
@@ -76,6 +77,21 @@ If you want to access the exporter directly you should bind it to a local port, 
       - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
       - GITHUB_EXPORTER_LOG_PRETTY=true
       - GITHUB_EXPORTER_ORG=promhippie
+      - GITHUB_EXPORTER_REPO=promhippie/example
+{{< / highlight >}}
+
+If you want to collect the metrics of all repositories within an organization you are able to use globbing, but be aware that all repositories matched by globbing won't provide metrics for the number of subscribers, the number of repositories in the network, if squash merges are allowed, if rebase merges are allowed or merge commits are allowed. These metrics are only present for specific repositories like the example mentioned above.
+
+{{< highlight diff >}}
+  github-exporter:
+    image: promhippie/github-exporter:latest
+    restart: always
+    environment:
+      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
+      - GITHUB_EXPORTER_LOG_PRETTY=true
+      - GITHUB_EXPORTER_ORG=promhippie
+-     - GITHUB_EXPORTER_REPO=promhippie/example
++     - GITHUB_EXPORTER_REPO=promhippie/*_exporter,promhippie/prometheus*,webhippie/*
 {{< / highlight >}}
 
 If you want to secure the access to the exporter you can provide a web config. You just need to provide a path to the config file in order to enable the support for it, for details about the config format look at the [documentation](#web-configuration) section:
