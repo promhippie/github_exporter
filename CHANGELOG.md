@@ -4,11 +4,21 @@ The following sections list the changes for unreleased.
 
 ## Summary
 
+ * Fix #67: Fixed typecasts within billing API
  * Chg #45: Change docker image name
  * Chg #42: Drop darwin/386 release builds
  * Chg #46: Generate metrics documentation
+ * Chg #71: Integrate standard web config
+ * Chg #68: Add support for wildcard repo match
 
 ## Details
+
+ * Bugfix #67: Fixed typecasts within billing API
+
+   In some cases it happened that the GitHub billing API responded with floats, but we only
+   accepted integers. With this fix any number should be casted to floats all the time.
+
+   https://github.com/promhippie/github_exporter/issues/67
 
  * Change #45: Change docker image name
 
@@ -33,6 +43,22 @@ The following sections list the changes for unreleased.
    that.
 
    https://github.com/promhippie/github_exporter/issues/46
+
+ * Change #71: Integrate standard web config
+
+   We integrated the new web config from the Prometheus toolkit which provides a configuration
+   for TLS support and also some basic builtin authentication. For the detailed configuration
+   you check out the documentation.
+
+   https://github.com/promhippie/github_exporter/issues/71
+
+ * Change #68: Add support for wildcard repo match
+
+   We integrated the functionality to add a wildcard matching for repository names to export
+   metrics from. Now you don't need to add every single repo you want to match, you can add a whole
+   organization.
+
+   https://github.com/promhippie/github_exporter/issues/68
 
 
 # Changelog for 1.0.1
