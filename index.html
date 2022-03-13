@@ -3,7 +3,7 @@
 <html id="html" lang="en-us">
 
 <head>
-	<meta name="generator" content="Hugo 0.55.5" />
+	<meta name="generator" content="Hugo 0.84.0" />
     <meta http-equiv="content-type" content="text/html;charset=utf-8">
     <meta name="viewport" content="width=device-width" />
 
@@ -366,6 +366,9 @@
             <a href="#getting-started">
 						Getting Started
 					</a> 
+            <a href="#kubernetes">
+						Kubernetes
+					</a> 
             <a href="#building">
 						Building
 					</a> 
@@ -390,49 +393,42 @@
         </h1>
 
         <h2 id="installation">Installation</h2>
-
 <p>We won&rsquo;t cover further details how to properly setup <a href="https://prometheus.io">Prometheus</a> itself, we will only cover some basic setup based on <a href="https://docs.docker.com/compose/">docker-compose</a>. But if you want to run this exporter without <a href="https://docs.docker.com/compose/">docker-compose</a> you should be able to adopt that to your needs.</p>
-
 <p>First of all we need to prepare a configuration for <a href="https://prometheus.io">Prometheus</a> that includes the exporter as a target based on a static host mapping which is just the <a href="https://docs.docker.com/compose/">docker-compose</a> container name, e.g. <code>github_exporter</code>.</p>
-
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">global<span class="p">:</span><span class="w">
-</span><span class="w">  </span>scrape_interval<span class="p">:</span><span class="w"> </span>1m<span class="w">
-</span><span class="w">  </span>scrape_timeout<span class="p">:</span><span class="w"> </span>10s<span class="w">
-</span><span class="w">  </span>evaluation_interval<span class="p">:</span><span class="w"> </span>1m<span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">global</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w"> </span><span class="l">1m</span><span class="w">
+</span><span class="w">  </span><span class="nt">scrape_timeout</span><span class="p">:</span><span class="w"> </span><span class="l">10s</span><span class="w">
+</span><span class="w">  </span><span class="nt">evaluation_interval</span><span class="p">:</span><span class="w"> </span><span class="l">1m</span><span class="w">
 </span><span class="w">
-</span><span class="w"></span>scrape_configs<span class="p">:</span><span class="w">
-</span><span class="w"></span>-<span class="w"> </span>job_name<span class="p">:</span><span class="w"> </span>github<span class="w">
-</span><span class="w">  </span>static_configs<span class="p">:</span><span class="w">
-</span><span class="w">  </span>-<span class="w"> </span>targets<span class="p">:</span><span class="w">
-</span><span class="w">    </span>-<span class="w"> </span>github_exporter<span class="p">:</span><span class="m">9504</span></code></pre></div>
-
+</span><span class="w"></span><span class="nt">scrape_configs</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="l">github</span><span class="w">
+</span><span class="w">  </span><span class="nt">static_configs</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="nt">targets</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="l">github_exporter:9504</span></code></pre></div>
 <p>After preparing the configuration we need to create the <code>docker-compose.yml</code> within the same folder, this <code>docker-compose.yml</code> starts a simple <a href="https://prometheus.io">Prometheus</a> instance together with the exporter. Don&rsquo;t forget to update the exporter envrionment variables with the required credentials.</p>
-
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">version<span class="p">:</span><span class="w"> </span><span class="s1">&#39;2&#39;</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;2&#39;</span><span class="w">
 </span><span class="w">
-</span><span class="w"></span>volumes<span class="p">:</span><span class="w">
-</span><span class="w">  </span>prometheus<span class="p">:</span><span class="w">
+</span><span class="w"></span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">prometheus</span><span class="p">:</span><span class="w">
 </span><span class="w">
-</span><span class="w"></span>services<span class="p">:</span><span class="w">
-</span><span class="w">  </span>prometheus<span class="p">:</span><span class="w">
-</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>prom/prometheus<span class="p">:</span>latest<span class="w">
-</span><span class="w">    </span>restart<span class="p">:</span><span class="w"> </span>always<span class="w">
-</span><span class="w">    </span>ports<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span><span class="m">9090</span><span class="p">:</span><span class="m">9090</span><span class="w">
-</span><span class="w">    </span>volumes<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>prometheus<span class="p">:</span>/prometheus<span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>./prometheus.yml<span class="p">:</span>/etc/prometheus/prometheus.yml<span class="w">
+</span><span class="w"></span><span class="nt">services</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">prometheus</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">prom/prometheus:latest</span><span class="w">
+</span><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l">always</span><span class="w">
+</span><span class="w">    </span><span class="nt">ports</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="m">9090</span><span class="p">:</span><span class="m">9090</span><span class="w">
+</span><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="l">prometheus:/prometheus</span><span class="w">
+</span><span class="w">      </span>- <span class="l">./prometheus.yml:/etc/prometheus/prometheus.yml</span><span class="w">
 </span><span class="w">
-</span><span class="w">  </span>github_exporter<span class="p">:</span><span class="w">
-</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>promhippie/github-exporter<span class="p">:</span>latest<span class="w">
-</span><span class="w">    </span>restart<span class="p">:</span><span class="w"> </span>always<span class="w">
-</span><span class="w">    </span>environment<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb<span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>GITHUB_EXPORTER_LOG_PRETTY=<span class="kc">true</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>GITHUB_EXPORTER_ORG=promhippie</code></pre></div>
-
+</span><span class="w">  </span><span class="nt">github_exporter</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">promhippie/github-exporter:latest</span><span class="w">
+</span><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l">always</span><span class="w">
+</span><span class="w">    </span><span class="nt">environment</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="l">GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb</span><span class="w">
+</span><span class="w">      </span>- <span class="l">GITHUB_EXPORTER_LOG_PRETTY=true</span><span class="w">
+</span><span class="w">      </span>- <span class="l">GITHUB_EXPORTER_ORG=promhippie</span></code></pre></div>
 <p>Since our <code>latest</code> Docker tag always refers to the <code>master</code> branch of the Git repository you should always use some fixed version. You can see all available tags at our <a href="https://hub.docker.com/r/promhippie/github-exporter/tags/">DockerHub repository</a>, there you will see that we also provide a manifest, you can easily start the exporter on various architectures without any change to the image name. You should apply a change like this to the <code>docker-compose.yml</code>:</p>
-
 <div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff">  github_exporter:
 <span class="gd">-   image: promhippie/github-exporter:latest
 </span><span class="gd"></span><span class="gi">+   image: promhippie/github-exporter:1.0.0
@@ -441,11 +437,10 @@
       - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
       - GITHUB_EXPORTER_LOG_PRETTY=true
       - GITHUB_EXPORTER_ORG=promhippie
+      - GITHUB_EXPORTER_REPO=promhippie/example
 </code></pre></div>
-
 <p>If you want to access the exporter directly you should bind it to a local port, otherwise only <a href="https://prometheus.io">Prometheus</a> will have access to the exporter. For debugging purpose or just to discover all available metrics directly you can apply this change to your <code>docker-compose.yml</code>, after that you can access it directly at <a href="http://localhost:9504/metrics">http://localhost:9504/metrics</a>:</p>
-
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff">  hcloud-exporter:
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff">  github-exporter:
     image: promhippie/github-exporter:latest
     restart: always
 <span class="gi">+   ports:
@@ -454,204 +449,208 @@
       - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
       - GITHUB_EXPORTER_LOG_PRETTY=true
       - GITHUB_EXPORTER_ORG=promhippie
+      - GITHUB_EXPORTER_REPO=promhippie/example
 </code></pre></div>
-
+<p>If you want to collect the metrics of all repositories within an organization you are able to use globbing, but be aware that all repositories matched by globbing won&rsquo;t provide metrics for the number of subscribers, the number of repositories in the network, if squash merges are allowed, if rebase merges are allowed or merge commits are allowed. These metrics are only present for specific repositories like the example mentioned above.</p>
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff">  github-exporter:
+    image: promhippie/github-exporter:latest
+    restart: always
+    environment:
+      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
+      - GITHUB_EXPORTER_LOG_PRETTY=true
+      - GITHUB_EXPORTER_ORG=promhippie
+<span class="gd">-     - GITHUB_EXPORTER_REPO=promhippie/example
+</span><span class="gd"></span><span class="gi">+     - GITHUB_EXPORTER_REPO=promhippie/*_exporter,promhippie/prometheus*,webhippie/*
+</span></code></pre></div>
+<p>If you want to secure the access to the exporter you can provide a web config. You just need to provide a path to the config file in order to enable the support for it, for details about the config format look at the <a href="#web-configuration">documentation</a> section:</p>
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff">  github_exporter:
+    image: promhippie/github-exporter:latest
+    restart: always
+    environment:
+<span class="gi">+     - GITHUB_EXPORTER_WEB_CONFIG=path/to/web-config.json
+</span><span class="gi"></span>      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
+      - GITHUB_EXPORTER_LOG_PRETTY=true
+      - GITHUB_EXPORTER_ORG=promhippie
+</code></pre></div>
 <p>Finally the exporter should be configured fine, let&rsquo;s start this stack with <a href="https://docs.docker.com/compose/">docker-compose</a>, you just need to execute <code>docker-compose up</code> within the directory where you have stored the <code>prometheus.yml</code> and <code>docker-compose.yml</code>.</p>
-
 <p>That&rsquo;s all, the exporter should be up and running. Have fun with it and hopefully you will gather interesting metrics and never run into issues. You can access the exporter at <a href="http://localhost:9504/metrics">http://localhost:9504/metrics</a> and <a href="https://prometheus.io">Prometheus</a> at <a href="http://localhost:9090">http://localhost:9090</a>.</p>
-
 <h2 id="configuration">Configuration</h2>
-
 <dl>
-<dt>GITHUB_EXPORTER_LOG_LEVEL<br /></dt>
-<dd>Only log messages with given severity, defaults to <code>info</code><br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_LOG_PRETTY<br /></dt>
-<dd>Enable pretty messages for logging, defaults to <code>false</code><br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_WEB_ADDRESS<br /></dt>
-<dd>Address to bind the metrics server, defaults to <code>0.0.0.0:9504</code><br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_WEB_PATH<br /></dt>
-<dd>Path to bind the metrics server, defaults to <code>/metrics</code><br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_WEB_TIMEOUT<br /></dt>
-<dd>Server metrics endpoint timeout, defaults to <code>10s</code><br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_REQUEST_TIMEOUT<br /></dt>
-<dd>Timeout requesting GitHub API, defaults to <code>5s</code><br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_TOKEN<br /></dt>
-<dd>Access token for the GitHub API<br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_BASE_URL<br /></dt>
-<dd>URL to access the GitHub Enterprise API<br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_INSECURE<br /></dt>
-<dd>Skip TLS verification for GitHub Enterprise, defaults to <code>false</code><br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_ENTERPRISE, GITHUB_EXPORTER_ENTERPRISES<br /></dt>
-<dd>Enterprises to scrape metrics from, comma-separated list<br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_ORG, GITHUB_EXPORTER_ORGS<br /></dt>
-<dd>Organizations to scrape metrics from, comma-separated list<br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_REPO, GITHUB_EXPORTER_REPOS<br /></dt>
-<dd>Repositories to scrape metrics from, comma-separated list<br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_COLLECTOR_ORGS<br /></dt>
-<dd>Enable collector for orgs, defaults to <code>true</code><br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_COLLECTOR_REPOS<br /></dt>
-<dd>Enable collector for repos, defaults to <code>true</code><br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_COLLECTOR_ACTIONS<br /></dt>
-<dd>Enable collector for actions, defaults to <code>false</code><br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_COLLECTOR_PACKAGES<br /></dt>
-<dd>Enable collector for packages, defaults to <code>false</code><br />
-<br /></dd>
-<dt>GITHUB_EXPORTER_COLLECTOR_STORAGE<br /></dt>
-<dd>Enable collector for storage, defaults to <code>false</code><br /></dd>
+<dt>GITHUB_EXPORTER_LOG_LEVEL</dt>
+<dd>Only log messages with given severity, defaults to <code>info</code></dd>
+<dt>GITHUB_EXPORTER_LOG_PRETTY</dt>
+<dd>Enable pretty messages for logging, defaults to <code>false</code></dd>
+<dt>GITHUB_EXPORTER_WEB_ADDRESS</dt>
+<dd>Address to bind the metrics server, defaults to <code>0.0.0.0:9504</code></dd>
+<dt>GITHUB_EXPORTER_WEB_PATH</dt>
+<dd>Path to bind the metrics server, defaults to <code>/metrics</code></dd>
+<dt>GITHUB_EXPORTER_WEB_TIMEOUT</dt>
+<dd>Server metrics endpoint timeout, defaults to <code>10s</code></dd>
+<dt>GITHUB_EXPORTER_WEB_CONFIG</dt>
+<dd>Path to web-config file</dd>
+<dt>GITHUB_EXPORTER_REQUEST_TIMEOUT</dt>
+<dd>Timeout requesting GitHub API, defaults to <code>5s</code></dd>
+<dt>GITHUB_EXPORTER_TOKEN</dt>
+<dd>Access token for the GitHub API</dd>
+<dt>GITHUB_EXPORTER_BASE_URL</dt>
+<dd>URL to access the GitHub Enterprise API</dd>
+<dt>GITHUB_EXPORTER_INSECURE</dt>
+<dd>Skip TLS verification for GitHub Enterprise, defaults to <code>false</code></dd>
+<dt>GITHUB_EXPORTER_ENTERPRISE, GITHUB_EXPORTER_ENTERPRISES</dt>
+<dd>Enterprises to scrape metrics from, comma-separated list</dd>
+<dt>GITHUB_EXPORTER_ORG, GITHUB_EXPORTER_ORGS</dt>
+<dd>Organizations to scrape metrics from, comma-separated list</dd>
+<dt>GITHUB_EXPORTER_REPO, GITHUB_EXPORTER_REPOS</dt>
+<dd>Repositories to scrape metrics from, comma-separated list</dd>
+<dt>GITHUB_EXPORTER_COLLECTOR_ORGS</dt>
+<dd>Enable collector for orgs, defaults to <code>true</code></dd>
+<dt>GITHUB_EXPORTER_COLLECTOR_REPOS</dt>
+<dd>Enable collector for repos, defaults to <code>true</code></dd>
+<dt>GITHUB_EXPORTER_COLLECTOR_ACTIONS</dt>
+<dd>Enable collector for actions, defaults to <code>false</code></dd>
+<dt>GITHUB_EXPORTER_COLLECTOR_PACKAGES</dt>
+<dd>Enable collector for packages, defaults to <code>false</code></dd>
+<dt>GITHUB_EXPORTER_COLLECTOR_STORAGE</dt>
+<dd>Enable collector for storage, defaults to <code>false</code></dd>
 </dl>
-
+<h3 id="web-configuration">Web Configuration</h3>
+<p>If you want to secure the service by TLS or by some basic authentication you can provide a <code>YAML</code> configuration file whch follows the <a href="https://prometheus.io">Prometheus</a> toolkit format. You can see a full configration example within the <a href="https://github.com/prometheus/exporter-toolkit/blob/master/docs/web-configuration.md">toolkit documentation</a>.</p>
 <h2 id="metrics">Metrics</h2>
-
 <p>You can a rough list of available metrics below, additionally to these metrics you will always get the standard metrics exported by the Golang client of <a href="https://prometheus.io">Prometheus</a>. If you want to know more about these standard metrics take a look at the <a href="https://github.com/prometheus/client_golang/blob/master/prometheus/process_collector.go">process collector</a> and the <a href="https://github.com/prometheus/client_golang/blob/master/prometheus/go_collector.go">Go collector</a>.</p>
-
 <dl>
-<dt>github_action_billing_included_minutes{type, name}<br /></dt>
-<dd>Included minutes for this type<br />
-<br /></dd>
-<dt>github_action_billing_minutes_used{type, name}<br /></dt>
-<dd>Total action minutes used for this type<br />
-<br /></dd>
-<dt>github_action_billing_minutes_used_breakdown{type, name, os}<br /></dt>
-<dd>Total action minutes used for this type broken down by operating system<br />
-<br /></dd>
-<dt>github_action_billing_paid_minutes{type, name}<br /></dt>
-<dd>Total paid minutes used for this type<br />
-<br /></dd>
-<dt>github_org_collaborators{name}<br /></dt>
-<dd>Number of collaborators within org<br />
-<br /></dd>
-<dt>github_org_create_timestamp{name}<br /></dt>
-<dd>Timestamp of the creation of org<br />
-<br /></dd>
-<dt>github_org_disk_usage{name}<br /></dt>
-<dd>Used diskspace by the org<br />
-<br /></dd>
-<dt>github_org_followers{name}<br /></dt>
-<dd>Number of followers for org<br />
-<br /></dd>
-<dt>github_org_following{name}<br /></dt>
-<dd>Number of following other users by org<br />
-<br /></dd>
-<dt>github_org_private_gists{name}<br /></dt>
-<dd>Number of private gists from org<br />
-<br /></dd>
-<dt>github_org_private_repos_owned{name}<br /></dt>
-<dd>Owned private repositories by org<br />
-<br /></dd>
-<dt>github_org_private_repos_total{name}<br /></dt>
-<dd>Total amount of private repositories<br />
-<br /></dd>
-<dt>github_org_public_gists{name}<br /></dt>
-<dd>Number of public gists from org<br />
-<br /></dd>
-<dt>github_org_public_repos{name}<br /></dt>
-<dd>Number of public repositories from org<br />
-<br /></dd>
-<dt>github_org_updated_timestamp{name}<br /></dt>
-<dd>Timestamp of the last modification of org<br />
-<br /></dd>
-<dt>github_package_billing_gigabytes_bandwidth_used{type, name}<br /></dt>
-<dd>Total bandwidth used by this type in Gigabytes<br />
-<br /></dd>
-<dt>github_package_billing_included_gigabytes_bandwidth{type, name}<br /></dt>
-<dd>Included bandwidth for this type in Gigabytes<br />
-<br /></dd>
-<dt>github_package_billing_paid_gigabytes_bandwidth_used{type, name}<br /></dt>
-<dd>Total paid bandwidth used by this type in Gigabytes<br />
-<br /></dd>
-<dt>github_repo_allow_merge_commit{owner, name}<br /></dt>
-<dd>Show if this repository allows merge commits<br />
-<br /></dd>
-<dt>github_repo_allow_rebase_merge{owner, name}<br /></dt>
-<dd>Show if this repository allows rebase merges<br />
-<br /></dd>
-<dt>github_repo_allow_squash_merge{owner, name}<br /></dt>
-<dd>Show if this repository allows squash merges<br />
-<br /></dd>
-<dt>github_repo_archived{owner, name}<br /></dt>
-<dd>Show if this repository have been archived<br />
-<br /></dd>
-<dt>github_repo_created_timestamp{owner, name}<br /></dt>
-<dd>Timestamp of the creation of repo<br />
-<br /></dd>
-<dt>github_repo_forked{owner, name}<br /></dt>
-<dd>Show if this repository is a forked repository<br />
-<br /></dd>
-<dt>github_repo_forks{owner, name}<br /></dt>
-<dd>How often has this repository been forked<br />
-<br /></dd>
-<dt>github_repo_has_downloads{owner, name}<br /></dt>
-<dd>Show if this repository got downloads enabled<br />
-<br /></dd>
-<dt>github_repo_has_issues{owner, name}<br /></dt>
-<dd>Show if this repository got issues enabled<br />
-<br /></dd>
-<dt>github_repo_has_pages{owner, name}<br /></dt>
-<dd>Show if this repository got pages enabled<br />
-<br /></dd>
-<dt>github_repo_has_projects{owner, name}<br /></dt>
-<dd>Show if this repository got projects enabled<br />
-<br /></dd>
-<dt>github_repo_has_wiki{owner, name}<br /></dt>
-<dd>Show if this repository got wiki enabled<br />
-<br /></dd>
-<dt>github_repo_issues{owner, name}<br /></dt>
-<dd>Number of open issues on this repository<br />
-<br /></dd>
-<dt>github_repo_network{owner, name}<br /></dt>
-<dd>Number of repositories in the network<br />
-<br /></dd>
-<dt>github_repo_private{owner, name}<br /></dt>
-<dd>Show iof this repository is private<br />
-<br /></dd>
-<dt>github_repo_pushed_timestamp{owner, name}<br /></dt>
-<dd>Timestamp of the last push to repo<br />
-<br /></dd>
-<dt>github_repo_size{owner, name}<br /></dt>
-<dd>Size of the repository content<br />
-<br /></dd>
-<dt>github_repo_stargazers{owner, name}<br /></dt>
-<dd>Number of stargazers on this repository<br />
-<br /></dd>
-<dt>github_repo_subscribers{owner, name}<br /></dt>
-<dd>Number of subscribers on this repository<br />
-<br /></dd>
-<dt>github_repo_updated_timestamp{owner, name}<br /></dt>
-<dd>Timestamp of the last modification of repo<br />
-<br /></dd>
-<dt>github_repo_watchers{owner, name}<br /></dt>
-<dd>Number of watchers on this repository<br />
-<br /></dd>
-<dt>github_request_duration_seconds{collector}<br /></dt>
-<dd>Histogram of latencies for requests to the api per collector<br />
-<br /></dd>
-<dt>github_request_failures_total{collector}<br /></dt>
-<dd>Total number of failed requests to the api per collector<br />
-<br /></dd>
-<dt>github_storage_billing_days_left_in_cycle{type, name}<br /></dt>
-<dd>Days left within this billing cycle for this type<br />
-<br /></dd>
-<dt>github_storage_billing_estimated_paid_storage_for_month{type, name}<br /></dt>
-<dd>Estimated paid storage for this month for this type<br />
-<br /></dd>
-<dt>github_storage_billing_estimated_storage_for_month{type, name}<br /></dt>
-<dd>Estimated total storage for this month for this type<br /></dd>
+<dt>github_action_billing_included_minutes{type, name}</dt>
+<dd>Included minutes for this type</dd>
+<dt>github_action_billing_minutes_used{type, name}</dt>
+<dd>Total action minutes used for this type</dd>
+<dt>github_action_billing_minutes_used_breakdown{type, name, os}</dt>
+<dd>Total action minutes used for this type broken down by operating system</dd>
+<dt>github_action_billing_paid_minutes{type, name}</dt>
+<dd>Total paid minutes used for this type</dd>
+<dt>github_org_collaborators{name}</dt>
+<dd>Number of collaborators within org</dd>
+<dt>github_org_create_timestamp{name}</dt>
+<dd>Timestamp of the creation of org</dd>
+<dt>github_org_disk_usage{name}</dt>
+<dd>Used diskspace by the org</dd>
+<dt>github_org_followers{name}</dt>
+<dd>Number of followers for org</dd>
+<dt>github_org_following{name}</dt>
+<dd>Number of following other users by org</dd>
+<dt>github_org_private_gists{name}</dt>
+<dd>Number of private gists from org</dd>
+<dt>github_org_private_repos_owned{name}</dt>
+<dd>Owned private repositories by org</dd>
+<dt>github_org_private_repos_total{name}</dt>
+<dd>Total amount of private repositories</dd>
+<dt>github_org_public_gists{name}</dt>
+<dd>Number of public gists from org</dd>
+<dt>github_org_public_repos{name}</dt>
+<dd>Number of public repositories from org</dd>
+<dt>github_org_updated_timestamp{name}</dt>
+<dd>Timestamp of the last modification of org</dd>
+<dt>github_package_billing_gigabytes_bandwidth_used{type, name}</dt>
+<dd>Total bandwidth used by this type in Gigabytes</dd>
+<dt>github_package_billing_included_gigabytes_bandwidth{type, name}</dt>
+<dd>Included bandwidth for this type in Gigabytes</dd>
+<dt>github_package_billing_paid_gigabytes_bandwidth_used{type, name}</dt>
+<dd>Total paid bandwidth used by this type in Gigabytes</dd>
+<dt>github_repo_allow_merge_commit{owner, name}</dt>
+<dd>Show if this repository allows merge commits</dd>
+<dt>github_repo_allow_rebase_merge{owner, name}</dt>
+<dd>Show if this repository allows rebase merges</dd>
+<dt>github_repo_allow_squash_merge{owner, name}</dt>
+<dd>Show if this repository allows squash merges</dd>
+<dt>github_repo_archived{owner, name}</dt>
+<dd>Show if this repository have been archived</dd>
+<dt>github_repo_created_timestamp{owner, name}</dt>
+<dd>Timestamp of the creation of repo</dd>
+<dt>github_repo_forked{owner, name}</dt>
+<dd>Show if this repository is a forked repository</dd>
+<dt>github_repo_forks{owner, name}</dt>
+<dd>How often has this repository been forked</dd>
+<dt>github_repo_has_downloads{owner, name}</dt>
+<dd>Show if this repository got downloads enabled</dd>
+<dt>github_repo_has_issues{owner, name}</dt>
+<dd>Show if this repository got issues enabled</dd>
+<dt>github_repo_has_pages{owner, name}</dt>
+<dd>Show if this repository got pages enabled</dd>
+<dt>github_repo_has_projects{owner, name}</dt>
+<dd>Show if this repository got projects enabled</dd>
+<dt>github_repo_has_wiki{owner, name}</dt>
+<dd>Show if this repository got wiki enabled</dd>
+<dt>github_repo_issues{owner, name}</dt>
+<dd>Number of open issues on this repository</dd>
+<dt>github_repo_network{owner, name}</dt>
+<dd>Number of repositories in the network</dd>
+<dt>github_repo_private{owner, name}</dt>
+<dd>Show iof this repository is private</dd>
+<dt>github_repo_pushed_timestamp{owner, name}</dt>
+<dd>Timestamp of the last push to repo</dd>
+<dt>github_repo_size{owner, name}</dt>
+<dd>Size of the repository content</dd>
+<dt>github_repo_stargazers{owner, name}</dt>
+<dd>Number of stargazers on this repository</dd>
+<dt>github_repo_subscribers{owner, name}</dt>
+<dd>Number of subscribers on this repository</dd>
+<dt>github_repo_updated_timestamp{owner, name}</dt>
+<dd>Timestamp of the last modification of repo</dd>
+<dt>github_repo_watchers{owner, name}</dt>
+<dd>Number of watchers on this repository</dd>
+<dt>github_request_duration_seconds{collector}</dt>
+<dd>Histogram of latencies for requests to the api per collector</dd>
+<dt>github_request_failures_total{collector}</dt>
+<dd>Total number of failed requests to the api per collector</dd>
+<dt>github_storage_billing_days_left_in_cycle{type, name}</dt>
+<dd>Days left within this billing cycle for this type</dd>
+<dt>github_storage_billing_estimated_paid_storage_for_month{type, name}</dt>
+<dd>Estimated paid storage for this month for this type</dd>
+<dt>github_storage_billing_estimated_storage_for_month{type, name}</dt>
+<dd>Estimated total storage for this month for this type</dd>
 </dl>
+
+    </section>
+    
+    <section id="kubernetes">
+        <h1>
+            <a href="#kubernetes">
+						Kubernetes
+					</a>
+
+            <small>
+						<a href="#html">
+							Back to Top
+						</a>
+					</small>
+        </h1>
+
+        <h2 id="kubernetes">Kubernetes</h2>
+<p>So far we got the deployment via <a href="https://github.com/kubernetes-sigs/kustomize">Kustomize</a> to get this exporter working on Kubernetes. We are already working on a <a href="">Helm</a> chart to offer more options, dependening on your preferences.</p>
+<h3 id="kustomize">Kustomize</h3>
+<p>We won&rsquo;t cover the installation of <a href="https://github.com/kubernetes-sigs/kustomize">Kustomize</a> or encryption tooling like <a href="https://github.com/viaduct-ai/kustomize-sops">KSOPS</a> within this guide, to get it installed and working please consult the documentation of these projects. After the installation of <a href="https://github.com/kubernetes-sigs/kustomize">Kustomize</a> you just need to prepare a <code>kustomization.yml</code> wherever you like:</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">kustomize.config.k8s.io/v1beta1</span><span class="w">
+</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Kustomization</span><span class="w">
+</span><span class="w"></span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">github-exporter</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="l">github.com/promhippie/github_exporter?ref=master</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="nt">configMapGenerator</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">github-exporter</span><span class="w">
+</span><span class="w">    </span><span class="nt">behavior</span><span class="p">:</span><span class="w"> </span><span class="l">merge</span><span class="w">
+</span><span class="w">    </span><span class="nt">literals</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="l">GITHUB_EXPORTER_ORGS=promhippie</span><span class="w">
+</span><span class="w">      </span>- <span class="l">GITHUB_EXPORTER_REPOS=promhippie/*</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="nt">secretGenerator</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">github-exporter</span><span class="w">
+</span><span class="w">    </span><span class="nt">behavior</span><span class="p">:</span><span class="w"> </span><span class="l">merge</span><span class="w">
+</span><span class="w">    </span><span class="nt">literals</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="l">GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb</span></code></pre></div>
+<p>After that you can simply execute <code>kustomize build | kubectl apply -f -</code> to get the manifest applied. Generally it&rsquo;s best to use fixed versions of Docker images, this can be done quite easy, you just need to append this block to your <code>kustomization.yml</code> to use this specific version:</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">images</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">quay.io/promhippie/github-exporter</span><span class="w">
+</span><span class="w">    </span><span class="nt">newTag</span><span class="p">:</span><span class="w"> </span><span class="m">1.1.0</span></code></pre></div>
+<p>After applying this manifest the exporter should be directly visible within your Prometheus instance if you are using the Prometheus Operator as these manifests are providing a ServiceMonitor.</p>
 
     </section>
     
@@ -669,14 +668,10 @@
         </h1>
 
         <p>As this project is built with Go you need to install Go first. The installation of Go is out of the scope of this document, please follow the <a href="https://golang.org/doc/install">official documentation</a>. After the installation of Go you need to get the sources:</p>
-
 <div class="highlight"><pre class="chroma"><code class="language-txt" data-lang="txt">git clone https://github.com/promhippie/github_exporter.git
 cd github_exporter/</code></pre></div>
-
 <p>All required tool besides Go itself are bundled by Go modules, all you need is part of the <code>Makfile</code>:</p>
-
 <div class="highlight"><pre class="chroma"><code class="language-txt" data-lang="txt">make generate build</code></pre></div>
-
 <p>Finally you should have the binary within the <code>bin/</code> folder now, give it a try with <code>./bin/github_exporter -h</code> to see all available options.</p>
 
     </section>
