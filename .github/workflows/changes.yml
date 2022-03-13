@@ -1,0 +1,97 @@
+---
+name: changes
+
+'on':
+  push:
+    branches:
+      - master
+
+jobs:
+  changelog:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout source
+        id: source
+        uses: actions/checkout@v2
+
+      - name: Setup golang
+        id: golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17.8
+
+      - name: Run changelog
+        id: changelog
+        run: make changelog
+
+      - name: Commit changes
+        id: commit
+        uses: EndBug/add-and-commit@v7
+        with:
+          author_name: GitHub Actions
+          author_email: github@webhippie.de
+          add: CHANGELOG.md
+          message: Automated changelog update
+          push: true
+          signoff: true
+
+  envvars:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout source
+        id: source
+        uses: actions/checkout@v2
+
+      - name: Setup golang
+        id: golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17.8
+
+      - name: Run envvars
+        id: envvars
+        run: make envvars
+
+      - name: Commit changes
+        id: commit
+        uses: EndBug/add-and-commit@v7
+        with:
+          author_name: GitHub Actions
+          author_email: github@webhippie.de
+          add: docs/partials/envvars.md
+          message: Automated envvars update
+          push: true
+          signoff: true
+
+  metrics:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout source
+        id: source
+        uses: actions/checkout@v2
+
+      - name: Setup golang
+        id: golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17.8
+
+      - name: Run metrics
+        id: metrics
+        run: make metrics
+
+      - name: Commit changes
+        id: commit
+        uses: EndBug/add-and-commit@v7
+        with:
+          author_name: GitHub Actions
+          author_email: github@webhippie.de
+          add: docs/partials/metrics.md
+          message: Automated metrics update
+          push: true
+          signoff: true
+
+...

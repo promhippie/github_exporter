@@ -13,6 +13,9 @@ GITHUB_EXPORTER_WEB_PATH
 GITHUB_EXPORTER_WEB_TIMEOUT
 : Server metrics endpoint timeout, defaults to `10s`
 
+GITHUB_EXPORTER_WEB_CONFIG
+: Path to web-config file
+
 GITHUB_EXPORTER_REQUEST_TIMEOUT
 : Timeout requesting GitHub API, defaults to `5s`
 

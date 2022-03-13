@@ -11,6 +11,7 @@ type Server struct {
 	Addr    string
 	Path    string
 	Timeout time.Duration
+	Web     string
 }
 
 // Logs defines the level and color for log configuration.

@@ -46,11 +46,3 @@ labels:
   - name: outdated
     color: cccccc
     description: This is out of scope and outdated
-
-branches:
-  - name: master
-    protection:
-      required_status_checks:
-        strict: true
-        contexts:
-          - continuous-integration/drone/pr

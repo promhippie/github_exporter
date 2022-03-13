@@ -1,0 +1,22 @@
+---
+kind: Service
+apiVersion: v1
+
+metadata:
+  name: github-exporter
+  labels:
+    app.kubernetes.io/name: github-exporter
+    app.kubernetes.io/component: exporter
+
+spec:
+  selector:
+    app.kubernetes.io/name: github-exporter
+    app.kubernetes.io/component: exporter
+
+  ports:
+    - name: http
+      port: 9504
+      targetPort: http
+      protocol: TCP
+
+...

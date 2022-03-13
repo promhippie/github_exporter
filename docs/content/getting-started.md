@@ -62,17 +62,46 @@ Since our `latest` Docker tag always refers to the `master` branch of the Git re
       - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
       - GITHUB_EXPORTER_LOG_PRETTY=true
       - GITHUB_EXPORTER_ORG=promhippie
+      - GITHUB_EXPORTER_REPO=promhippie/example
 {{< / highlight >}}
 
 If you want to access the exporter directly you should bind it to a local port, otherwise only [Prometheus](https://prometheus.io) will have access to the exporter. For debugging purpose or just to discover all available metrics directly you can apply this change to your `docker-compose.yml`, after that you can access it directly at [http://localhost:9504/metrics](http://localhost:9504/metrics):
 
 {{< highlight diff >}}
-  hcloud-exporter:
+  github-exporter:
     image: promhippie/github-exporter:latest
     restart: always
 +   ports:
 +     - 127.0.0.1:9504:9504
     environment:
+      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
+      - GITHUB_EXPORTER_LOG_PRETTY=true
+      - GITHUB_EXPORTER_ORG=promhippie
+      - GITHUB_EXPORTER_REPO=promhippie/example
+{{< / highlight >}}
+
+If you want to collect the metrics of all repositories within an organization you are able to use globbing, but be aware that all repositories matched by globbing won't provide metrics for the number of subscribers, the number of repositories in the network, if squash merges are allowed, if rebase merges are allowed or merge commits are allowed. These metrics are only present for specific repositories like the example mentioned above.
+
+{{< highlight diff >}}
+  github-exporter:
+    image: promhippie/github-exporter:latest
+    restart: always
+    environment:
+      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
+      - GITHUB_EXPORTER_LOG_PRETTY=true
+      - GITHUB_EXPORTER_ORG=promhippie
+-     - GITHUB_EXPORTER_REPO=promhippie/example
++     - GITHUB_EXPORTER_REPO=promhippie/*_exporter,promhippie/prometheus*,webhippie/*
+{{< / highlight >}}
+
+If you want to secure the access to the exporter you can provide a web config. You just need to provide a path to the config file in order to enable the support for it, for details about the config format look at the [documentation](#web-configuration) section:
+
+{{< highlight diff >}}
+  github_exporter:
+    image: promhippie/github-exporter:latest
+    restart: always
+    environment:
++     - GITHUB_EXPORTER_WEB_CONFIG=path/to/web-config.json
       - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
       - GITHUB_EXPORTER_LOG_PRETTY=true
       - GITHUB_EXPORTER_ORG=promhippie
@@ -85,6 +114,10 @@ That's all, the exporter should be up and running. Have fun with it and hopefull
 ## Configuration
 
 {{< partial "envvars.md" >}}
+
+### Web Configuration
+
+If you want to secure the service by TLS or by some basic authentication you can provide a `YAML` configuration file whch follows the [Prometheus](https://prometheus.io) toolkit format. You can see a full configration example within the [toolkit documentation](https://github.com/prometheus/exporter-toolkit/blob/master/docs/web-configuration.md).
 
 ## Metrics
 
