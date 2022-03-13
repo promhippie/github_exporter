@@ -102,7 +102,7 @@ $(BIN)/$(EXECUTABLE)-debug: $(SOURCES)
 	$(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -gcflags '$(GCFLAGS)' -o $@ ./cmd/$(NAME)
 
 .PHONY: release
-release: $(DIST) release-linux release-darwin release-windows release-reduce release-checksum
+release: $(DIST) release-linux release-darwin release-windows release-checksum
 
 $(DIST):
 	mkdir -p $(DIST)
