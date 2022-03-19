@@ -1,3 +1,21 @@
+# Changelog for unreleased
+
+The following sections list the changes for unreleased.
+
+## Summary
+
+ * Fix #75: Fixed wildcard matching for private repos
+
+## Details
+
+ * Bugfix #75: Fixed wildcard matching for private repos
+
+   We have fixed the ability to match by globbing/wildcard for private repositories. So far the
+   private repositories have been missing with the latest globbing/wildcard matching.
+
+   https://github.com/promhippie/github_exporter/issues/75
+
+
 # Changelog for 1.1.0
 
 The following sections list the changes for 1.1.0.
@@ -127,23 +145,6 @@ The following sections list the changes for 1.0.0.
    https://github.com/promhippie/github_exporter/pull/20
 
 
-# Changelog for 0.1.0
-
-The following sections list the changes for 0.1.0.
-
-## Summary
-
- * Chg #11: Initial release of basic version
-
-## Details
-
- * Change #11: Initial release of basic version
-
-   Just prepared an initial basic version which could be released to the public.
-
-   https://github.com/promhippie/github_exporter/issues/11
-
-
 # Changelog for 0.2.0
 
 The following sections list the changes for 0.2.0.
@@ -169,5 +170,22 @@ The following sections list the changes for 0.2.0.
    or not.
 
    https://github.com/promhippie/github_exporter/issues/2
+
+
+# Changelog for 0.1.0
+
+The following sections list the changes for 0.1.0.
+
+## Summary
+
+ * Chg #11: Initial release of basic version
+
+## Details
+
+ * Change #11: Initial release of basic version
+
+   Just prepared an initial basic version which could be released to the public.
+
+   https://github.com/promhippie/github_exporter/issues/11
 
 

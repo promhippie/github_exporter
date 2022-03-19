@@ -2,6 +2,7 @@ package exporter
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
@@ -472,20 +473,20 @@ func (c *RepoCollector) Collect(ch chan<- prometheus.Metric) {
 
 func (c *RepoCollector) reposByOwnerAndName(ctx context.Context, owner, repo string) ([]*github.Repository, error) {
 	if strings.Contains(repo, "*") {
-		opts := &github.RepositoryListOptions{
+		opts := &github.SearchOptions{
 			ListOptions: github.ListOptions{
 				PerPage: 50,
 			},
 		}
 
 		var (
-			result []*github.Repository
+			repos []*github.Repository
 		)
 
 		for {
-			repos, resp, err := c.client.Repositories.List(
+			result, resp, err := c.client.Search.Repositories(
 				ctx,
-				owner,
+				fmt.Sprintf("user:%s", owner),
 				opts,
 			)
 
@@ -493,9 +494,9 @@ func (c *RepoCollector) reposByOwnerAndName(ctx context.Context, owner, repo str
 				return nil, err
 			}
 
-			result = append(
-				result,
-				repos...,
+			repos = append(
+				repos,
+				result.Repositories...,
 			)
 
 			if resp.NextPage == 0 {
@@ -505,7 +506,7 @@ func (c *RepoCollector) reposByOwnerAndName(ctx context.Context, owner, repo str
 			opts.Page = resp.NextPage
 		}
 
-		return result, nil
+		return repos, nil
 	}
 
 	res, _, err := c.client.Repositories.Get(ctx, owner, repo)
