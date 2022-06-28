@@ -12,5 +12,5 @@ require (
 	github.com/prometheus/exporter-toolkit v0.7.1
 	github.com/ryanuber/go-glob v1.0.0
 	github.com/urfave/cli/v2 v2.10.3
-	golang.org/x/oauth2 v0.0.0-20220622183110-fd043fe589d2
+	golang.org/x/oauth2 v0.0.0-20220628200809-02e64fa58f26
 )
