@@ -1,0 +1,31 @@
+---
+name: react
+
+"on":
+  issue_comment:
+    types:
+      - created
+      - edited
+  pull_request_review_comment:
+    types:
+      - created
+      - edited
+  schedule:
+    - cron: "0 0 * * *"
+
+permissions:
+  actions: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: react
+
+jobs:
+  execute:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: dessant/reaction-comments@v2
+
+...

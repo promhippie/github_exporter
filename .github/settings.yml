@@ -1,3 +1,4 @@
+---
 repository:
   name: github_exporter
   description: Prometheus exporter for GitHub
@@ -46,3 +47,21 @@ labels:
   - name: outdated
     color: cccccc
     description: This is out of scope and outdated
+
+branches:
+  - name: master
+    protection:
+      required_pull_request_reviews: null
+      required_status_checks:
+        strict: true
+        contexts:
+          - general
+      enforce_admins: false
+      restrictions:
+        apps:
+          - renovate
+        users:
+          - bothippie
+        teams: []
+
+...

@@ -1,0 +1,23 @@
+---
+name: lock
+
+"on":
+  schedule:
+    - cron: "0 0 * * *"
+
+permissions:
+  actions: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: lock
+
+jobs:
+  execute:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: dessant/lock-threads@v3
+
+...

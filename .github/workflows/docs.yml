@@ -1,7 +1,7 @@
 ---
 name: docs
 
-'on':
+"on":
   push:
     branches:
       - master
@@ -13,13 +13,13 @@ jobs:
     steps:
       - name: Checkout source
         id: source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup hugo
         id: hugo
         uses: peaceiris/actions-hugo@v2
         with:
-          hugo-version: 0.84.0
+          hugo-version: 0.98.0
 
       - name: Run docs
         id: docs

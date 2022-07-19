@@ -1,0 +1,31 @@
+---
+name: kustomize
+
+"on":
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  generate:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout source
+        id: source
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.BOT_ACCESS_TOKEN }}
+
+      - name: Generate manifest
+        id: kustomize
+        uses: actionhippie/kustomize@v1
+        with:
+          version: 4.4.0
+          path: deploy/kubernetes/
+          target: deploy/kubernetes/bundle.yml
+
+...
