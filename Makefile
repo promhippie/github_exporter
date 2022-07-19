@@ -1,7 +1,7 @@
 include .bingo/Variables.mk
 
 SHELL := bash
-NAME := github_exporter
+NAME := hcloud_exporter
 IMPORT := github.com/promhippie/$(NAME)
 BIN := bin
 DIST := dist
@@ -23,7 +23,7 @@ TAGS ?= netgo
 
 ifndef OUTPUT
 	ifeq ($(GITHUB_REF_TYPE), tag)
-		OUTPUT ?= $(subst refs/tags/v,,$(GITHUB_REF))
+		OUTPUT ?= $(subst v,,$(GITHUB_REF_NAME))
 	else
 		OUTPUT ?= testing
 	endif
@@ -31,7 +31,7 @@ endif
 
 ifndef VERSION
 	ifeq ($(GITHUB_REF_TYPE), tag)
-		VERSION ?= $(subst refs/tags/v,,$(GITHUB_REF))
+		VERSION ?= $(subst v,,$(GITHUB_REF_NAME))
 	else
 		VERSION ?= $(shell git rev-parse --short HEAD)
 	endif
@@ -102,7 +102,7 @@ $(BIN)/$(EXECUTABLE)-debug: $(SOURCES)
 	$(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -gcflags '$(GCFLAGS)' -o $@ ./cmd/$(NAME)
 
 .PHONY: release
-release: $(DIST) release-linux release-darwin release-windows release-checksum
+release: $(DIST) release-linux release-darwin release-windows release-reduce release-checksum
 
 $(DIST):
 	mkdir -p $(DIST)
@@ -196,5 +196,5 @@ metrics:
 	go run hack/generate-metrics-docs.go
 
 .PHONY: watch
-watch: $(REFLEX)
+watch:
 	$(REFLEX) -c reflex.conf
