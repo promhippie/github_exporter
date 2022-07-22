@@ -15,5 +15,5 @@ pygmentsUseClasses = true
 
 [params]
   author = "Thomas Boerger"
-  description = "Export GitHub metrics for Prometheus"
+  description = "Prometheus exporter for GitHub"
   keywords = "prometheus, exporter, github"
