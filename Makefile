@@ -1,7 +1,7 @@
 include .bingo/Variables.mk
 
 SHELL := bash
-NAME := hcloud_exporter
+NAME := github_exporter
 IMPORT := github.com/promhippie/$(NAME)
 BIN := bin
 DIST := dist
