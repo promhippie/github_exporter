@@ -7,40 +7,42 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language><atom:link href="https://promhippie.github.io/github_exporter/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Getting Started</title>
-      <link>https://promhippie.github.io/github_exporter/getting-started/</link>
-      <pubDate>Wed, 28 Oct 2020 00:00:00 +0000</pubDate>
+      <title>Usage</title>
+      <link>https://promhippie.github.io/github_exporter/usage/</link>
+      <pubDate>Fri, 22 Jul 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://promhippie.github.io/github_exporter/getting-started/</guid>
+      <guid>https://promhippie.github.io/github_exporter/usage/</guid>
       <description>Installation We won&amp;rsquo;t cover further details how to properly setup Prometheus itself, we will only cover some basic setup based on docker-compose. But if you want to run this exporter without docker-compose you should be able to adopt that to your needs.
-First of all we need to prepare a configuration for Prometheus that includes the exporter as a target based on a static host mapping which is just the docker-compose container name, e.</description>
+First of all we need to prepare a configuration for Prometheus that includes the exporter based on a static configuration with the container name as a hostname:
+global:scrape_interval:1mscrape_timeout:10sevaluation_interval:1mscrape_configs:- job_name:githubstatic_configs:- targets:- github_exporter:9504 After preparing the configuration we need to create the docker-compose.</description>
     </item>
     
     <item>
       <title>Kubernetes</title>
       <link>https://promhippie.github.io/github_exporter/kubernetes/</link>
-      <pubDate>Wed, 09 Mar 2022 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 22 Jul 2022 00:00:00 +0000</pubDate>
       
       <guid>https://promhippie.github.io/github_exporter/kubernetes/</guid>
-      <description>Kubernetes So far we got the deployment via Kustomize to get this exporter working on Kubernetes. We are already working on a Helm chart to offer more options, dependening on your preferences.
-Kustomize We won&amp;rsquo;t cover the installation of Kustomize or encryption tooling like KSOPS within this guide, to get it installed and working please consult the documentation of these projects. After the installation of Kustomize you just need to prepare a kustomization.</description>
+      <description>Kubernetes Currently we are covering the most famous installation methods on Kubernetes, you can choose between Kustomize and Helm.
+Kustomize We won&amp;rsquo;t cover the installation of Kustomize within this guide, to get it installed and working please read the upstream documentation. After the installation of Kustomize you just need to prepare a kustomization.yml wherever you like similar to this:
+apiVersion:kustomize.config.k8s.io/v1beta1kind:Kustomizationnamespace:github-exporterresources:- github.com/promhippie/github_exporter//deploy/kubernetes?ref=masterconfigMapGenerator:- name:github-exporterbehavior:mergeliterals:[]secretGenerator:- name:github-exporterbehavior:mergeliterals:[] After that you can simply execute kustomize build | kubectl apply -f - to get the manifest applied.</description>
     </item>
     
     <item>
       <title>Building</title>
       <link>https://promhippie.github.io/github_exporter/building/</link>
-      <pubDate>Wed, 28 Oct 2020 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 20 Jul 2022 00:00:00 +0000</pubDate>
       
       <guid>https://promhippie.github.io/github_exporter/building/</guid>
       <description>As this project is built with Go you need to install Go first. The installation of Go is out of the scope of this document, please follow the official documentation. After the installation of Go you need to get the sources:
-git clone https://github.com/promhippie/github_exporter.git cd github_exporter/ All required tool besides Go itself are bundled by Go modules, all you need is part of the Makfile:
+git clone https://github.com/promhippie/github_exporter.git cd github_exporter/ All required tool besides Go itself are bundled, all you need is part of the Makfile:
 make generate build Finally you should have the binary within the bin/ folder now, give it a try with .</description>
     </item>
     
     <item>
       <title>License</title>
       <link>https://promhippie.github.io/github_exporter/license/</link>
-      <pubDate>Wed, 28 Oct 2020 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 20 Jul 2022 00:00:00 +0000</pubDate>
       
       <guid>https://promhippie.github.io/github_exporter/license/</guid>
       <description>This project is licensed under the Apache 2.0 license. For the license of the used libraries you have to check the respective sources.</description>
