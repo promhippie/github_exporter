@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/go-kit/kit/log/level"
+	"github.com/go-kit/log/level"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/urfave/cli/v2"
 )
