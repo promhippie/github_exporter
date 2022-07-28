@@ -196,5 +196,5 @@ metrics:
 	go run hack/generate-metrics-docs.go
 
 .PHONY: watch
-watch:
+watch: $(REFLEX)
 	$(REFLEX) -c reflex.conf
