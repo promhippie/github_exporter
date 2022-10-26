@@ -98,7 +98,15 @@ func Server(cfg *config.Config, logger log.Logger) error {
 				"addr", cfg.Server.Addr,
 			)
 
-			return web.ListenAndServe(server, cfg.Server.Web, logger)
+			return web.ListenAndServe(
+				server,
+				&web.FlagConfig{
+					WebListenAddresses: sliceP([]string{cfg.Server.Addr}),
+					WebSystemdSocket:   boolP(false),
+					WebConfigFile:      stringP(cfg.Server.Web),
+				},
+				logger,
+			)
 		}, func(reason error) {
 			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 			defer cancel()
@@ -245,4 +253,16 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 	})
 
 	return mux
+}
+
+func boolP(i bool) *bool {
+	return &i
+}
+
+func stringP(i string) *string {
+	return &i
+}
+
+func sliceP(i []string) *[]string {
+	return &i
 }
