@@ -31,14 +31,6 @@ func Run() error {
 		Action: func(c *cli.Context) error {
 			logger := setupLogger(cfg)
 
-			// if cfg.Target.Token == "" {
-			// 	level.Error(logger).Log(
-			// 		"msg", "Missing required github.token",
-			// 	)
-
-			// 	return fmt.Errorf("missing required github.token")
-			// }
-
 			return action.Server(cfg, logger)
 		},
 	}
