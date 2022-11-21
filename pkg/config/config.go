@@ -22,13 +22,16 @@ type Logs struct {
 
 // Target defines the target specific configuration.
 type Target struct {
-	Token       string
-	BaseURL     string
-	Insecure    bool
-	Enterprises cli.StringSlice
-	Orgs        cli.StringSlice
-	Repos       cli.StringSlice
-	Timeout     time.Duration
+	Token                   string
+	PrivateKeyApp           string
+	GithubAppId             int64
+	GithubAppInstallationId int64
+	BaseURL                 string
+	Insecure                bool
+	Enterprises             cli.StringSlice
+	Orgs                    cli.StringSlice
+	Repos                   cli.StringSlice
+	Timeout                 time.Duration
 }
 
 // Collector defines the collector specific configuration.

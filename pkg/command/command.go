@@ -1,11 +1,9 @@
 package command
 
 import (
-	"fmt"
 	"os"
 	"time"
 
-	"github.com/go-kit/log/level"
 	"github.com/promhippie/github_exporter/pkg/action"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/version"
@@ -33,13 +31,13 @@ func Run() error {
 		Action: func(c *cli.Context) error {
 			logger := setupLogger(cfg)
 
-			if cfg.Target.Token == "" {
-				level.Error(logger).Log(
-					"msg", "Missing required github.token",
-				)
+			// if cfg.Target.Token == "" {
+			// 	level.Error(logger).Log(
+			// 		"msg", "Missing required github.token",
+			// 	)
 
-				return fmt.Errorf("missing required github.token")
-			}
+			// 	return fmt.Errorf("missing required github.token")
+			// }
 
 			return action.Server(cfg, logger)
 		},
@@ -118,6 +116,25 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			Usage:       "Access token for the GitHub API",
 			EnvVars:     []string{"GITHUB_EXPORTER_TOKEN"},
 			Destination: &cfg.Target.Token,
+		},
+		&cli.Int64Flag{
+			Name:        "github.githubappid",
+			Usage:       "App ID for the GitHub App",
+			EnvVars:     []string{"GITHUB_EXPORTER_GITHUB_APP_ID"},
+			Destination: &cfg.Target.GithubAppId,
+		},
+		&cli.Int64Flag{
+			Name:        "github.githubappinstallationid",
+			Usage:       "App Installation ID for the GitHub App",
+			EnvVars:     []string{"GITHUB_EXPORTER_GITHUB_APP_INSTALLATION_ID"},
+			Destination: &cfg.Target.GithubAppInstallationId,
+		},
+		&cli.StringFlag{
+			Name:        "github.privatekey",
+			Value:       "",
+			Usage:       "Private Key in Base64 for the GitHub App",
+			EnvVars:     []string{"GITHUB_EXPORTER_PRIVATE_KEY_APP"},
+			Destination: &cfg.Target.PrivateKeyApp,
 		},
 		&cli.StringFlag{
 			Name:        "github.baseurl",

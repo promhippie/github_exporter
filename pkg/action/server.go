@@ -3,12 +3,14 @@ package action
 import (
 	"context"
 	"crypto/tls"
+	"encoding/base64"
 	"io"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
+	"github.com/bradleyfalzon/ghinstallation/v2"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
@@ -43,6 +45,31 @@ func Server(cfg *config.Config, logger log.Logger) error {
 			),
 		),
 	)
+
+	if cfg.Target.PrivateKeyApp != "" {
+
+		bytes, err := base64.StdEncoding.DecodeString(cfg.Target.PrivateKeyApp)
+		if err != nil {
+			panic(err)
+		}
+
+		itr, err := ghinstallation.New(
+			http.DefaultTransport,
+			cfg.Target.GithubAppId,
+			cfg.Target.GithubAppInstallationId,
+			bytes,
+		)
+
+		if err != nil {
+			level.Error(logger).Log(
+				"msg", "Failed to create new Github Transport",
+				"err", err,
+			)
+
+			return err
+		}
+		client = github.NewClient(&http.Client{Transport: itr})
+	}
 
 	if cfg.Target.BaseURL != "" {
 		var (
