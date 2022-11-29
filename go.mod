@@ -9,7 +9,7 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/oklog/run v1.1.0
 	github.com/prometheus/client_golang v1.14.0
-	github.com/prometheus/exporter-toolkit v0.8.1
+	github.com/prometheus/exporter-toolkit v0.8.2
 	github.com/ryanuber/go-glob v1.0.0
 	github.com/urfave/cli/v2 v2.23.5
 	golang.org/x/oauth2 v0.2.0
