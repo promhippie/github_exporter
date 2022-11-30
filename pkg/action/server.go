@@ -46,17 +46,20 @@ func Server(cfg *config.Config, logger log.Logger) error {
 		),
 	)
 
-	if cfg.Target.PrivateKeyApp != "" {
+	if cfg.Target.PrivateKey != "" {
 
-		bytes, err := base64.StdEncoding.DecodeString(cfg.Target.PrivateKeyApp)
+		bytes, err := base64.StdEncoding.DecodeString(cfg.Target.PrivateKey)
 		if err != nil {
-			panic(err)
+			level.Error(logger).Log(
+				"msg", "Failed to decode the PrivateKey",
+				"err", err,
+			)
 		}
 
 		itr, err := ghinstallation.New(
 			http.DefaultTransport,
-			cfg.Target.GithubAppId,
-			cfg.Target.GithubAppInstallationId,
+			cfg.Target.AppId,
+			cfg.Target.InstallationId,
 			bytes,
 		)
 
