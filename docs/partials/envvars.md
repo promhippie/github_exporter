@@ -23,13 +23,13 @@ GITHUB_EXPORTER_TOKEN
 : Access token for the GitHub API
 
 GITHUB_EXPORTER_APP_ID
-: GitHub App ID
+: App ID for the GitHub app, defaults to `0`
 
 GITHUB_EXPORTER_INSTALLATION_ID
-: GitHub App Installation ID
+: Installation ID for the GitHub app, defaults to `0`
 
 GITHUB_EXPORTER_PRIVATE_KEY
-: GitHub App Private Key in Base64 
+: Private key for the GitHub app, path or base64-encoded
 
 GITHUB_EXPORTER_BASE_URL
 : URL to access the GitHub Enterprise API

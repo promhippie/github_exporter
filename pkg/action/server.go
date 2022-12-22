@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/base64"
+	"errors"
 	"io"
 	"net/http"
 	"os"
@@ -46,32 +47,39 @@ func Server(cfg *config.Config, logger log.Logger) error {
 		),
 	)
 
-	if cfg.Target.PrivateKey != "" {
-
-		bytes, err := base64.StdEncoding.DecodeString(cfg.Target.PrivateKey)
-		if err != nil {
-			level.Error(logger).Log(
-				"msg", "Failed to decode the PrivateKey",
-				"err", err,
-			)
-		}
-
-		itr, err := ghinstallation.New(
-			http.DefaultTransport,
-			cfg.Target.AppId,
-			cfg.Target.InstallationId,
-			bytes,
-		)
+	if cfg.Target.PrivateKey != "" && cfg.Target.AppID != 0 && cfg.Target.InstallID != 0 {
+		privateKey, err := contentOrDecode(cfg.Target.PrivateKey)
 
 		if err != nil {
 			level.Error(logger).Log(
-				"msg", "Failed to create new Github Transport",
+				"msg", "Failed to read GitHub key",
 				"err", err,
 			)
 
 			return err
 		}
-		client = github.NewClient(&http.Client{Transport: itr})
+
+		transport, err := ghinstallation.New(
+			http.DefaultTransport,
+			cfg.Target.AppID,
+			cfg.Target.InstallID,
+			privateKey,
+		)
+
+		if err != nil {
+			level.Error(logger).Log(
+				"msg", "Failed to create GitHub transport",
+				"err", err,
+			)
+
+			return err
+		}
+
+		client = github.NewClient(
+			&http.Client{
+				Transport: transport,
+			},
+		)
 	}
 
 	if cfg.Target.BaseURL != "" {
@@ -295,4 +303,14 @@ func stringP(i string) *string {
 
 func sliceP(i []string) *[]string {
 	return &i
+}
+
+func contentOrDecode(file string) ([]byte, error) {
+	if _, err := os.Stat(file); errors.Is(err, os.ErrNotExist) {
+		return base64.StdEncoding.DecodeString(
+			file,
+		)
+	}
+
+	return os.ReadFile(file)
 }

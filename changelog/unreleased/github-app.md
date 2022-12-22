@@ -1,10 +1,7 @@
-Enhancement:: Add support for GitHub Apps
+Enhancement: Add support for GitHub app
 
-We've add integration with GitHub Apps.
-
-In a organization we aren't able to create a Token. 
-Now we have new environment variables to enable it.
-`GITHUB_EXPORTER_APP_ID`, `GITHUB_EXPORTER_INSTALLATION_ID`, `GITHUB_EXPORTER_PRIVATE_KEY`  
-
+We've added an integration with GitHub Apps. Organizations which are not able to
+use tokens for the API access are able to register a GitHub app for the API
+requests of this exporter now.
 
 https://github.com/promhippie/github_exporter/pull/145
