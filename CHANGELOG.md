@@ -1,3 +1,21 @@
+# Changelog for 1.2.0
+
+The following sections list the changes for 1.2.0.
+
+## Summary
+
+ * Enh #145: Add support for GitHub app
+
+## Details
+
+ * Enhancement #145: Add support for GitHub app
+
+   We've added an integration with GitHub Apps. Organizations which are not able to use tokens for
+   the API access are able to register a GitHub app for the API requests of this exporter now.
+
+   https://github.com/promhippie/github_exporter/pull/145
+
+
 # Changelog for 1.1.1
 
 The following sections list the changes for 1.1.1.
@@ -145,6 +163,23 @@ The following sections list the changes for 1.0.0.
    https://github.com/promhippie/github_exporter/pull/20
 
 
+# Changelog for 0.1.0
+
+The following sections list the changes for 0.1.0.
+
+## Summary
+
+ * Chg #11: Initial release of basic version
+
+## Details
+
+ * Change #11: Initial release of basic version
+
+   Just prepared an initial basic version which could be released to the public.
+
+   https://github.com/promhippie/github_exporter/issues/11
+
+
 # Changelog for 0.2.0
 
 The following sections list the changes for 0.2.0.
@@ -170,22 +205,5 @@ The following sections list the changes for 0.2.0.
    or not.
 
    https://github.com/promhippie/github_exporter/issues/2
-
-
-# Changelog for 0.1.0
-
-The following sections list the changes for 0.1.0.
-
-## Summary
-
- * Chg #11: Initial release of basic version
-
-## Details
-
- * Change #11: Initial release of basic version
-
-   Just prepared an initial basic version which could be released to the public.
-
-   https://github.com/promhippie/github_exporter/issues/11
 
 
