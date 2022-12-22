@@ -43,6 +43,14 @@ func main() {
 				Help:    v.Usage,
 				List:    false,
 			})
+		case *cli.Int64Flag:
+			flags = append(flags, flag{
+				Flag:    v.Name,
+				Default: strconv.FormatInt(v.Value, 10),
+				Envs:    v.EnvVars,
+				Help:    v.Usage,
+				List:    false,
+			})
 		case *cli.BoolFlag:
 			flags = append(flags, flag{
 				Flag:    v.Name,
