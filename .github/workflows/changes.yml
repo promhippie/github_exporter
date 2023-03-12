@@ -69,7 +69,7 @@ jobs:
           push: true
           commit: --signoff
 
-  labels:
+  metrics:
     runs-on: ubuntu-latest
 
     steps:
@@ -85,9 +85,9 @@ jobs:
         with:
           go-version: ^1.19.0
 
-      - name: Generate labels
-        id: labels
-        run: make labels
+      - name: Generate metrics
+        id: metrics
+        run: make metrics
 
       - name: Commit changes
         id: commit
@@ -95,8 +95,8 @@ jobs:
         with:
           author_name: GitHub Actions
           author_email: github@webhippie.de
-          add: docs/partials/labels.md
-          message: "docs: automated labels update"
+          add: docs/partials/metrics.md
+          message: "docs: automated metrics update"
           push: true
           commit: --signoff
 
