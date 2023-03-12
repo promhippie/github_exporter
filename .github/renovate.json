@@ -1,13 +1,9 @@
 {
     "extends": [
         "config:base",
-        ":dependencyDashboard",
-        ":automergeMinor",
+        ":semanticCommits",
+        ":semanticCommitType(deps)",
         ":automergeDigest"
-    ],
-    "enabledManagers": [
-        "dockerfile",
-        "gomod"
     ],
     "dockerfile": {
         "pinDigests": true
@@ -18,21 +14,60 @@
             "gomodTidy"
         ]
     },
-    "packageRules": [{
-        "description": "Automerge digest updates",
-        "groupName": "docker digests",
-        "matchDatasources": [
-            "docker"
-        ],
-        "matchUpdateTypes": [
-            "pin",
-            "digest",
-            "major",
-            "minor",
-            "patch"
-        ],
-        "automerge": true
-    }],
+    "packageRules": [
+        {
+            "description": "Semantic commits for major versions",
+            "groupName": "major versions",
+            "matchUpdateTypes": [
+                "major"
+            ],
+            "semanticCommitType": "deps",
+            "semanticCommitScope": "major",
+            "automerge": true
+        },
+        {
+            "description": "Semantic commits for minor versions",
+            "groupName": "minor versions",
+            "matchUpdateTypes": [
+                "minor"
+            ],
+            "semanticCommitType": "deps",
+            "semanticCommitScope": "minor",
+            "automerge": true
+        },
+        {
+            "description": "Semantic commits for patch versions",
+            "groupName": "patch versions",
+            "matchUpdateTypes": [
+                "patch"
+            ],
+            "semanticCommitType": "deps",
+            "semanticCommitScope": "patch",
+            "automerge": true
+        },
+        {
+            "description": "Semantic commits for pin and digest",
+            "groupName": "digest versions",
+            "matchUpdateTypes": [
+                "pin",
+                "digest"
+            ],
+            "semanticCommitType": "deps",
+            "semanticCommitScope": "patch",
+            "automerge": true
+        },
+        {
+            "description": "Automerge untagged golang libs",
+            "groupName": "untagged libraries",
+            "matchPackageNames": [
+                "golang.org/x/crypto",
+                "golang.org/x/net"
+            ],
+            "semanticCommitType": "deps",
+            "semanticCommitScope": "patch",
+            "automerge": true
+        }
+    ],
     "ignoreDeps": [
         "github.com/prometheus/prometheus"
     ],
