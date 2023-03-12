@@ -11,7 +11,7 @@ name: general
 
 jobs:
   general:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout source
@@ -20,9 +20,9 @@ jobs:
 
       - name: Setup golang
         id: golang
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
-          go-version: 1.18.1
+          go-version: ^1.19.0
 
       - name: Run generate
         id: generate
@@ -47,5 +47,14 @@ jobs:
       - name: Run test
         id: test
         run: make test
+
+      # - name: Coverage report
+      #   id: codacy
+      #   if: github.ref == 'refs/heads/master'
+      #   uses: codacy/codacy-coverage-reporter-action@v1
+      #   with:
+      #     project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+      #     coverage-reports: coverage.out
+      #     force-coverage-parser: go
 
 ...

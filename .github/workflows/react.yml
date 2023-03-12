@@ -23,9 +23,9 @@ concurrency:
 
 jobs:
   execute:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: dessant/reaction-comments@v2
+      - uses: dessant/reaction-comments@v3
 
 ...

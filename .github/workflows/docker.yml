@@ -10,7 +10,7 @@ name: docker
 
 jobs:
   docker:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -36,9 +36,9 @@ jobs:
 
       - name: Setup golang
         id: golang
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
-          go-version: 1.18.1
+          go-version: ^1.19.0
 
       - name: Run generate
         id: generate
@@ -58,7 +58,7 @@ jobs:
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           images: |
@@ -79,15 +79,15 @@ jobs:
 
       - name: Setup qemu
         id: qemu
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v2
 
       - name: Setup buildx
         id: buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
 
       - name: Hub login
         id: login1
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.event_name != 'pull_request'
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -95,7 +95,7 @@ jobs:
 
       - name: Quay login
         id: login2
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         if: github.event_name != 'pull_request'
         with:
           registry: quay.io
@@ -104,7 +104,7 @@ jobs:
 
       - name: Build image
         id: publish
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
@@ -115,7 +115,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
 
   manifest:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: docker
 
     steps:
@@ -170,7 +170,7 @@ jobs:
           ignore_missing: true
 
   readme:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: docker
 
     steps:
@@ -186,7 +186,7 @@ jobs:
           target: promhippie/github-exporter
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          description: Prometheus exporter for GitHub
+          description: GitHub Exporter
           readme: README.md
 
       - name: Quay readme

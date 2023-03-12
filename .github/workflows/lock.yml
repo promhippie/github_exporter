@@ -4,9 +4,9 @@ name: lock
 "on":
   schedule:
     - cron: "0 0 * * *"
+  workflow_dispatch:
 
 permissions:
-  actions: write
   issues: write
   pull-requests: write
 
@@ -15,9 +15,9 @@ concurrency:
 
 jobs:
   execute:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: dessant/lock-threads@v3
+      - uses: dessant/lock-threads@v4
 
 ...

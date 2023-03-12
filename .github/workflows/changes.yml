@@ -8,7 +8,7 @@ name: changes
 
 jobs:
   changelog:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout source
@@ -19,9 +19,9 @@ jobs:
 
       - name: Setup golang
         id: golang
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
-          go-version: 1.18.1
+          go-version: ^1.19.0
 
       - name: Run changelog
         id: changelog
@@ -34,12 +34,12 @@ jobs:
           author_name: GitHub Actions
           author_email: github@webhippie.de
           add: CHANGELOG.md
-          message: Automated changelog update
+          message: "docs: automated changelog update"
           push: true
           commit: --signoff
 
   envvars:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout source
@@ -50,9 +50,9 @@ jobs:
 
       - name: Setup golang
         id: golang
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
-          go-version: 1.18.1
+          go-version: ^1.19.0
 
       - name: Generate envvars
         id: envvars
@@ -65,12 +65,12 @@ jobs:
           author_name: GitHub Actions
           author_email: github@webhippie.de
           add: docs/partials/envvars.md
-          message: Automated envvars update
+          message: "docs: automated envvars update"
           push: true
           commit: --signoff
 
-  metrics:
-    runs-on: ubuntu-20.04
+  labels:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout source
@@ -81,13 +81,13 @@ jobs:
 
       - name: Setup golang
         id: golang
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
-          go-version: 1.18.1
+          go-version: ^1.19.0
 
-      - name: Generate metrics
-        id: metrics
-        run: make metrics
+      - name: Generate labels
+        id: labels
+        run: make labels
 
       - name: Commit changes
         id: commit
@@ -95,8 +95,8 @@ jobs:
         with:
           author_name: GitHub Actions
           author_email: github@webhippie.de
-          add: docs/partials/metrics.md
-          message: Automated metrics update
+          add: docs/partials/labels.md
+          message: "docs: automated labels update"
           push: true
           commit: --signoff
 
