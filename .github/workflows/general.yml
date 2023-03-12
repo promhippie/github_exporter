@@ -10,7 +10,7 @@ name: general
       - master
 
 jobs:
-  general:
+  testing:
     runs-on: ubuntu-latest
 
     steps:
