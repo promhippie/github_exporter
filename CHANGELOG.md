@@ -41,11 +41,11 @@ The following sections list the changes for 1.1.0.
 ## Summary
 
  * Fix #67: Fixed typecasts within billing API
- * Chg #45: Change docker image name
  * Chg #42: Drop darwin/386 release builds
+ * Chg #45: Change docker image name
  * Chg #46: Generate metrics documentation
- * Chg #71: Integrate standard web config
  * Chg #68: Add support for wildcard repo match
+ * Chg #71: Integrate standard web config
 
 ## Details
 
@@ -56,6 +56,13 @@ The following sections list the changes for 1.1.0.
 
    https://github.com/promhippie/github_exporter/issues/67
 
+ * Change #42: Drop darwin/386 release builds
+
+   We dropped the build of 386 builds on Darwin as this architecture is not supported by current Go
+   versions anymore.
+
+   https://github.com/promhippie/github_exporter/issues/42
+
  * Change #45: Change docker image name
 
    We should use the same docker image name as all the other exporters within this organization. So
@@ -63,13 +70,6 @@ The following sections list the changes for 1.1.0.
    to have the same naming convention as for the other exporters.
 
    https://github.com/promhippie/github_exporter/issues/45
-
- * Change #42: Drop darwin/386 release builds
-
-   We dropped the build of 386 builds on Darwin as this architecture is not supported by current Go
-   versions anymore.
-
-   https://github.com/promhippie/github_exporter/issues/42
 
  * Change #46: Generate metrics documentation
 
@@ -80,14 +80,6 @@ The following sections list the changes for 1.1.0.
 
    https://github.com/promhippie/github_exporter/issues/46
 
- * Change #71: Integrate standard web config
-
-   We integrated the new web config from the Prometheus toolkit which provides a configuration
-   for TLS support and also some basic builtin authentication. For the detailed configuration
-   you check out the documentation.
-
-   https://github.com/promhippie/github_exporter/issues/71
-
  * Change #68: Add support for wildcard repo match
 
    We integrated the functionality to add a wildcard matching for repository names to export
@@ -95,6 +87,14 @@ The following sections list the changes for 1.1.0.
    organization.
 
    https://github.com/promhippie/github_exporter/issues/68
+
+ * Change #71: Integrate standard web config
+
+   We integrated the new web config from the Prometheus toolkit which provides a configuration
+   for TLS support and also some basic builtin authentication. For the detailed configuration
+   you check out the documentation.
+
+   https://github.com/promhippie/github_exporter/issues/71
 
 
 # Changelog for 1.0.1
@@ -169,17 +169,10 @@ The following sections list the changes for 0.2.0.
 
 ## Summary
 
- * Chg #4: Enforce a repo or an org flag
  * Chg #2: Renamed valid_response metric to up metric
+ * Chg #4: Enforce a repo or an org flag
 
 ## Details
-
- * Change #4: Enforce a repo or an org flag
-
-   The exporter requires at least one organization or repository to work properly, integrated a
-   check that something have been set when launching the exporter.
-
-   https://github.com/promhippie/github_exporter/issues/4
 
  * Change #2: Renamed valid_response metric to up metric
 
@@ -188,6 +181,13 @@ The following sections list the changes for 0.2.0.
    or not.
 
    https://github.com/promhippie/github_exporter/issues/2
+
+ * Change #4: Enforce a repo or an org flag
+
+   The exporter requires at least one organization or repository to work properly, integrated a
+   check that something have been set when launching the exporter.
+
+   https://github.com/promhippie/github_exporter/issues/4
 
 
 # Changelog for 0.1.0
