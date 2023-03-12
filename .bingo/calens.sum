@@ -20,6 +20,8 @@ github.com/mitchellh/reflectwalk v1.0.0/go.mod h1:mSTlrgnPZtwu0c4WaC2kGObEpuNDbx
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/restic/calens v0.2.0 h1:LVNAtmFc+Pb4ODX66qdX1T3Di1P0OTLyUsVyvM/xD7E=
 github.com/restic/calens v0.2.0/go.mod h1:UXwyAKS4wsgUZGEc7NrzzygJbLsQZIo3wl+62Q1wvmU=
+github.com/restic/calens v0.3.0 h1:GtkB4butZZQ+GyKYlIGN3SVKvOdaR8eZ/81wkitaUFI=
+github.com/restic/calens v0.3.0/go.mod h1:UXwyAKS4wsgUZGEc7NrzzygJbLsQZIo3wl+62Q1wvmU=
 github.com/spf13/cast v1.3.0 h1:oget//CVOEoFewqQxwr0Ej5yjygnqGkvggSE/gB35Q8=
 github.com/spf13/cast v1.3.0/go.mod h1:Qx5cxh0v+4UWYiBimWS+eyWzqEqokIECu5etghLkUJE=
 github.com/spf13/pflag v1.0.5 h1:iy+VFUOCP1a+8yFto/drg2CJ5u0yRoB7fZw3DKv/JXA=
