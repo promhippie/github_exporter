@@ -69,7 +69,8 @@
         }
     ],
     "ignoreDeps": [
-        "github.com/prometheus/prometheus"
+        "github.com/prometheus/prometheus",
+        "docker/build-push-action"
     ],
     "labels": [
         "renovate"
