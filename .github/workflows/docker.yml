@@ -64,6 +64,7 @@ jobs:
           images: |
             promhippie/github-exporter
             quay.io/promhippie/github-exporter
+            ghcr.io/promhippie/github-exporter
           labels: |
             io.artifacthub.package.readme-url=https://raw.githubusercontent.com/promhippie/github_exporter/master/README.md
             org.opencontainers.image.vendor=Webhippie
@@ -101,6 +102,15 @@ jobs:
           registry: quay.io
           username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_PASSWORD }}
+
+      - name: Ghcr login
+        id: login3
+        uses: docker/login-action@v2
+        if: github.event_name != 'pull_request'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image
         id: publish
@@ -167,6 +177,29 @@ jobs:
           platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v6
           template: quay.io/promhippie/github-exporter:VERSION-OS-ARCH
           target: ${{ steps.quayTags.outputs.tags }}
+          ignore_missing: true
+
+      - name: Ghcr tags
+        id: ghcrTags
+        uses: docker/metadata-action@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          images: ghcr.io/promhippie/github-exporter
+          tags: |
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+
+      - name: Ghcr manifest
+        id: ghcr
+        uses: actionhippie/manifest@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v6
+          template: ghcr.io/promhippie/github-exporter:VERSION-OS-ARCH
+          target: ${{ steps.ghcrTags.outputs.tags }}
           ignore_missing: true
 
   readme:
