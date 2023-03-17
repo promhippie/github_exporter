@@ -6,7 +6,7 @@ require (
 	github.com/bradleyfalzon/ghinstallation/v2 v2.2.0
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-kit/log v0.2.1
-	github.com/google/go-github/v50 v50.1.0
+	github.com/google/go-github/v50 v50.2.0
 	github.com/joho/godotenv v1.5.1
 	github.com/oklog/run v1.1.0
 	github.com/prometheus/client_golang v1.14.0
@@ -17,8 +17,10 @@ require (
 )
 
 require (
+	github.com/ProtonMail/go-crypto v0.0.0-20230217124315-7d5c6f04bbb8 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/cloudflare/circl v1.1.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
