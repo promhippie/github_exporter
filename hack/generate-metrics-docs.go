@@ -36,17 +36,12 @@ func main() {
 
 	collectors = append(
 		collectors,
+		exporter.NewBillingCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
+	)
+
+	collectors = append(
+		collectors,
 		exporter.NewActionCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
-	)
-
-	collectors = append(
-		collectors,
-		exporter.NewPackageCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
-	)
-
-	collectors = append(
-		collectors,
-		exporter.NewStorageCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 
 	metrics := make([]metric, 0)

@@ -217,40 +217,26 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 		))
 	}
 
+	if cfg.Collector.Billing {
+		level.Debug(logger).Log(
+			"msg", "Billing collector registered",
+		)
+
+		registry.MustRegister(exporter.NewBillingCollector(
+			logger,
+			client,
+			requestFailures,
+			requestDuration,
+			cfg.Target,
+		))
+	}
+
 	if cfg.Collector.Actions {
 		level.Debug(logger).Log(
 			"msg", "Action collector registered",
 		)
 
 		registry.MustRegister(exporter.NewActionCollector(
-			logger,
-			client,
-			requestFailures,
-			requestDuration,
-			cfg.Target,
-		))
-	}
-
-	if cfg.Collector.Packages {
-		level.Debug(logger).Log(
-			"msg", "Package collector registered",
-		)
-
-		registry.MustRegister(exporter.NewPackageCollector(
-			logger,
-			client,
-			requestFailures,
-			requestDuration,
-			cfg.Target,
-		))
-	}
-
-	if cfg.Collector.Storage {
-		level.Debug(logger).Log(
-			"msg", "Storage collector registered",
-		)
-
-		registry.MustRegister(exporter.NewStorageCollector(
 			logger,
 			client,
 			requestFailures,

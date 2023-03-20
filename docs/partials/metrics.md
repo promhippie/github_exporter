@@ -10,6 +10,12 @@ github_action_billing_minutes_used_breakdown{type, name, os}
 github_action_billing_paid_minutes{type, name}
 : Total paid minutes used for this type
 
+github_action_workflow_count{org, repo, event, name, job, status, head_branch, runner_node_arch, runner_node_os, runner_node_type, retry}
+: Number of workflow runs
+
+github_action_workflow_duration_ms{org, repo, event, name, job, status, head_branch, runner_node_arch, runner_node_os, runner_node_type, retry}
+: Duration of workflow runs
+
 github_org_collaborators{name}
 : Number of collaborators within org
 

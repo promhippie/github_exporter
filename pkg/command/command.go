@@ -178,25 +178,18 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			Destination: &cfg.Collector.Repos,
 		},
 		&cli.BoolFlag{
+			Name:        "collector.billing",
+			Value:       false,
+			Usage:       "Enable collector for billing",
+			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_BILLING"},
+			Destination: &cfg.Collector.Billing,
+		},
+		&cli.BoolFlag{
 			Name:        "collector.actions",
 			Value:       false,
 			Usage:       "Enable collector for actions",
 			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_ACTIONS"},
 			Destination: &cfg.Collector.Actions,
-		},
-		&cli.BoolFlag{
-			Name:        "collector.packages",
-			Value:       false,
-			Usage:       "Enable collector for packages",
-			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_PACKAGES"},
-			Destination: &cfg.Collector.Packages,
-		},
-		&cli.BoolFlag{
-			Name:        "collector.storage",
-			Value:       false,
-			Usage:       "Enable collector for storage",
-			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_STORAGE"},
-			Destination: &cfg.Collector.Storage,
 		},
 	}
 }
