@@ -55,8 +55,8 @@ GITHUB_EXPORTER_COLLECTOR_REPOS
 GITHUB_EXPORTER_COLLECTOR_BILLING
 : Enable collector for billing, defaults to `false`
 
-GITHUB_EXPORTER_COLLECTOR_ACTIONS
-: Enable collector for actions, defaults to `false`
+GITHUB_EXPORTER_COLLECTOR_WORKFLOWS
+: Enable collector for workflows, defaults to `false`
 
 GITHUB_EXPORTER_COLLECTOR_RUNNERS
 : Enable collector for runners, defaults to `false`

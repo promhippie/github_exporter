@@ -36,11 +36,11 @@ type Target struct {
 
 // Collector defines the collector specific configuration.
 type Collector struct {
-	Orgs    bool
-	Repos   bool
-	Billing bool
-	Actions bool
-	Runners bool
+	Orgs      bool
+	Repos     bool
+	Billing   bool
+	Workflows bool
+	Runners   bool
 }
 
 // Config is a combination of all available configurations.

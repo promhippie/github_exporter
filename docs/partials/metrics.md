@@ -10,12 +10,6 @@ github_action_billing_minutes_used_breakdown{type, name, os}
 github_action_billing_paid_minutes{type, name}
 : Total paid minutes used for this type
 
-github_action_workflow_count{org, repo, event, name, job, status, head_branch, runner_node_arch, runner_node_os, runner_node_type, retry}
-: Number of workflow runs
-
-github_action_workflow_duration_ms{org, repo, event, name, job, status, head_branch, runner_node_arch, runner_node_os, runner_node_type, retry}
-: Duration of workflow runs
-
 github_org_collaborators{name}
 : Number of collaborators within org
 
@@ -153,3 +147,9 @@ github_storage_billing_estimated_paid_storage_for_month{type, name}
 
 github_storage_billing_estimated_storage_for_month{type, name}
 : Estimated total storage for this month for this type
+
+github_workflow_duration_ms{owner, repo, event, name, status, head_branch, run, retry}
+: Duration of workflow runs
+
+github_workflow_status{owner, repo, event, name, status, head_branch, run, retry}
+: Status of workflow runs

@@ -231,12 +231,12 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 		))
 	}
 
-	if cfg.Collector.Actions {
+	if cfg.Collector.Workflows {
 		level.Debug(logger).Log(
-			"msg", "Action collector registered",
+			"msg", "Workflow collector registered",
 		)
 
-		registry.MustRegister(exporter.NewActionCollector(
+		registry.MustRegister(exporter.NewWorkflowCollector(
 			logger,
 			client,
 			requestFailures,

@@ -185,11 +185,11 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			Destination: &cfg.Collector.Billing,
 		},
 		&cli.BoolFlag{
-			Name:        "collector.actions",
+			Name:        "collector.workflows",
 			Value:       false,
-			Usage:       "Enable collector for actions",
-			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_ACTIONS"},
-			Destination: &cfg.Collector.Actions,
+			Usage:       "Enable collector for workflows",
+			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_WORKFLOWS"},
+			Destination: &cfg.Collector.Workflows,
 		},
 		&cli.BoolFlag{
 			Name:        "collector.runners",

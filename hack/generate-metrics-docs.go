@@ -41,7 +41,7 @@ func main() {
 
 	collectors = append(
 		collectors,
-		exporter.NewActionCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
+		exporter.NewWorkflowCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 
 	collectors = append(
