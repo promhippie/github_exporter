@@ -381,7 +381,7 @@ func (c *RunnerCollector) pagedEnterpriseRunners(ctx context.Context, name strin
 func (c *RunnerCollector) orgRunners() []*github.Runner {
 	result := make([]*github.Runner, 0)
 
-	for _, name := range c.config.Enterprises.Value() {
+	for _, name := range c.config.Orgs.Value() {
 		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
 		defer cancel()
 
