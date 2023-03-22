@@ -554,12 +554,12 @@ access the exporter at
 <dd>Enable collector for orgs, defaults to <code>true</code></dd>
 <dt>GITHUB_EXPORTER_COLLECTOR_REPOS</dt>
 <dd>Enable collector for repos, defaults to <code>true</code></dd>
-<dt>GITHUB_EXPORTER_COLLECTOR_ACTIONS</dt>
-<dd>Enable collector for actions, defaults to <code>false</code></dd>
-<dt>GITHUB_EXPORTER_COLLECTOR_PACKAGES</dt>
-<dd>Enable collector for packages, defaults to <code>false</code></dd>
-<dt>GITHUB_EXPORTER_COLLECTOR_STORAGE</dt>
-<dd>Enable collector for storage, defaults to <code>false</code></dd>
+<dt>GITHUB_EXPORTER_COLLECTOR_BILLING</dt>
+<dd>Enable collector for billing, defaults to <code>false</code></dd>
+<dt>GITHUB_EXPORTER_COLLECTOR_WORKFLOWS</dt>
+<dd>Enable collector for workflows, defaults to <code>false</code></dd>
+<dt>GITHUB_EXPORTER_COLLECTOR_RUNNERS</dt>
+<dd>Enable collector for runners, defaults to <code>false</code></dd>
 </dl>
 <h3 id="web-configuration">Web Configuration</h3>
 <p>If you want to secure the service by TLS or by some basic authentication you can
@@ -655,12 +655,28 @@ take a look at the <a href="https://github.com/prometheus/client_golang/blob/mas
 <dd>Histogram of latencies for requests to the api per collector</dd>
 <dt>github_request_failures_total{collector}</dt>
 <dd>Total number of failed requests to the api per collector</dd>
+<dt>github_runner_enterprise_busy{owner, id, name, os, status}</dt>
+<dd>1 if the runner is busy, 0 otherwise</dd>
+<dt>github_runner_enterprise_online{owner, id, name, os, status}</dt>
+<dd>Static metrics of runner is online or not</dd>
+<dt>github_runner_org_busy{owner, id, name, os, status}</dt>
+<dd>1 if the runner is busy, 0 otherwise</dd>
+<dt>github_runner_org_online{owner, id, name, os, status}</dt>
+<dd>Static metrics of runner is online or not</dd>
+<dt>github_runner_repo_busy{owner, id, name, os, status}</dt>
+<dd>1 if the runner is busy, 0 otherwise</dd>
+<dt>github_runner_repo_online{owner, id, name, os, status}</dt>
+<dd>Static metrics of runner is online or not</dd>
 <dt>github_storage_billing_days_left_in_cycle{type, name}</dt>
 <dd>Days left within this billing cycle for this type</dd>
 <dt>github_storage_billing_estimated_paid_storage_for_month{type, name}</dt>
 <dd>Estimated paid storage for this month for this type</dd>
 <dt>github_storage_billing_estimated_storage_for_month{type, name}</dt>
 <dd>Estimated total storage for this month for this type</dd>
+<dt>github_workflow_duration_ms{owner, repo, event, name, status, head_branch, run, retry}</dt>
+<dd>Duration of workflow runs</dd>
+<dt>github_workflow_status{owner, repo, event, name, status, head_branch, run, retry}</dt>
+<dd>Status of workflow runs</dd>
 </dl>
 
 			</section>
