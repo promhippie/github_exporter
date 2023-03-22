@@ -52,11 +52,11 @@ GITHUB_EXPORTER_COLLECTOR_ORGS
 GITHUB_EXPORTER_COLLECTOR_REPOS
 : Enable collector for repos, defaults to `true`
 
-GITHUB_EXPORTER_COLLECTOR_ACTIONS
-: Enable collector for actions, defaults to `false`
+GITHUB_EXPORTER_COLLECTOR_BILLING
+: Enable collector for billing, defaults to `false`
 
-GITHUB_EXPORTER_COLLECTOR_PACKAGES
-: Enable collector for packages, defaults to `false`
+GITHUB_EXPORTER_COLLECTOR_WORKFLOWS
+: Enable collector for workflows, defaults to `false`
 
-GITHUB_EXPORTER_COLLECTOR_STORAGE
-: Enable collector for storage, defaults to `false`
+GITHUB_EXPORTER_COLLECTOR_RUNNERS
+: Enable collector for runners, defaults to `false`

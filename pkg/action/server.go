@@ -217,12 +217,12 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 		))
 	}
 
-	if cfg.Collector.Actions {
+	if cfg.Collector.Billing {
 		level.Debug(logger).Log(
-			"msg", "Action collector registered",
+			"msg", "Billing collector registered",
 		)
 
-		registry.MustRegister(exporter.NewActionCollector(
+		registry.MustRegister(exporter.NewBillingCollector(
 			logger,
 			client,
 			requestFailures,
@@ -231,12 +231,12 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 		))
 	}
 
-	if cfg.Collector.Packages {
+	if cfg.Collector.Workflows {
 		level.Debug(logger).Log(
-			"msg", "Package collector registered",
+			"msg", "Workflow collector registered",
 		)
 
-		registry.MustRegister(exporter.NewPackageCollector(
+		registry.MustRegister(exporter.NewWorkflowCollector(
 			logger,
 			client,
 			requestFailures,
@@ -245,12 +245,12 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 		))
 	}
 
-	if cfg.Collector.Storage {
+	if cfg.Collector.Runners {
 		level.Debug(logger).Log(
-			"msg", "Storage collector registered",
+			"msg", "Runner collector registered",
 		)
 
-		registry.MustRegister(exporter.NewStorageCollector(
+		registry.MustRegister(exporter.NewRunnerCollector(
 			logger,
 			client,
 			requestFailures,

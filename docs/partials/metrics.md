@@ -121,6 +121,24 @@ github_request_duration_seconds{collector}
 github_request_failures_total{collector}
 : Total number of failed requests to the api per collector
 
+github_runner_enterprise_busy{owner, id, name, os, status}
+: 1 if the runner is busy, 0 otherwise
+
+github_runner_enterprise_online{owner, id, name, os, status}
+: Static metrics of runner is online or not
+
+github_runner_org_busy{owner, id, name, os, status}
+: 1 if the runner is busy, 0 otherwise
+
+github_runner_org_online{owner, id, name, os, status}
+: Static metrics of runner is online or not
+
+github_runner_repo_busy{owner, id, name, os, status}
+: 1 if the runner is busy, 0 otherwise
+
+github_runner_repo_online{owner, id, name, os, status}
+: Static metrics of runner is online or not
+
 github_storage_billing_days_left_in_cycle{type, name}
 : Days left within this billing cycle for this type
 
@@ -129,3 +147,9 @@ github_storage_billing_estimated_paid_storage_for_month{type, name}
 
 github_storage_billing_estimated_storage_for_month{type, name}
 : Estimated total storage for this month for this type
+
+github_workflow_duration_ms{owner, repo, event, name, status, head_branch, run, retry}
+: Duration of workflow runs
+
+github_workflow_status{owner, repo, event, name, status, head_branch, run, retry}
+: Status of workflow runs

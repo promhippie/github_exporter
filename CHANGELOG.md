@@ -1,3 +1,45 @@
+# Changelog for unreleased
+
+The following sections list the changes for unreleased.
+
+## Summary
+
+ * Enh #123: Add metrics for GitHub runners
+ * Enh #123: Add metrics for GitHub workflows
+ * Enh #174: Merge all billing related metrics
+ * Enh #174: Update all releated dependencies
+
+## Details
+
+ * Enhancement #123: Add metrics for GitHub runners
+
+   We've added new metrics for selfhosted runners used per repo, org or enterprise to give the
+   ability to check if the runners are online and busy.
+
+   https://github.com/promhippie/github_exporter/issues/123
+
+ * Enhancement #123: Add metrics for GitHub workflows
+
+   We've added new metrics for the observability of GitHub workflows/actions, they are disabled
+   by default because it could result in a high cardinality of the labels.
+
+   https://github.com/promhippie/github_exporter/issues/123
+
+ * Enhancement #174: Merge all billing related metrics
+
+   We've merged the three available collectors only related to billing into a single billing
+   collector to reduce the required options and simply because they related to each other.
+
+   https://github.com/promhippie/github_exporter/pull/174
+
+ * Enhancement #174: Update all releated dependencies
+
+   We've updated all dependencies to the latest available versions, including the build tools
+   provided by Bingo.
+
+   https://github.com/promhippie/github_exporter/pull/174
+
+
 # Changelog for 1.2.0
 
 The following sections list the changes for 1.2.0.
