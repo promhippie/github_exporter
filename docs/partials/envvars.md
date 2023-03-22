@@ -57,3 +57,6 @@ GITHUB_EXPORTER_COLLECTOR_BILLING
 
 GITHUB_EXPORTER_COLLECTOR_ACTIONS
 : Enable collector for actions, defaults to `false`
+
+GITHUB_EXPORTER_COLLECTOR_RUNNERS
+: Enable collector for runners, defaults to `false`

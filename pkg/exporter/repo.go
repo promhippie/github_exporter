@@ -2,7 +2,6 @@ package exporter
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"time"
 
@@ -261,7 +260,7 @@ func (c *RepoCollector) Collect(ch chan<- prometheus.Metric) {
 		defer cancel()
 
 		now := time.Now()
-		records, err := c.reposByOwnerAndName(ctx, owner, repo)
+		records, err := reposByOwnerAndName(ctx, c.client, owner, repo)
 		c.duration.WithLabelValues("repo").Observe(time.Since(now).Seconds())
 
 		if err != nil {
@@ -469,61 +468,4 @@ func (c *RepoCollector) Collect(ch chan<- prometheus.Metric) {
 			)
 		}
 	}
-}
-
-func (c *RepoCollector) reposByOwnerAndName(ctx context.Context, owner, repo string) ([]*github.Repository, error) {
-	if strings.Contains(repo, "*") {
-		opts := &github.SearchOptions{
-			ListOptions: github.ListOptions{
-				PerPage: 50,
-			},
-		}
-
-		var (
-			repos []*github.Repository
-		)
-
-		for {
-			result, resp, err := c.client.Search.Repositories(
-				ctx,
-				fmt.Sprintf("user:%s", owner),
-				opts,
-			)
-
-			if err != nil {
-				return nil, err
-			}
-
-			repos = append(
-				repos,
-				result.Repositories...,
-			)
-
-			if resp.NextPage == 0 {
-				break
-			}
-
-			opts.Page = resp.NextPage
-		}
-
-		return repos, nil
-	}
-
-	res, _, err := c.client.Repositories.Get(ctx, owner, repo)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return []*github.Repository{
-		res,
-	}, nil
-}
-
-func boolToFloat64(val bool) float64 {
-	if val {
-		return 1.0
-	}
-
-	return 0.0
 }

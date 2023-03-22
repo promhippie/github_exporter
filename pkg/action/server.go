@@ -245,6 +245,20 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 		))
 	}
 
+	if cfg.Collector.Runners {
+		level.Debug(logger).Log(
+			"msg", "Runner collector registered",
+		)
+
+		registry.MustRegister(exporter.NewRunnerCollector(
+			logger,
+			client,
+			requestFailures,
+			requestDuration,
+			cfg.Target,
+		))
+	}
+
 	reg := promhttp.HandlerFor(
 		registry,
 		promhttp.HandlerOpts{

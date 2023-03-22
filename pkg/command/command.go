@@ -191,5 +191,12 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_ACTIONS"},
 			Destination: &cfg.Collector.Actions,
 		},
+		&cli.BoolFlag{
+			Name:        "collector.runners",
+			Value:       false,
+			Usage:       "Enable collector for runners",
+			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_RUNNERS"},
+			Destination: &cfg.Collector.Runners,
+		},
 	}
 }

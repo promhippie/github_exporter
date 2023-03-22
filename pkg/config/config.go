@@ -40,6 +40,7 @@ type Collector struct {
 	Repos   bool
 	Billing bool
 	Actions bool
+	Runners bool
 }
 
 // Config is a combination of all available configurations.
