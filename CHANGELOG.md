@@ -4,23 +4,23 @@ The following sections list the changes for unreleased.
 
 ## Summary
 
- * Fix #183: Set right name/owner labels for runner metrics
+ * Fix #184: Set right name/owner labels for runner metrics
  * Enh #123: Add metrics for GitHub runners
  * Enh #123: Add metrics for GitHub workflows
  * Enh #174: Merge all billing related metrics
  * Enh #174: Update all releated dependencies
  * Enh #183: Integrate admin stats for GitHub enterprise
- * Enh #183: Use getter functions to get values
+ * Enh #184: Use getter functions to get values
 
 ## Details
 
- * Bugfix #183: Set right name/owner labels for runner metrics
+ * Bugfix #184: Set right name/owner labels for runner metrics
 
    We introduced metrics for GitHub self-hosted runners but we missed some important labels as
    remaining todos. With this change this gets corrected to properly show the
    repo/org/enterprise where the runner have been attached to.
 
-   https://github.com/promhippie/github_exporter/pull/183
+   https://github.com/promhippie/github_exporter/pull/184
 
  * Enhancement #123: Add metrics for GitHub runners
 
@@ -59,13 +59,13 @@ The following sections list the changes for unreleased.
    https://github.com/promhippie/github_exporter/issues/183
    https://github.com/promhippie/github_exporter/pull/23
 
- * Enhancement #183: Use getter functions to get values
+ * Enhancement #184: Use getter functions to get values
 
    To reduce the used boilerplate code and to better use the GitHub library we have updated most of
    the available collectors to simply use the provided getter functions instead of checking for
    nil values everywhere on our own.
 
-   https://github.com/promhippie/github_exporter/pull/183
+   https://github.com/promhippie/github_exporter/pull/184
 
 
 # Changelog for 1.2.0
