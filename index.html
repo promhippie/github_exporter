@@ -550,6 +550,8 @@ access the exporter at
 <dd>Organizations to scrape metrics from, comma-separated list</dd>
 <dt>GITHUB_EXPORTER_REPO, GITHUB_EXPORTER_REPOS</dt>
 <dd>Repositories to scrape metrics from, comma-separated list</dd>
+<dt>GITHUB_EXPORTER_COLLECTOR_ADMIN</dt>
+<dd>Enable collector for admin stats, defaults to <code>false</code></dd>
 <dt>GITHUB_EXPORTER_COLLECTOR_ORGS</dt>
 <dd>Enable collector for orgs, defaults to <code>true</code></dd>
 <dt>GITHUB_EXPORTER_COLLECTOR_REPOS</dt>
@@ -581,6 +583,74 @@ take a look at the <a href="https://github.com/prometheus/client_golang/blob/mas
 <dd>Total action minutes used for this type broken down by operating system</dd>
 <dt>github_action_billing_paid_minutes{type, name}</dt>
 <dd>Total paid minutes used for this type</dd>
+<dt>github_admin_comments_commit{}</dt>
+<dd>Number of commit comments</dd>
+<dt>github_admin_comments_gist{}</dt>
+<dd>Number of gist comments</dd>
+<dt>github_admin_comments_issue{}</dt>
+<dd>Number of issue comments</dd>
+<dt>github_admin_comments_pull_request{}</dt>
+<dd>Number of pull request comments</dd>
+<dt>github_admin_gists_private{}</dt>
+<dd>Number of private gists</dd>
+<dt>github_admin_gists_public{}</dt>
+<dd>Number of public gists</dd>
+<dt>github_admin_gists_total{}</dt>
+<dd>Total number of gists</dd>
+<dt>github_admin_hooks_active{}</dt>
+<dd>Number of active hooks</dd>
+<dt>github_admin_hooks_inactive{}</dt>
+<dd>Number of inactive hooks</dd>
+<dt>github_admin_hooks_total{}</dt>
+<dd>Total number of hooks</dd>
+<dt>github_admin_issues_closed{}</dt>
+<dd>Number of closed issues</dd>
+<dt>github_admin_issues_open{}</dt>
+<dd>Number of open issues</dd>
+<dt>github_admin_issues_total{}</dt>
+<dd>Total number of issues</dd>
+<dt>github_admin_milestones_closed{}</dt>
+<dd>Number of closed milestones</dd>
+<dt>github_admin_milestones_open{}</dt>
+<dd>Number of open milestones</dd>
+<dt>github_admin_milestones_total{}</dt>
+<dd>Total number of milestones</dd>
+<dt>github_admin_orgs_disabled{}</dt>
+<dd>Number of disabled organizations</dd>
+<dt>github_admin_orgs_members{}</dt>
+<dd>Number of organization team members</dd>
+<dt>github_admin_orgs_teams{}</dt>
+<dd>Number of organization teams</dd>
+<dt>github_admin_orgs_total{}</dt>
+<dd>Total number of organizations</dd>
+<dt>github_admin_pages_total{}</dt>
+<dd>Total number of pages</dd>
+<dt>github_admin_pulls_mergeable{}</dt>
+<dd>Number of mergeable pull requests</dd>
+<dt>github_admin_pulls_merged{}</dt>
+<dd>Number of merged pull requests</dd>
+<dt>github_admin_pulls_total{}</dt>
+<dd>Total number of pull requests</dd>
+<dt>github_admin_pulls_unmergeable{}</dt>
+<dd>Number of unmergeable pull requests</dd>
+<dt>github_admin_repos_fork{}</dt>
+<dd>Number of fork repositories</dd>
+<dt>github_admin_repos_org{}</dt>
+<dd>Number of organization repos</dd>
+<dt>github_admin_repos_pushes_total{}</dt>
+<dd>Total number of pushes</dd>
+<dt>github_admin_repos_root{}</dt>
+<dd>Number of root repositories</dd>
+<dt>github_admin_repos_total{}</dt>
+<dd>Total number of repositories</dd>
+<dt>github_admin_repos_wikis_total{}</dt>
+<dd>Total number of wikis</dd>
+<dt>github_admin_users_admin{}</dt>
+<dd>Number of admin users</dd>
+<dt>github_admin_users_suspended{}</dt>
+<dd>Number of suspended users</dd>
+<dt>github_admin_users_total{}</dt>
+<dd>Total number of users</dd>
 <dt>github_org_collaborators{name}</dt>
 <dd>Number of collaborators within org</dd>
 <dt>github_org_create_timestamp{name}</dt>
