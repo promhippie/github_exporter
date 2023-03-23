@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/base64"
-	"errors"
 	"io"
 	"net/http"
 	"os"
@@ -320,11 +319,13 @@ func sliceP(i []string) *[]string {
 }
 
 func contentOrDecode(file string) ([]byte, error) {
-	if _, err := os.Stat(file); errors.Is(err, os.ErrNotExist) {
-		return base64.StdEncoding.DecodeString(
-			file,
-		)
+	decoded, err := base64.StdEncoding.DecodeString(
+		file,
+	)
+
+	if err != nil {
+		return os.ReadFile(file)
 	}
 
-	return os.ReadFile(file)
+	return decoded, nil
 }
