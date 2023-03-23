@@ -4,6 +4,7 @@ The following sections list the changes for unreleased.
 
 ## Summary
 
+ * Fix #183: Set right name/owner labels for runner metrics
  * Enh #123: Add metrics for GitHub runners
  * Enh #123: Add metrics for GitHub workflows
  * Enh #174: Merge all billing related metrics
@@ -12,6 +13,14 @@ The following sections list the changes for unreleased.
  * Enh #183: Use getter functions to get values
 
 ## Details
+
+ * Bugfix #183: Set right name/owner labels for runner metrics
+
+   We introduced metrics for GitHub self-hosted runners but we missed some important labels as
+   remaining todos. With this change this gets corrected to properly show the
+   repo/org/enterprise where the runner have been attached to.
+
+   https://github.com/promhippie/github_exporter/pull/183
 
  * Enhancement #123: Add metrics for GitHub runners
 

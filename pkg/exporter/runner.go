@@ -118,7 +118,7 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 			)
 
 			labels := []string{
-				"TODO: repo",
+				record.Owner,
 				strconv.FormatInt(record.GetID(), 10),
 				record.GetName(),
 				record.GetOS(),
@@ -156,7 +156,7 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 			)
 
 			labels := []string{
-				"TODO: enterprise",
+				record.Owner,
 				strconv.FormatInt(record.GetID(), 10),
 				record.GetName(),
 				record.GetOS(),
@@ -194,7 +194,7 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 			)
 
 			labels := []string{
-				"TODO: org",
+				record.Owner,
 				strconv.FormatInt(record.GetID(), 10),
 				record.GetName(),
 				record.GetOS(),
@@ -222,8 +222,8 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 	}
 }
 
-func (c *RunnerCollector) repoRunners() []*github.Runner {
-	result := make([]*github.Runner, 0)
+func (c *RunnerCollector) repoRunners() []runner {
+	result := make([]runner, 0)
 
 	for _, name := range c.config.Repos.Value() {
 		n := strings.Split(name, "/")
@@ -274,7 +274,12 @@ func (c *RunnerCollector) repoRunners() []*github.Runner {
 				continue
 			}
 
-			result = append(result, records...)
+			for _, row := range records {
+				result = append(result, runner{
+					Owner:  name,
+					Runner: row,
+				})
+			}
 		}
 	}
 
@@ -317,8 +322,8 @@ func (c *RunnerCollector) pagedRepoRunners(ctx context.Context, owner, name stri
 	return runners, nil
 }
 
-func (c *RunnerCollector) enterpriseRunners() []*github.Runner {
-	result := make([]*github.Runner, 0)
+func (c *RunnerCollector) enterpriseRunners() []runner {
+	result := make([]runner, 0)
 
 	for _, name := range c.config.Enterprises.Value() {
 		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
@@ -337,7 +342,12 @@ func (c *RunnerCollector) enterpriseRunners() []*github.Runner {
 			continue
 		}
 
-		result = append(result, records...)
+		for _, row := range records {
+			result = append(result, runner{
+				Owner:  name,
+				Runner: row,
+			})
+		}
 	}
 
 	return result
@@ -378,8 +388,8 @@ func (c *RunnerCollector) pagedEnterpriseRunners(ctx context.Context, name strin
 	return runners, nil
 }
 
-func (c *RunnerCollector) orgRunners() []*github.Runner {
-	result := make([]*github.Runner, 0)
+func (c *RunnerCollector) orgRunners() []runner {
+	result := make([]runner, 0)
 
 	for _, name := range c.config.Orgs.Value() {
 		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
@@ -398,7 +408,12 @@ func (c *RunnerCollector) orgRunners() []*github.Runner {
 			continue
 		}
 
-		result = append(result, records...)
+		for _, row := range records {
+			result = append(result, runner{
+				Owner:  name,
+				Runner: row,
+			})
+		}
 	}
 
 	return result
@@ -437,4 +452,9 @@ func (c *RunnerCollector) pagedOrgRunners(ctx context.Context, name string) ([]*
 	}
 
 	return runners, nil
+}
+
+type runner struct {
+	Owner string
+	*github.Runner
 }
