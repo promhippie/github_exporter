@@ -9,6 +9,7 @@ The following sections list the changes for unreleased.
  * Enh #174: Merge all billing related metrics
  * Enh #174: Update all releated dependencies
  * Enh #183: Integrate admin stats for GitHub enterprise
+ * Enh #183: Use getter functions to get values
 
 ## Details
 
@@ -48,6 +49,14 @@ The following sections list the changes for unreleased.
 
    https://github.com/promhippie/github_exporter/issues/183
    https://github.com/promhippie/github_exporter/pull/23
+
+ * Enhancement #183: Use getter functions to get values
+
+   To reduce the used boilerplate code and to better use the GitHub library we have updated most of
+   the available collectors to simply use the provided getter functions instead of checking for
+   nil values everywhere on our own.
+
+   https://github.com/promhippie/github_exporter/pull/183
 
 
 # Changelog for 1.2.0
