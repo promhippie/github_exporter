@@ -36,6 +36,7 @@ type Target struct {
 
 // Collector defines the collector specific configuration.
 type Collector struct {
+	Admin     bool
 	Orgs      bool
 	Repos     bool
 	Billing   bool

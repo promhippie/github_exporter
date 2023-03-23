@@ -8,6 +8,7 @@ The following sections list the changes for unreleased.
  * Enh #123: Add metrics for GitHub workflows
  * Enh #174: Merge all billing related metrics
  * Enh #174: Update all releated dependencies
+ * Enh #183: Integrate admin stats for GitHub enterprise
 
 ## Details
 
@@ -38,6 +39,15 @@ The following sections list the changes for unreleased.
    provided by Bingo.
 
    https://github.com/promhippie/github_exporter/pull/174
+
+ * Enhancement #183: Integrate admin stats for GitHub enterprise
+
+   We've integrated another collector within this exporter to provide admin stats as metrics to
+   get a general overview about the amount of repos, issues, pull requests and so on. Special
+   thanks for the great initial work by @mafrosis, your effort is highly appreciated.
+
+   https://github.com/promhippie/github_exporter/issues/183
+   https://github.com/promhippie/github_exporter/pull/23
 
 
 # Changelog for 1.2.0

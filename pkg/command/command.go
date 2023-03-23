@@ -164,6 +164,13 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			Destination: &cfg.Target.Repos,
 		},
 		&cli.BoolFlag{
+			Name:        "collector.admin",
+			Value:       false,
+			Usage:       "Enable collector for admin stats",
+			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_ADMIN"},
+			Destination: &cfg.Collector.Admin,
+		},
+		&cli.BoolFlag{
 			Name:        "collector.orgs",
 			Value:       true,
 			Usage:       "Enable collector for orgs",

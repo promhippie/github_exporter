@@ -46,6 +46,9 @@ GITHUB_EXPORTER_ORG, GITHUB_EXPORTER_ORGS
 GITHUB_EXPORTER_REPO, GITHUB_EXPORTER_REPOS
 : Repositories to scrape metrics from, comma-separated list
 
+GITHUB_EXPORTER_COLLECTOR_ADMIN
+: Enable collector for admin stats, defaults to `false`
+
 GITHUB_EXPORTER_COLLECTOR_ORGS
 : Enable collector for orgs, defaults to `true`
 
