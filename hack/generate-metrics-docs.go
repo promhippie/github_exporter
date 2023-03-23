@@ -26,6 +26,11 @@ func main() {
 
 	collectors = append(
 		collectors,
+		exporter.NewAdminCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
+	)
+
+	collectors = append(
+		collectors,
 		exporter.NewOrgCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 

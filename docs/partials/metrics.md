@@ -10,6 +10,108 @@ github_action_billing_minutes_used_breakdown{type, name, os}
 github_action_billing_paid_minutes{type, name}
 : Total paid minutes used for this type
 
+github_admin_comments_commit{}
+: Number of commit comments
+
+github_admin_comments_gist{}
+: Number of gist comments
+
+github_admin_comments_issue{}
+: Number of issue comments
+
+github_admin_comments_pull_request{}
+: Number of pull request comments
+
+github_admin_gists_private{}
+: Number of private gists
+
+github_admin_gists_public{}
+: Number of public gists
+
+github_admin_gists_total{}
+: Total number of gists
+
+github_admin_hooks_active{}
+: Number of active hooks
+
+github_admin_hooks_inactive{}
+: Number of inactive hooks
+
+github_admin_hooks_total{}
+: Total number of hooks
+
+github_admin_issues_closed{}
+: Number of closed issues
+
+github_admin_issues_open{}
+: Number of open issues
+
+github_admin_issues_total{}
+: Total number of issues
+
+github_admin_milestones_closed{}
+: Number of closed milestones
+
+github_admin_milestones_open{}
+: Number of open milestones
+
+github_admin_milestones_total{}
+: Total number of milestones
+
+github_admin_orgs_disabled{}
+: Number of disabled organizations
+
+github_admin_orgs_members{}
+: Number of organization team members
+
+github_admin_orgs_teams{}
+: Number of organization teams
+
+github_admin_orgs_total{}
+: Total number of organizations
+
+github_admin_pages_total{}
+: Total number of pages
+
+github_admin_pulls_mergeable{}
+: Number of mergeable pull requests
+
+github_admin_pulls_merged{}
+: Number of merged pull requests
+
+github_admin_pulls_total{}
+: Total number of pull requests
+
+github_admin_pulls_unmergeable{}
+: Number of unmergeable pull requests
+
+github_admin_repos_fork{}
+: Number of fork repositories
+
+github_admin_repos_org{}
+: Number of organization repos
+
+github_admin_repos_pushes_total{}
+: Total number of pushes
+
+github_admin_repos_root{}
+: Number of root repositories
+
+github_admin_repos_total{}
+: Total number of repositories
+
+github_admin_repos_wikis_total{}
+: Total number of wikis
+
+github_admin_users_admin{}
+: Number of admin users
+
+github_admin_users_suspended{}
+: Number of suspended users
+
+github_admin_users_total{}
+: Total number of users
+
 github_org_collaborators{name}
 : Number of collaborators within org
 

@@ -78,8 +78,8 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 
 	for _, record := range records {
 		labels := []string{
-			*record.Repository.Owner.Login,
-			*record.Repository.Name,
+			record.GetRepository().GetOwner().GetLogin(),
+			record.GetRepository().GetName(),
 			record.GetEvent(),
 			record.GetName(),
 			record.GetStatus(),
@@ -98,7 +98,7 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 		ch <- prometheus.MustNewConstMetric(
 			c.Duration,
 			prometheus.GaugeValue,
-			float64((record.UpdatedAt.Time.Unix()-record.CreatedAt.Time.Unix())*1000),
+			float64((record.GetUpdatedAt().Time.Unix()-record.GetCreatedAt().Time.Unix())*1000),
 			labels...,
 		)
 	}

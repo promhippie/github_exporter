@@ -172,98 +172,80 @@ func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
 			name,
 		}
 
-		if record.PublicRepos != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.PublicRepos,
-				prometheus.GaugeValue,
-				float64(*record.PublicRepos),
-				labels...,
-			)
-		}
+		ch <- prometheus.MustNewConstMetric(
+			c.PublicRepos,
+			prometheus.GaugeValue,
+			float64(record.GetPublicRepos()),
+			labels...,
+		)
 
-		if record.PublicGists != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.PublicGists,
-				prometheus.GaugeValue,
-				float64(*record.PublicGists),
-				labels...,
-			)
-		}
+		ch <- prometheus.MustNewConstMetric(
+			c.PublicGists,
+			prometheus.GaugeValue,
+			float64(record.GetPublicGists()),
+			labels...,
+		)
 
-		if record.PrivateGists != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.PrivateGists,
-				prometheus.GaugeValue,
-				float64(*record.PrivateGists),
-				labels...,
-			)
-		}
+		ch <- prometheus.MustNewConstMetric(
+			c.PrivateGists,
+			prometheus.GaugeValue,
+			float64(record.GetPrivateGists()),
+			labels...,
+		)
 
-		if record.Followers != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.Followers,
-				prometheus.GaugeValue,
-				float64(*record.Followers),
-				labels...,
-			)
-		}
+		ch <- prometheus.MustNewConstMetric(
+			c.Followers,
+			prometheus.GaugeValue,
+			float64(record.GetFollowers()),
+			labels...,
+		)
 
-		if record.Following != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.Following,
-				prometheus.GaugeValue,
-				float64(*record.Following),
-				labels...,
-			)
-		}
+		ch <- prometheus.MustNewConstMetric(
+			c.Following,
+			prometheus.GaugeValue,
+			float64(record.GetFollowing()),
+			labels...,
+		)
 
-		if record.Collaborators != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.Collaborators,
-				prometheus.GaugeValue,
-				float64(*record.Collaborators),
-				labels...,
-			)
-		}
+		ch <- prometheus.MustNewConstMetric(
+			c.Collaborators,
+			prometheus.GaugeValue,
+			float64(record.GetCollaborators()),
+			labels...,
+		)
 
-		if record.DiskUsage != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.DiskUsage,
-				prometheus.GaugeValue,
-				float64(*record.DiskUsage),
-				labels...,
-			)
-		}
+		ch <- prometheus.MustNewConstMetric(
+			c.DiskUsage,
+			prometheus.GaugeValue,
+			float64(record.GetDiskUsage()),
+			labels...,
+		)
 
-		if record.TotalPrivateRepos != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.PrivateReposTotal,
-				prometheus.GaugeValue,
-				float64(*record.TotalPrivateRepos),
-				labels...,
-			)
-		}
+		ch <- prometheus.MustNewConstMetric(
+			c.PrivateReposTotal,
+			prometheus.GaugeValue,
+			float64(record.GetTotalPrivateRepos()),
+			labels...,
+		)
 
-		if record.OwnedPrivateRepos != nil {
-			ch <- prometheus.MustNewConstMetric(
-				c.PrivateReposOwned,
-				prometheus.GaugeValue,
-				float64(*record.OwnedPrivateRepos),
-				labels...,
-			)
-		}
+		ch <- prometheus.MustNewConstMetric(
+			c.PrivateReposOwned,
+			prometheus.GaugeValue,
+			float64(record.GetOwnedPrivateRepos()),
+			labels...,
+		)
 
 		ch <- prometheus.MustNewConstMetric(
 			c.Created,
 			prometheus.GaugeValue,
-			float64(record.CreatedAt.Unix()),
+			float64(record.GetCreatedAt().Unix()),
 			labels...,
 		)
 
 		ch <- prometheus.MustNewConstMetric(
 			c.Updated,
 			prometheus.GaugeValue,
-			float64(record.UpdatedAt.Unix()),
+			float64(record.GetUpdatedAt().Unix()),
 			labels...,
 		)
 	}

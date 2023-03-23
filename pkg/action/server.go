@@ -189,6 +189,20 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 	mux.Use(middleware.Timeout)
 	mux.Use(middleware.Cache)
 
+	if cfg.Collector.Admin {
+		level.Debug(logger).Log(
+			"msg", "Admin collector registered",
+		)
+
+		registry.MustRegister(exporter.NewAdminCollector(
+			logger,
+			client,
+			requestFailures,
+			requestDuration,
+			cfg.Target,
+		))
+	}
+
 	if cfg.Collector.Orgs {
 		level.Debug(logger).Log(
 			"msg", "Org collector registered",
