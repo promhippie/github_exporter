@@ -32,6 +32,7 @@ type Target struct {
 	Orgs        cli.StringSlice
 	Repos       cli.StringSlice
 	Timeout     time.Duration
+	PerPage     int
 }
 
 // Collector defines the collector specific configuration.

@@ -260,7 +260,7 @@ func (c *RepoCollector) Collect(ch chan<- prometheus.Metric) {
 		defer cancel()
 
 		now := time.Now()
-		records, err := reposByOwnerAndName(ctx, c.client, owner, repo)
+		records, err := reposByOwnerAndName(ctx, c.client, owner, repo, c.config.PerPage)
 		c.duration.WithLabelValues("repo").Observe(time.Since(now).Seconds())
 
 		if err != nil {

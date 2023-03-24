@@ -125,7 +125,7 @@ func (c *WorkflowCollector) repoWorkflows() []*github.WorkflowRun {
 		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
 		defer cancel()
 
-		repos, err := reposByOwnerAndName(ctx, c.client, splitOwner, splitName)
+		repos, err := reposByOwnerAndName(ctx, c.client, splitOwner, splitName, c.config.PerPage)
 
 		if err != nil {
 			level.Error(c.logger).Log(
@@ -171,7 +171,7 @@ func (c *WorkflowCollector) pagedRepoWorkflows(ctx context.Context, owner, name 
 	opts := &github.ListWorkflowRunsOptions{
 		Created: fmt.Sprintf(">=%s", startWindow),
 		ListOptions: github.ListOptions{
-			PerPage: 200,
+			PerPage: c.config.PerPage,
 		},
 	}
 

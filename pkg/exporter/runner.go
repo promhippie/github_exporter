@@ -243,7 +243,7 @@ func (c *RunnerCollector) repoRunners() []runner {
 		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
 		defer cancel()
 
-		repos, err := reposByOwnerAndName(ctx, c.client, splitOwner, splitName)
+		repos, err := reposByOwnerAndName(ctx, c.client, splitOwner, splitName, c.config.PerPage)
 
 		if err != nil {
 			level.Error(c.logger).Log(
@@ -288,7 +288,7 @@ func (c *RunnerCollector) repoRunners() []runner {
 
 func (c *RunnerCollector) pagedRepoRunners(ctx context.Context, owner, name string) ([]*github.Runner, error) {
 	opts := &github.ListOptions{
-		PerPage: 200,
+		PerPage: c.config.PerPage,
 	}
 
 	var (
@@ -355,7 +355,7 @@ func (c *RunnerCollector) enterpriseRunners() []runner {
 
 func (c *RunnerCollector) pagedEnterpriseRunners(ctx context.Context, name string) ([]*github.Runner, error) {
 	opts := &github.ListOptions{
-		PerPage: 50,
+		PerPage: c.config.PerPage,
 	}
 
 	var (
@@ -421,7 +421,7 @@ func (c *RunnerCollector) orgRunners() []runner {
 
 func (c *RunnerCollector) pagedOrgRunners(ctx context.Context, name string) ([]*github.Runner, error) {
 	opts := &github.ListOptions{
-		PerPage: 50,
+		PerPage: c.config.PerPage,
 	}
 
 	var (

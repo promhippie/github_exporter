@@ -163,6 +163,13 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			EnvVars:     []string{"GITHUB_EXPORTER_REPO", "GITHUB_EXPORTER_REPOS"},
 			Destination: &cfg.Target.Repos,
 		},
+		&cli.IntFlag{
+			Name:        "github.per-page",
+			Value:       500,
+			Usage:       "Number of records per page for API requests",
+			EnvVars:     []string{"GITHUB_EXPORTER_PER_PAGE"},
+			Destination: &cfg.Target.PerPage,
+		},
 		&cli.BoolFlag{
 			Name:        "collector.admin",
 			Value:       false,
