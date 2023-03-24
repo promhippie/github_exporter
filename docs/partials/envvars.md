@@ -47,7 +47,7 @@ GITHUB_EXPORTER_REPO, GITHUB_EXPORTER_REPOS
 : Repositories to scrape metrics from, comma-separated list
 
 GITHUB_EXPORTER_PER_PAGE
-: Number of records per page for API requests, defaults to `200`
+: Number of records per page for API requests, defaults to `500`
 
 GITHUB_EXPORTER_COLLECTOR_ADMIN
 : Enable collector for admin stats, defaults to `false`
