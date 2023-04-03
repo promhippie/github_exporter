@@ -391,6 +391,10 @@ func (c *AdminCollector) Collect(ch chan<- prometheus.Metric) {
 		return
 	}
 
+	level.Debug(c.logger).Log(
+		"msg", "Fetched admin stats",
+	)
+
 	labels := []string{}
 
 	ch <- prometheus.MustNewConstMetric(

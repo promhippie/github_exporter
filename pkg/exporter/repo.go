@@ -241,6 +241,8 @@ func (c *RepoCollector) Describe(ch chan<- *prometheus.Desc) {
 
 // Collect is called by the Prometheus registry when collecting metrics.
 func (c *RepoCollector) Collect(ch chan<- prometheus.Metric) {
+	collected := make([]string, 0)
+
 	for _, name := range c.config.Repos.Value() {
 		n := strings.Split(name, "/")
 
@@ -274,10 +276,32 @@ func (c *RepoCollector) Collect(ch chan<- prometheus.Metric) {
 			continue
 		}
 
+		level.Debug(c.logger).Log(
+			"msg", "Fetched repos",
+			"count", len(records),
+			"duration", time.Since(now),
+		)
+
 		for _, record := range records {
 			if !glob.Glob(name, record.GetFullName()) {
 				continue
 			}
+
+			if alreadyCollected(collected, record.GetFullName()) {
+				level.Debug(c.logger).Log(
+					"msg", "Already collected repo",
+					"name", record.GetFullName(),
+				)
+
+				continue
+			}
+
+			collected = append(collected, record.GetFullName())
+
+			level.Debug(c.logger).Log(
+				"msg", "Collecting repo",
+				"name", record.GetFullName(),
+			)
 
 			labels := []string{
 				owner,

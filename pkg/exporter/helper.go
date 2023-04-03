@@ -8,6 +8,16 @@ import (
 	"github.com/google/go-github/v50/github"
 )
 
+func alreadyCollected(collected []string, needle string) bool {
+	for _, val := range collected {
+		if needle == val {
+			return true
+		}
+	}
+
+	return false
+}
+
 func boolToFloat64(val bool) float64 {
 	if val {
 		return 1.0
