@@ -72,11 +72,37 @@ func (c *WorkflowCollector) Describe(ch chan<- *prometheus.Desc) {
 
 // Collect is called by the Prometheus registry when collecting metrics.
 func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
+	collected := make([]string, 0)
+
 	now := time.Now()
 	records := c.repoWorkflows()
 	c.duration.WithLabelValues("runner").Observe(time.Since(now).Seconds())
 
+	level.Debug(c.logger).Log(
+		"msg", "Fetched workflows",
+		"count", len(records),
+		"duration", time.Since(now),
+	)
+
 	for _, record := range records {
+		if alreadyCollected(collected, record.GetRepository().GetFullName()+record.GetName()) {
+			level.Debug(c.logger).Log(
+				"msg", "Already collected workflow",
+				"owner", record.GetRepository().GetFullName(),
+				"name", record.GetName(),
+			)
+
+			continue
+		}
+
+		collected = append(collected, record.GetRepository().GetFullName()+record.GetName())
+
+		level.Debug(c.logger).Log(
+			"msg", "Collecting workflow",
+			"owner", record.GetRepository().GetFullName(),
+			"name", record.GetName(),
+		)
+
 		labels := []string{
 			record.GetRepository().GetOwner().GetLogin(),
 			record.GetRepository().GetName(),
@@ -105,6 +131,7 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 }
 
 func (c *WorkflowCollector) repoWorkflows() []*github.WorkflowRun {
+	collected := make([]string, 0)
 	result := make([]*github.WorkflowRun, 0)
 
 	for _, name := range c.config.Repos.Value() {
@@ -138,10 +165,26 @@ func (c *WorkflowCollector) repoWorkflows() []*github.WorkflowRun {
 			continue
 		}
 
+		level.Debug(c.logger).Log(
+			"msg", "Fetched repos for workflows",
+			"count", len(repos),
+		)
+
 		for _, repo := range repos {
 			if !glob.Glob(name, *repo.FullName) {
 				continue
 			}
+
+			if alreadyCollected(collected, repo.GetFullName()) {
+				level.Debug(c.logger).Log(
+					"msg", "Already collected repo",
+					"name", repo.GetFullName(),
+				)
+
+				continue
+			}
+
+			collected = append(collected, repo.GetFullName())
 
 			records, err := c.pagedRepoWorkflows(ctx, *repo.Owner.Login, *repo.Name)
 

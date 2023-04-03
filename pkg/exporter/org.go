@@ -149,7 +149,20 @@ func (c *OrgCollector) Describe(ch chan<- *prometheus.Desc) {
 
 // Collect is called by the Prometheus registry when collecting metrics.
 func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
+	collected := make([]string, 0)
+
 	for _, name := range c.config.Orgs.Value() {
+		if alreadyCollected(collected, name) {
+			level.Debug(c.logger).Log(
+				"msg", "Already collected org",
+				"name", name,
+			)
+
+			continue
+		}
+
+		collected = append(collected, name)
+
 		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
 		defer cancel()
 
@@ -167,6 +180,11 @@ func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
 			c.failures.WithLabelValues("org").Inc()
 			continue
 		}
+
+		level.Debug(c.logger).Log(
+			"msg", "Collecting org",
+			"name", name,
+		)
 
 		labels := []string{
 			name,

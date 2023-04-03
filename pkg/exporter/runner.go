@@ -108,13 +108,37 @@ func (c *RunnerCollector) Describe(ch chan<- *prometheus.Desc) {
 // Collect is called by the Prometheus registry when collecting metrics.
 func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 	{
+		collected := make([]string, 0)
+
 		now := time.Now()
 		records := c.repoRunners()
 		c.duration.WithLabelValues("runner").Observe(time.Since(now).Seconds())
 
+		level.Debug(c.logger).Log(
+			"msg", "Fetched repo runners",
+			"count", len(records),
+			"duration", time.Since(now),
+		)
+
 		for _, record := range records {
+			if alreadyCollected(collected, record.GetName()) {
+				level.Debug(c.logger).Log(
+					"msg", "Already collected repo runner",
+					"name", record.GetName(),
+				)
+
+				continue
+			}
+
+			collected = append(collected, record.GetName())
+
 			var (
 				online float64
+			)
+
+			level.Debug(c.logger).Log(
+				"msg", "Collecting repo runner",
+				"name", record.GetName(),
 			)
 
 			labels := []string{
@@ -146,13 +170,37 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	{
+		collected := make([]string, 0)
+
 		now := time.Now()
 		records := c.enterpriseRunners()
 		c.duration.WithLabelValues("runner").Observe(time.Since(now).Seconds())
 
+		level.Debug(c.logger).Log(
+			"msg", "Fetched enterprise runners",
+			"count", len(records),
+			"duration", time.Since(now),
+		)
+
 		for _, record := range records {
+			if alreadyCollected(collected, record.GetName()) {
+				level.Debug(c.logger).Log(
+					"msg", "Already collected enterprise runner",
+					"name", record.GetName(),
+				)
+
+				continue
+			}
+
+			collected = append(collected, record.GetName())
+
 			var (
 				online float64
+			)
+
+			level.Debug(c.logger).Log(
+				"msg", "Collecting enterprise runner",
+				"name", record.GetName(),
 			)
 
 			labels := []string{
@@ -184,13 +232,37 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	{
+		collected := make([]string, 0)
+
 		now := time.Now()
 		records := c.orgRunners()
 		c.duration.WithLabelValues("runner").Observe(time.Since(now).Seconds())
 
+		level.Debug(c.logger).Log(
+			"msg", "Fetched org runners",
+			"count", len(records),
+			"duration", time.Since(now),
+		)
+
 		for _, record := range records {
+			if alreadyCollected(collected, record.GetName()) {
+				level.Debug(c.logger).Log(
+					"msg", "Already collected org runner",
+					"name", record.GetName(),
+				)
+
+				continue
+			}
+
+			collected = append(collected, record.GetName())
+
 			var (
 				online float64
+			)
+
+			level.Debug(c.logger).Log(
+				"msg", "Collecting org runner",
+				"name", record.GetName(),
 			)
 
 			labels := []string{
@@ -223,6 +295,7 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 }
 
 func (c *RunnerCollector) repoRunners() []runner {
+	collected := make([]string, 0)
 	result := make([]runner, 0)
 
 	for _, name := range c.config.Repos.Value() {
@@ -256,10 +329,26 @@ func (c *RunnerCollector) repoRunners() []runner {
 			continue
 		}
 
+		level.Debug(c.logger).Log(
+			"msg", "Fetched repos for runners",
+			"count", len(repos),
+		)
+
 		for _, repo := range repos {
 			if !glob.Glob(name, *repo.FullName) {
 				continue
 			}
+
+			if alreadyCollected(collected, repo.GetFullName()) {
+				level.Debug(c.logger).Log(
+					"msg", "Already collected repo",
+					"name", repo.GetFullName(),
+				)
+
+				continue
+			}
+
+			collected = append(collected, repo.GetFullName())
 
 			records, err := c.pagedRepoRunners(ctx, *repo.Owner.Login, *repo.Name)
 

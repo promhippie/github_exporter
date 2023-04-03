@@ -144,11 +144,37 @@ func (c *BillingCollector) Describe(ch chan<- *prometheus.Desc) {
 // Collect is called by the Prometheus registry when collecting metrics.
 func (c *BillingCollector) Collect(ch chan<- prometheus.Metric) {
 	{
+		collected := make([]string, 0)
+
 		now := time.Now()
 		billing := c.getActionBilling()
 		c.duration.WithLabelValues("action").Observe(time.Since(now).Seconds())
 
+		level.Debug(c.logger).Log(
+			"msg", "Fetched action billing",
+			"count", len(billing),
+			"duration", time.Since(now),
+		)
+
 		for _, record := range billing {
+			if alreadyCollected(collected, record.Name) {
+				level.Debug(c.logger).Log(
+					"msg", "Already collected action billing",
+					"type", record.Type,
+					"name", record.Name,
+				)
+
+				continue
+			}
+
+			collected = append(collected, record.Name)
+
+			level.Debug(c.logger).Log(
+				"msg", "Collecting action billing",
+				"type", record.Type,
+				"name", record.Name,
+			)
+
 			labels := []string{
 				record.Type,
 				record.Name,
@@ -187,11 +213,37 @@ func (c *BillingCollector) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	{
+		collected := make([]string, 0)
+
 		now := time.Now()
 		billing := c.getPackageBilling()
 		c.duration.WithLabelValues("action").Observe(time.Since(now).Seconds())
 
+		level.Debug(c.logger).Log(
+			"msg", "Fetched package billing",
+			"count", len(billing),
+			"duration", time.Since(now),
+		)
+
 		for _, record := range billing {
+			if alreadyCollected(collected, record.Name) {
+				level.Debug(c.logger).Log(
+					"msg", "Already collected package billing",
+					"type", record.Type,
+					"name", record.Name,
+				)
+
+				continue
+			}
+
+			collected = append(collected, record.Name)
+
+			level.Debug(c.logger).Log(
+				"msg", "Collecting package billing",
+				"type", record.Type,
+				"name", record.Name,
+			)
+
 			labels := []string{
 				record.Type,
 				record.Name,
@@ -221,11 +273,37 @@ func (c *BillingCollector) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	{
+		collected := make([]string, 0)
+
 		now := time.Now()
 		billing := c.getStorageBilling()
 		c.duration.WithLabelValues("action").Observe(time.Since(now).Seconds())
 
+		level.Debug(c.logger).Log(
+			"msg", "Fetched storage billing",
+			"count", len(billing),
+			"duration", time.Since(now),
+		)
+
 		for _, record := range billing {
+			if alreadyCollected(collected, record.Name) {
+				level.Debug(c.logger).Log(
+					"msg", "Already collected storage billing",
+					"type", record.Type,
+					"name", record.Name,
+				)
+
+				continue
+			}
+
+			collected = append(collected, record.Name)
+
+			level.Debug(c.logger).Log(
+				"msg", "Collecting storage billing",
+				"type", record.Type,
+				"name", record.Name,
+			)
+
 			labels := []string{
 				record.Type,
 				record.Name,
