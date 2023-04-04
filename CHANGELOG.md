@@ -5,6 +5,7 @@ The following sections list the changes for unreleased.
 ## Summary
 
  * Fix #190: Prevent concurrent scrapes
+ * Enh #193: Integrate option pprof profiling
 
 ## Details
 
@@ -15,6 +16,14 @@ The following sections list the changes for unreleased.
    prevent duplicated exports an all currently available collectors.
 
    https://github.com/promhippie/github_exporter/issues/190
+
+ * Enhancement #193: Integrate option pprof profiling
+
+   We have added an option to enable a pprof endpoint for proper profiling support with the help of
+   tools like Parca. The endpoint `/debug/pprof` can now optionally be enabled to get the
+   profiling details for catching potential memory leaks.
+
+   https://github.com/promhippie/github_exporter/pull/193
 
 
 # Changelog for 2.1.0
