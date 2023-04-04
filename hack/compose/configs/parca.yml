@@ -1,0 +1,11 @@
+object_storage:
+  bucket:
+    type: FILESYSTEM
+    config:
+      directory: /var/lib/parca
+
+scrape_configs:
+  - job_name: github_exporter
+    scrape_interval: 3s
+    static_configs:
+      - targets: ["exporter:9504"]
