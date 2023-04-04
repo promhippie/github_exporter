@@ -1,0 +1,16 @@
+version: '3.4'
+
+volumes:
+  parca:
+
+services:
+  parca:
+    image: ghcr.io/parca-dev/parca:v0.17.0
+    restart: always
+    command:
+      - /parca
+    ports:
+      - 7070:7070
+    volumes:
+      - ./configs/parca.yml:/parca.yaml
+      - parca:/var/lib/parca

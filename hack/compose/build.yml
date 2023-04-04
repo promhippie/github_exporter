@@ -1,0 +1,7 @@
+version: '3.4'
+
+services:
+  exporter:
+    build:
+      context: ../../
+      dockerfile: docker/Dockerfile.linux.amd64

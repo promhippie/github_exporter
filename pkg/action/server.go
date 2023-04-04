@@ -188,6 +188,10 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 	mux.Use(middleware.Timeout)
 	mux.Use(middleware.Cache)
 
+	if cfg.Server.Pprof {
+		mux.Mount("/debug", middleware.Profiler())
+	}
+
 	if cfg.Collector.Admin {
 		level.Debug(logger).Log(
 			"msg", "Admin collector registered",

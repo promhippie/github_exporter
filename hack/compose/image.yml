@@ -1,0 +1,5 @@
+version: '3.4'
+
+services:
+  exporter:
+    image: quay.io/promhippie/github-exporter:${GITHUB_EXPORTER_DOCKER_IMAGE:-latest}

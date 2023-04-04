@@ -1,0 +1,39 @@
+version: '3.4'
+
+volumes:
+  grafana:
+  prometheus:
+
+services:
+  grafana:
+    image: grafana/grafana:8.5.22
+    restart: always
+    environment:
+      - GF_DEFAULT_APP_MODE=production
+      - GF_DEFAULT_INSTANCE_NAME=Exporter
+      - GF_SERVER_DOMAIN=localhost
+      - GF_SERVER_ROOT_URL=http://localhost:3000
+      - GF_SECURITY_ADMIN_USER=devops
+      - GF_SECURITY_ADMIN_PASSWORD=devops
+    ports:
+      - 3000:3000
+    volumes:
+      - ./configs/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+      - ./configs/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml
+      - ./boards:/var/lib/grafana/dashboards
+      - grafana:/var/lib/grafana
+
+  prometheus:
+    image: prom/prometheus:v2.43.0
+    restart: always
+    user: root
+    command:
+      - --config.file=/etc/prometheus/config.yml
+      - --storage.tsdb.path=/var/lib/prometheus
+      - --web.external-url=http://localhost:9090
+      - --web.enable-admin-api
+    ports:
+      - 9090:9090
+    volumes:
+      - ./configs/prometheus.yml:/etc/prometheus/config.yml
+      - prometheus:/var/lib/prometheus

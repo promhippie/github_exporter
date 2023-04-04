@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 60s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: github_exporter
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets:
+          - exporter:9504
