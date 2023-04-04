@@ -50,5 +50,5 @@ docker-compose <base from above> -f hack/compose/metrics.yml up
 ```
 
 [parca]: https://www.parca.dev/
-[promtheus]: https://prometheus.io/
+[prometheus]: https://prometheus.io/
 [grafana]: https://grafana.com/
