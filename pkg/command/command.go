@@ -81,6 +81,13 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			EnvVars:     []string{"GITHUB_EXPORTER_WEB_PATH"},
 			Destination: &cfg.Server.Path,
 		},
+		&cli.BoolFlag{
+			Name:        "web.debug",
+			Value:       false,
+			Usage:       "Enable pprof debugging for server",
+			EnvVars:     []string{"GITHUB_EXPORTER_WEB_PPROF"},
+			Destination: &cfg.Server.Pprof,
+		},
 		&cli.DurationFlag{
 			Name:        "web.timeout",
 			Value:       10 * time.Second,
