@@ -579,13 +579,13 @@ you will always get the standard metrics exported by the Golang client of
 take a look at the <a href="https://github.com/prometheus/client_golang/blob/master/prometheus/process_collector.go">process collector</a> and the
 <a href="https://github.com/prometheus/client_golang/blob/master/prometheus/go_collector.go">Go collector</a>.</p>
 <dl>
-<dt>github_action_billing_included_minutes{type, name}</dt>
+<dt>github_action_billing_included_minutes{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Included minutes for this type</dd>
-<dt>github_action_billing_minutes_used{type, name}</dt>
+<dt>github_action_billing_minutes_used{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Total action minutes used for this type</dd>
-<dt>github_action_billing_minutes_used_breakdown{type, name, os}</dt>
+<dt>github_action_billing_minutes_used_breakdown{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Total action minutes used for this type broken down by operating system</dd>
-<dt>github_action_billing_paid_minutes{type, name}</dt>
+<dt>github_action_billing_paid_minutes{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Total paid minutes used for this type</dd>
 <dt>github_admin_comments_commit{}</dt>
 <dd>Number of commit comments</dd>
@@ -655,101 +655,101 @@ take a look at the <a href="https://github.com/prometheus/client_golang/blob/mas
 <dd>Number of suspended users</dd>
 <dt>github_admin_users_total{}</dt>
 <dd>Total number of users</dd>
-<dt>github_org_collaborators{name}</dt>
+<dt>github_org_collaborators{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Number of collaborators within org</dd>
-<dt>github_org_create_timestamp{name}</dt>
+<dt>github_org_create_timestamp{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Timestamp of the creation of org</dd>
-<dt>github_org_disk_usage{name}</dt>
+<dt>github_org_disk_usage{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Used diskspace by the org</dd>
-<dt>github_org_followers{name}</dt>
+<dt>github_org_followers{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Number of followers for org</dd>
-<dt>github_org_following{name}</dt>
+<dt>github_org_following{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Number of following other users by org</dd>
-<dt>github_org_private_gists{name}</dt>
+<dt>github_org_private_gists{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Number of private gists from org</dd>
-<dt>github_org_private_repos_owned{name}</dt>
+<dt>github_org_private_repos_owned{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Owned private repositories by org</dd>
-<dt>github_org_private_repos_total{name}</dt>
+<dt>github_org_private_repos_total{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Total amount of private repositories</dd>
-<dt>github_org_public_gists{name}</dt>
+<dt>github_org_public_gists{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Number of public gists from org</dd>
-<dt>github_org_public_repos{name}</dt>
+<dt>github_org_public_repos{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Number of public repositories from org</dd>
-<dt>github_org_updated_timestamp{name}</dt>
+<dt>github_org_updated_timestamp{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Timestamp of the last modification of org</dd>
-<dt>github_package_billing_gigabytes_bandwidth_used{type, name}</dt>
+<dt>github_package_billing_gigabytes_bandwidth_used{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Total bandwidth used by this type in Gigabytes</dd>
-<dt>github_package_billing_included_gigabytes_bandwidth{type, name}</dt>
+<dt>github_package_billing_included_gigabytes_bandwidth{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Included bandwidth for this type in Gigabytes</dd>
-<dt>github_package_billing_paid_gigabytes_bandwidth_used{type, name}</dt>
+<dt>github_package_billing_paid_gigabytes_bandwidth_used{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Total paid bandwidth used by this type in Gigabytes</dd>
-<dt>github_repo_allow_merge_commit{owner, name}</dt>
+<dt>github_repo_allow_merge_commit{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Show if this repository allows merge commits</dd>
-<dt>github_repo_allow_rebase_merge{owner, name}</dt>
+<dt>github_repo_allow_rebase_merge{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Show if this repository allows rebase merges</dd>
-<dt>github_repo_allow_squash_merge{owner, name}</dt>
+<dt>github_repo_allow_squash_merge{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Show if this repository allows squash merges</dd>
-<dt>github_repo_archived{owner, name}</dt>
+<dt>github_repo_archived{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Show if this repository have been archived</dd>
-<dt>github_repo_created_timestamp{owner, name}</dt>
+<dt>github_repo_created_timestamp{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Timestamp of the creation of repo</dd>
-<dt>github_repo_forked{owner, name}</dt>
+<dt>github_repo_forked{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Show if this repository is a forked repository</dd>
-<dt>github_repo_forks{owner, name}</dt>
+<dt>github_repo_forks{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>How often has this repository been forked</dd>
-<dt>github_repo_has_downloads{owner, name}</dt>
+<dt>github_repo_has_downloads{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Show if this repository got downloads enabled</dd>
-<dt>github_repo_has_issues{owner, name}</dt>
+<dt>github_repo_has_issues{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Show if this repository got issues enabled</dd>
-<dt>github_repo_has_pages{owner, name}</dt>
+<dt>github_repo_has_pages{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Show if this repository got pages enabled</dd>
-<dt>github_repo_has_projects{owner, name}</dt>
+<dt>github_repo_has_projects{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Show if this repository got projects enabled</dd>
-<dt>github_repo_has_wiki{owner, name}</dt>
+<dt>github_repo_has_wiki{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Show if this repository got wiki enabled</dd>
-<dt>github_repo_issues{owner, name}</dt>
+<dt>github_repo_issues{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Number of open issues on this repository</dd>
-<dt>github_repo_network{owner, name}</dt>
+<dt>github_repo_network{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Number of repositories in the network</dd>
-<dt>github_repo_private{owner, name}</dt>
+<dt>github_repo_private{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Show iof this repository is private</dd>
-<dt>github_repo_pushed_timestamp{owner, name}</dt>
+<dt>github_repo_pushed_timestamp{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Timestamp of the last push to repo</dd>
-<dt>github_repo_size{owner, name}</dt>
+<dt>github_repo_size{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Size of the repository content</dd>
-<dt>github_repo_stargazers{owner, name}</dt>
+<dt>github_repo_stargazers{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Number of stargazers on this repository</dd>
-<dt>github_repo_subscribers{owner, name}</dt>
+<dt>github_repo_subscribers{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Number of subscribers on this repository</dd>
-<dt>github_repo_updated_timestamp{owner, name}</dt>
+<dt>github_repo_updated_timestamp{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Timestamp of the last modification of repo</dd>
-<dt>github_repo_watchers{owner, name}</dt>
+<dt>github_repo_watchers{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Number of watchers on this repository</dd>
 <dt>github_request_duration_seconds{collector}</dt>
 <dd>Histogram of latencies for requests to the api per collector</dd>
 <dt>github_request_failures_total{collector}</dt>
 <dd>Total number of failed requests to the api per collector</dd>
-<dt>github_runner_enterprise_busy{owner, id, name, os, status}</dt>
+<dt>github_runner_enterprise_busy{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>1 if the runner is busy, 0 otherwise</dd>
-<dt>github_runner_enterprise_online{owner, id, name, os, status}</dt>
+<dt>github_runner_enterprise_online{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Static metrics of runner is online or not</dd>
-<dt>github_runner_org_busy{owner, id, name, os, status}</dt>
+<dt>github_runner_org_busy{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>1 if the runner is busy, 0 otherwise</dd>
-<dt>github_runner_org_online{owner, id, name, os, status}</dt>
+<dt>github_runner_org_online{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Static metrics of runner is online or not</dd>
-<dt>github_runner_repo_busy{owner, id, name, os, status}</dt>
+<dt>github_runner_repo_busy{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>1 if the runner is busy, 0 otherwise</dd>
-<dt>github_runner_repo_online{owner, id, name, os, status}</dt>
+<dt>github_runner_repo_online{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Static metrics of runner is online or not</dd>
-<dt>github_storage_billing_days_left_in_cycle{type, name}</dt>
+<dt>github_storage_billing_days_left_in_cycle{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Days left within this billing cycle for this type</dd>
-<dt>github_storage_billing_estimated_paid_storage_for_month{type, name}</dt>
+<dt>github_storage_billing_estimated_paid_storage_for_month{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Estimated paid storage for this month for this type</dd>
-<dt>github_storage_billing_estimated_storage_for_month{type, name}</dt>
+<dt>github_storage_billing_estimated_storage_for_month{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Estimated total storage for this month for this type</dd>
-<dt>github_workflow_duration_ms{owner, repo, event, name, status, head_branch, run, retry}</dt>
+<dt>github_workflow_duration_ms{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Duration of workflow runs</dd>
-<dt>github_workflow_status{owner, repo, event, name, status, head_branch, run, retry}</dt>
+<dt>github_workflow_status{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Status of workflow runs</dd>
 </dl>
 
