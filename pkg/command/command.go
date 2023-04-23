@@ -219,10 +219,10 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOWS_STATUS"},
 			Destination: &cfg.Target.WorkflowsCfg.Status,
 		},
-		&cli.IntFlag{
+		&cli.DurationFlag{
 			Name:        "collector.workflows.history-window",
-			Value:       60 * 12,
-			Usage:       "Number of minutes to go back when querying for workflows since the time they were created",
+			Value:       12 * time.Hour,
+			Usage:       "Duration for querying workflows since the time they were created",
 			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOWS_HISTORY_WINDOW"},
 			Destination: &cfg.Target.WorkflowsCfg.HistoryWindow,
 		},

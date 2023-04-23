@@ -24,7 +24,7 @@ type Logs struct {
 // WorkflowsExporterConfig defines the workflow exporter specific configuration.
 type WorkflowsExporterConfig struct {
 	Status        string
-	HistoryWindow int
+	HistoryWindow time.Duration
 }
 
 // Target defines the target specific configuration.

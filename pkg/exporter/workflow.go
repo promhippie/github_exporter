@@ -223,7 +223,7 @@ func (c *WorkflowCollector) repoWorkflows() []*github.WorkflowRun {
 
 func (c *WorkflowCollector) pagedRepoWorkflows(ctx context.Context, owner, name string) ([]*github.WorkflowRun, error) {
 	startWindow := time.Now().Add(
-		time.Duration(-c.config.WorkflowsCfg.HistoryWindow) * time.Minute,
+		-c.config.WorkflowsCfg.HistoryWindow,
 	).Format(time.RFC3339)
 
 	opts := &github.ListWorkflowRunsOptions{
