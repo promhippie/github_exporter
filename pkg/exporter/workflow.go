@@ -34,7 +34,7 @@ func NewWorkflowCollector(logger log.Logger, client *github.Client, failures *pr
 		failures.WithLabelValues("action").Add(0)
 	}
 
-	labels := []string{"owner", "repo", "event", "name", "status", "head_branch", "run", "retry"}
+	labels := []string{"owner", "repo", "event", "name", "status", "head_branch", "run", "run_id", "retry"}
 	return &WorkflowCollector{
 		client:   client,
 		logger:   log.With(logger, "collector", "workflow"),
@@ -119,6 +119,7 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 			record.GetStatus(),
 			record.GetHeadBranch(),
 			strconv.Itoa(record.GetRunNumber()),
+			strconv.FormatInt(record.GetID(), 10),
 			strconv.Itoa(record.GetRunAttempt()),
 		}
 
