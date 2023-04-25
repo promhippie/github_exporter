@@ -67,11 +67,5 @@ GITHUB_EXPORTER_COLLECTOR_BILLING
 GITHUB_EXPORTER_COLLECTOR_WORKFLOWS
 : Enable collector for workflows, defaults to `false`
 
-GITHUB_EXPORTER_WORKFLOWS_STATUS
-: Query workflows with specific status, defaults to `""` (any status)
-
-GITHUB_EXPORTER_WORKFLOWS_HISTORY_WINDOW
-: Duration for querying workflows since the time they were created, defaults to `12h`
-
 GITHUB_EXPORTER_COLLECTOR_RUNNERS
 : Enable collector for runners, defaults to `false`
