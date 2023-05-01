@@ -10,7 +10,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/oklog/run v1.1.0
 	github.com/prometheus/client_golang v1.15.0
-	github.com/prometheus/exporter-toolkit v0.9.1
+	github.com/prometheus/exporter-toolkit v0.10.0
 	github.com/ryanuber/go-glob v1.0.0
 	github.com/stretchr/testify v1.8.2
 	github.com/urfave/cli/v2 v2.25.3
@@ -40,7 +40,7 @@ require (
 	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
-	golang.org/x/crypto v0.7.0 // indirect
+	golang.org/x/crypto v0.8.0 // indirect
 	golang.org/x/net v0.9.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
