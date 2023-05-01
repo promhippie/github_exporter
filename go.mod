@@ -13,7 +13,7 @@ require (
 	github.com/prometheus/exporter-toolkit v0.9.1
 	github.com/ryanuber/go-glob v1.0.0
 	github.com/stretchr/testify v1.8.2
-	github.com/urfave/cli/v2 v2.25.1
+	github.com/urfave/cli/v2 v2.25.2
 	golang.org/x/oauth2 v0.7.0
 )
 
