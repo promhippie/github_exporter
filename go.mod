@@ -9,7 +9,7 @@ require (
 	github.com/google/go-github/v52 v52.0.0
 	github.com/joho/godotenv v1.5.1
 	github.com/oklog/run v1.1.0
-	github.com/prometheus/client_golang v1.15.0
+	github.com/prometheus/client_golang v1.15.1
 	github.com/prometheus/exporter-toolkit v0.10.0
 	github.com/ryanuber/go-glob v1.0.0
 	github.com/stretchr/testify v1.8.2
