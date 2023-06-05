@@ -250,8 +250,8 @@ github_storage_billing_estimated_paid_storage_for_month{<prometheus.ConstrainedL
 github_storage_billing_estimated_storage_for_month{<prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>}
 : Estimated total storage for this month for this type
 
-github_workflow_duration_ms{<prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>}
+github_workflow_duration_ms{<prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>}
 : Duration of workflow runs
 
-github_workflow_status{<prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>}
+github_workflow_status{<prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>, <prometheus.ConstrainedLabel Value>}
 : Status of workflow runs
