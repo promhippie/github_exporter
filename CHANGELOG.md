@@ -6,6 +6,7 @@ The following sections list the changes for unreleased.
 
  * Fix #190: Prevent concurrent scrapes
  * Enh #193: Integrate option pprof profiling
+ * Enh #200: New metrics and configurations for the workflow collector
 
 ## Details
 
@@ -24,6 +25,15 @@ The following sections list the changes for unreleased.
    profiling details for catching potential memory leaks.
 
    https://github.com/promhippie/github_exporter/pull/193
+
+ * Enhancement #200: New metrics and configurations for the workflow collector
+
+   1. Added a new metric for the duration, in minutes, of the time since the run was created:
+   github_workflow_duration_run_created_minutes 2. Added 2 optional configuration options
+   for the workflows exporter: 1. Query workflows with a specific status (Default to any) 2. Set
+   the window history (defaults to 12 hours) 3. Added run_id label
+
+   https://github.com/promhippie/github_exporter/pull/200
 
 
 # Changelog for 2.1.0
@@ -299,6 +309,23 @@ The following sections list the changes for 1.0.0.
    https://github.com/promhippie/github_exporter/pull/20
 
 
+# Changelog for 0.1.0
+
+The following sections list the changes for 0.1.0.
+
+## Summary
+
+ * Chg #11: Initial release of basic version
+
+## Details
+
+ * Change #11: Initial release of basic version
+
+   Just prepared an initial basic version which could be released to the public.
+
+   https://github.com/promhippie/github_exporter/issues/11
+
+
 # Changelog for 0.2.0
 
 The following sections list the changes for 0.2.0.
@@ -324,22 +351,5 @@ The following sections list the changes for 0.2.0.
    check that something have been set when launching the exporter.
 
    https://github.com/promhippie/github_exporter/issues/4
-
-
-# Changelog for 0.1.0
-
-The following sections list the changes for 0.1.0.
-
-## Summary
-
- * Chg #11: Initial release of basic version
-
-## Details
-
- * Change #11: Initial release of basic version
-
-   Just prepared an initial basic version which could be released to the public.
-
-   https://github.com/promhippie/github_exporter/issues/11
 
 
