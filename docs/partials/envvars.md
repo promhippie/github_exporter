@@ -70,8 +70,8 @@ GITHUB_EXPORTER_COLLECTOR_WORKFLOWS
 GITHUB_EXPORTER_WORKFLOWS_STATUS
 : Query workflows with specific status
 
-GITHUB_EXPORTER_WORKFLOWS_HISTORY_WINDOW
-: Duration for querying workflows since the time they were created, defaults to `12h0m0s`
+GITHUB_EXPORTER_WORKFLOWS_WINDOW
+: History window for querying workflows, defaults to `12h0m0s`
 
 GITHUB_EXPORTER_COLLECTOR_RUNNERS
 : Enable collector for runners, defaults to `false`
