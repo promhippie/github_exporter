@@ -23,9 +23,9 @@ type WorkflowCollector struct {
 	duration *prometheus.HistogramVec
 	config   config.Target
 
-	Status      *prometheus.Desc
-	Duration    *prometheus.Desc
-	RunCreation *prometheus.Desc
+	Status   *prometheus.Desc
+	Duration *prometheus.Desc
+	Creation *prometheus.Desc
 }
 
 // NewWorkflowCollector returns a new WorkflowCollector.
@@ -54,7 +54,7 @@ func NewWorkflowCollector(logger log.Logger, client *github.Client, failures *pr
 			labels,
 			nil,
 		),
-		RunCreation: prometheus.NewDesc(
+		Creation: prometheus.NewDesc(
 			"github_workflow_duration_run_created_minutes",
 			"Duration since the workflow run creation time in minutes",
 			labels,
@@ -68,6 +68,7 @@ func (c *WorkflowCollector) Metrics() []*prometheus.Desc {
 	return []*prometheus.Desc{
 		c.Status,
 		c.Duration,
+		c.Creation,
 	}
 }
 
@@ -75,7 +76,7 @@ func (c *WorkflowCollector) Metrics() []*prometheus.Desc {
 func (c *WorkflowCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.Status
 	ch <- c.Duration
-	ch <- c.RunCreation
+	ch <- c.Creation
 }
 
 // Collect is called by the Prometheus registry when collecting metrics.
@@ -138,7 +139,7 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 		)
 
 		ch <- prometheus.MustNewConstMetric(
-			c.RunCreation,
+			c.Creation,
 			prometheus.GaugeValue,
 			time.Since(record.GetRunStartedAt().Time).Minutes(),
 			labels...,
@@ -224,12 +225,12 @@ func (c *WorkflowCollector) repoWorkflows() []*github.WorkflowRun {
 
 func (c *WorkflowCollector) pagedRepoWorkflows(ctx context.Context, owner, name string) ([]*github.WorkflowRun, error) {
 	startWindow := time.Now().Add(
-		-c.config.WorkflowsCfg.HistoryWindow,
+		-c.config.Workflows.Window,
 	).Format(time.RFC3339)
 
 	opts := &github.ListWorkflowRunsOptions{
 		Created: fmt.Sprintf(">=%s", startWindow),
-		Status:  c.config.WorkflowsCfg.Status,
+		Status:  c.config.Workflows.Status,
 		ListOptions: github.ListOptions{
 			PerPage: c.config.PerPage,
 		},
@@ -248,6 +249,7 @@ func (c *WorkflowCollector) pagedRepoWorkflows(ctx context.Context, owner, name 
 		)
 
 		if err != nil {
+			resp.Body.Close()
 			return nil, err
 		}
 
@@ -257,9 +259,11 @@ func (c *WorkflowCollector) pagedRepoWorkflows(ctx context.Context, owner, name 
 		)
 
 		if resp.NextPage == 0 {
+			resp.Body.Close()
 			break
 		}
 
+		resp.Body.Close()
 		opts.Page = resp.NextPage
 	}
 
