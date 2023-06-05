@@ -566,8 +566,8 @@ access the exporter at
 <dd>Enable collector for workflows, defaults to <code>false</code></dd>
 <dt>GITHUB_EXPORTER_WORKFLOWS_STATUS</dt>
 <dd>Query workflows with specific status</dd>
-<dt>GITHUB_EXPORTER_WORKFLOWS_HISTORY_WINDOW</dt>
-<dd>Duration for querying workflows since the time they were created, defaults to <code>12h0m0s</code></dd>
+<dt>GITHUB_EXPORTER_WORKFLOWS_WINDOW</dt>
+<dd>History window for querying workflows, defaults to <code>12h0m0s</code></dd>
 <dt>GITHUB_EXPORTER_COLLECTOR_RUNNERS</dt>
 <dd>Enable collector for runners, defaults to <code>false</code></dd>
 </dl>
@@ -753,6 +753,8 @@ take a look at the <a href="https://github.com/prometheus/client_golang/blob/mas
 <dd>Estimated total storage for this month for this type</dd>
 <dt>github_workflow_duration_ms{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Duration of workflow runs</dd>
+<dt>github_workflow_duration_run_created_minutes{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dd>Duration since the workflow run creation time in minutes</dd>
 <dt>github_workflow_status{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
 <dd>Status of workflow runs</dd>
 </dl>
