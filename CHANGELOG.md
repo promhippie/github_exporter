@@ -6,7 +6,7 @@ The following sections list the changes for unreleased.
 
  * Fix #190: Prevent concurrent scrapes
  * Enh #193: Integrate option pprof profiling
- * Enh #200: New metrics and configurations for the workflow collector
+ * Enh #200: New metrics and configs for workflow collector
 
 ## Details
 
@@ -26,14 +26,15 @@ The following sections list the changes for unreleased.
 
    https://github.com/promhippie/github_exporter/pull/193
 
- * Enhancement #200: New metrics and configurations for the workflow collector
+ * Enhancement #200: New metrics and configs for workflow collector
 
-   1. Added a new metric for the duration, in minutes, of the time since the run was created:
-   github_workflow_duration_run_created_minutes 2. Added 2 optional configuration options
-   for the workflows exporter: 1. Query workflows with a specific status (Default to any) 2. Set
-   the window history (defaults to 12 hours) 3. Added run_id label
+   We have added a new metric for the duration of the time since the workflow run was created,
+   defined in minutes. Beside that we have added two additional configurations to query the
+   workflows for a specific status and you are able to define a different timeframe than 12 hours
+   now. Finally we have also added the run ID to the labels.
 
    https://github.com/promhippie/github_exporter/pull/200
+   https://github.com/promhippie/github_exporter/pull/214
 
 
 # Changelog for 2.1.0
