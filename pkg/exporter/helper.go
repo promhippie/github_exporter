@@ -46,6 +46,7 @@ func reposByOwnerAndName(ctx context.Context, client *github.Client, owner, repo
 			)
 
 			if err != nil {
+				resp.Body.Close()
 				return nil, err
 			}
 
@@ -55,9 +56,11 @@ func reposByOwnerAndName(ctx context.Context, client *github.Client, owner, repo
 			)
 
 			if resp.NextPage == 0 {
+				resp.Body.Close()
 				break
 			}
 
+			resp.Body.Close()
 			opts.Page = resp.NextPage
 		}
 

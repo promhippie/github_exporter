@@ -167,8 +167,9 @@ func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
 		defer cancel()
 
 		now := time.Now()
-		record, _, err := c.client.Organizations.Get(ctx, name)
+		record, resp, err := c.client.Organizations.Get(ctx, name)
 		c.duration.WithLabelValues("org").Observe(time.Since(now).Seconds())
+		defer resp.Body.Close()
 
 		if err != nil {
 			level.Error(c.logger).Log(
