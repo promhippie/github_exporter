@@ -23,8 +23,9 @@ type WorkflowCollector struct {
 	duration *prometheus.HistogramVec
 	config   config.Target
 
-	Status   *prometheus.Desc
-	Duration *prometheus.Desc
+	Status      *prometheus.Desc
+	Duration    *prometheus.Desc
+	RunCreation *prometheus.Desc
 }
 
 // NewWorkflowCollector returns a new WorkflowCollector.
@@ -33,7 +34,7 @@ func NewWorkflowCollector(logger log.Logger, client *github.Client, failures *pr
 		failures.WithLabelValues("action").Add(0)
 	}
 
-	labels := []string{"owner", "repo", "event", "name", "status", "head_branch", "run", "retry"}
+	labels := []string{"owner", "repo", "event", "name", "status", "head_branch", "run", "run_id", "retry"}
 	return &WorkflowCollector{
 		client:   client,
 		logger:   log.With(logger, "collector", "workflow"),
@@ -53,6 +54,12 @@ func NewWorkflowCollector(logger log.Logger, client *github.Client, failures *pr
 			labels,
 			nil,
 		),
+		RunCreation: prometheus.NewDesc(
+			"github_workflow_duration_run_created_minutes",
+			"Duration since the workflow run creation time in minutes",
+			labels,
+			nil,
+		),
 	}
 }
 
@@ -68,6 +75,7 @@ func (c *WorkflowCollector) Metrics() []*prometheus.Desc {
 func (c *WorkflowCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.Status
 	ch <- c.Duration
+	ch <- c.RunCreation
 }
 
 // Collect is called by the Prometheus registry when collecting metrics.
@@ -111,6 +119,7 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 			record.GetStatus(),
 			record.GetHeadBranch(),
 			strconv.Itoa(record.GetRunNumber()),
+			strconv.FormatInt(record.GetID(), 10),
 			strconv.Itoa(record.GetRunAttempt()),
 		}
 
@@ -125,6 +134,13 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 			c.Duration,
 			prometheus.GaugeValue,
 			float64((record.GetUpdatedAt().Time.Unix()-record.GetCreatedAt().Time.Unix())*1000),
+			labels...,
+		)
+
+		ch <- prometheus.MustNewConstMetric(
+			c.RunCreation,
+			prometheus.GaugeValue,
+			time.Since(record.GetRunStartedAt().Time).Minutes(),
 			labels...,
 		)
 	}
@@ -208,11 +224,12 @@ func (c *WorkflowCollector) repoWorkflows() []*github.WorkflowRun {
 
 func (c *WorkflowCollector) pagedRepoWorkflows(ctx context.Context, owner, name string) ([]*github.WorkflowRun, error) {
 	startWindow := time.Now().Add(
-		time.Duration(-12) * time.Hour,
+		-c.config.WorkflowsCfg.HistoryWindow,
 	).Format(time.RFC3339)
 
 	opts := &github.ListWorkflowRunsOptions{
 		Created: fmt.Sprintf(">=%s", startWindow),
+		Status:  c.config.WorkflowsCfg.Status,
 		ListOptions: github.ListOptions{
 			PerPage: c.config.PerPage,
 		},

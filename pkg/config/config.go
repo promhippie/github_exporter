@@ -21,19 +21,26 @@ type Logs struct {
 	Pretty bool
 }
 
+// WorkflowsExporterConfig defines the workflow exporter specific configuration.
+type WorkflowsExporterConfig struct {
+	Status        string
+	HistoryWindow time.Duration
+}
+
 // Target defines the target specific configuration.
 type Target struct {
-	Token       string
-	PrivateKey  string
-	AppID       int64
-	InstallID   int64
-	BaseURL     string
-	Insecure    bool
-	Enterprises cli.StringSlice
-	Orgs        cli.StringSlice
-	Repos       cli.StringSlice
-	Timeout     time.Duration
-	PerPage     int
+	Token        string
+	PrivateKey   string
+	AppID        int64
+	InstallID    int64
+	BaseURL      string
+	Insecure     bool
+	Enterprises  cli.StringSlice
+	Orgs         cli.StringSlice
+	Repos        cli.StringSlice
+	Timeout      time.Duration
+	PerPage      int
+	WorkflowsCfg WorkflowsExporterConfig
 }
 
 // Collector defines the collector specific configuration.

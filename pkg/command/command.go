@@ -212,6 +212,20 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_WORKFLOWS"},
 			Destination: &cfg.Collector.Workflows,
 		},
+		&cli.StringFlag{
+			Name:        "collector.workflows.status",
+			Value:       "",
+			Usage:       "Query workflows with specific status",
+			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOWS_STATUS"},
+			Destination: &cfg.Target.WorkflowsCfg.Status,
+		},
+		&cli.DurationFlag{
+			Name:        "collector.workflows.history-window",
+			Value:       12 * time.Hour,
+			Usage:       "Duration for querying workflows since the time they were created",
+			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOWS_HISTORY_WINDOW"},
+			Destination: &cfg.Target.WorkflowsCfg.HistoryWindow,
+		},
 		&cli.BoolFlag{
 			Name:        "collector.runners",
 			Value:       false,
