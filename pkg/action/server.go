@@ -14,7 +14,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v53/github"
 	"github.com/oklog/run"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/exporter-toolkit/web"
