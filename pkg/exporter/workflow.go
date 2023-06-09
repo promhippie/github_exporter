@@ -249,7 +249,7 @@ func (c *WorkflowCollector) pagedRepoWorkflows(ctx context.Context, owner, name 
 		)
 
 		if err != nil {
-			resp.Body.Close()
+			closeBody(resp)
 			return nil, err
 		}
 
@@ -259,11 +259,11 @@ func (c *WorkflowCollector) pagedRepoWorkflows(ctx context.Context, owner, name 
 		)
 
 		if resp.NextPage == 0 {
-			resp.Body.Close()
+			closeBody(resp)
 			break
 		}
 
-		resp.Body.Close()
+		closeBody(resp)
 		opts.Page = resp.NextPage
 	}
 

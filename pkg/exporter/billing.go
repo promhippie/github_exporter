@@ -379,7 +379,7 @@ func (c *BillingCollector) getActionBilling() []*actionBilling {
 			continue
 		}
 
-		defer resp.Body.Close()
+		defer closeBody(resp)
 
 		result = append(result, &actionBilling{
 			Type:          "enterprise",
@@ -390,7 +390,7 @@ func (c *BillingCollector) getActionBilling() []*actionBilling {
 
 	for _, name := range c.config.Orgs.Value() {
 		record, resp, err := c.client.Billing.GetActionsBillingOrg(ctx, name)
-		defer resp.Body.Close()
+		defer closeBody(resp)
 
 		if err != nil {
 			level.Error(c.logger).Log(
@@ -460,7 +460,7 @@ func (c *BillingCollector) getPackageBilling() []*packageBilling {
 			continue
 		}
 
-		defer resp.Body.Close()
+		defer closeBody(resp)
 
 		result = append(result, &packageBilling{
 			Type:           "enterprise",
@@ -474,7 +474,7 @@ func (c *BillingCollector) getPackageBilling() []*packageBilling {
 		defer cancel()
 
 		record, resp, err := c.client.Billing.GetPackagesBillingOrg(ctx, name)
-		defer resp.Body.Close()
+		defer closeBody(resp)
 
 		if err != nil {
 			level.Error(c.logger).Log(
@@ -544,7 +544,7 @@ func (c *BillingCollector) getStorageBilling() []*storageBilling {
 			continue
 		}
 
-		defer resp.Body.Close()
+		defer closeBody(resp)
 
 		result = append(result, &storageBilling{
 			Type:           "enterprise",
@@ -558,7 +558,7 @@ func (c *BillingCollector) getStorageBilling() []*storageBilling {
 		defer cancel()
 
 		record, resp, err := c.client.Billing.GetStorageBillingOrg(ctx, name)
-		defer resp.Body.Close()
+		defer closeBody(resp)
 
 		if err != nil {
 			level.Error(c.logger).Log(

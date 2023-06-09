@@ -380,7 +380,7 @@ func (c *AdminCollector) Collect(ch chan<- prometheus.Metric) {
 	now := time.Now()
 	record, resp, err := c.client.Admin.GetAdminStats(ctx)
 	c.duration.WithLabelValues("admin").Observe(time.Since(now).Seconds())
-	defer resp.Body.Close()
+	defer closeBody(resp)
 
 	if err != nil {
 		level.Error(c.logger).Log(
