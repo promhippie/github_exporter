@@ -1,6 +1,6 @@
-# Changelog for unreleased
+# Changelog for 2.2.1
 
-The following sections list the changes for unreleased.
+The following sections list the changes for 2.2.1.
 
 ## Summary
 
