@@ -1,3 +1,22 @@
+# Changelog for unreleased
+
+The following sections list the changes for unreleased.
+
+## Summary
+
+ * Fix #216: Resolve nil pointer issues with responses
+
+## Details
+
+ * Bugfix #216: Resolve nil pointer issues with responses
+
+   We have introduced previously a feature where we made sure to close all response bodies, but we
+   forgot to properly check if these responses are really valid which lead to nil pointer
+   dereference issues.
+
+   https://github.com/promhippie/github_exporter/issues/216
+
+
 # Changelog for 2.2.0
 
 The following sections list the changes for 2.2.0.
