@@ -393,7 +393,7 @@ func (c *RunnerCollector) pagedRepoRunners(ctx context.Context, owner, name stri
 		)
 
 		if err != nil {
-			resp.Body.Close()
+			closeBody(resp)
 			return nil, err
 		}
 
@@ -403,11 +403,11 @@ func (c *RunnerCollector) pagedRepoRunners(ctx context.Context, owner, name stri
 		)
 
 		if resp.NextPage == 0 {
-			resp.Body.Close()
+			closeBody(resp)
 			break
 		}
 
-		resp.Body.Close()
+		closeBody(resp)
 		opts.Page = resp.NextPage
 	}
 
@@ -462,7 +462,7 @@ func (c *RunnerCollector) pagedEnterpriseRunners(ctx context.Context, name strin
 		)
 
 		if err != nil {
-			resp.Body.Close()
+			closeBody(resp)
 			return nil, err
 		}
 
@@ -472,11 +472,11 @@ func (c *RunnerCollector) pagedEnterpriseRunners(ctx context.Context, name strin
 		)
 
 		if resp.NextPage == 0 {
-			resp.Body.Close()
+			closeBody(resp)
 			break
 		}
 
-		resp.Body.Close()
+		closeBody(resp)
 		opts.Page = resp.NextPage
 	}
 
@@ -531,7 +531,7 @@ func (c *RunnerCollector) pagedOrgRunners(ctx context.Context, name string) ([]*
 		)
 
 		if err != nil {
-			resp.Body.Close()
+			closeBody(resp)
 			return nil, err
 		}
 
@@ -541,11 +541,11 @@ func (c *RunnerCollector) pagedOrgRunners(ctx context.Context, name string) ([]*
 		)
 
 		if resp.NextPage == 0 {
-			resp.Body.Close()
+			closeBody(resp)
 			break
 		}
 
-		resp.Body.Close()
+		closeBody(resp)
 		opts.Page = resp.NextPage
 	}
 

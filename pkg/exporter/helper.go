@@ -8,6 +8,12 @@ import (
 	"github.com/google/go-github/v53/github"
 )
 
+func closeBody(resp *github.Response) {
+	if resp != nil {
+		resp.Body.Close()
+	}
+}
+
 func alreadyCollected(collected []string, needle string) bool {
 	for _, val := range collected {
 		if needle == val {
@@ -46,7 +52,7 @@ func reposByOwnerAndName(ctx context.Context, client *github.Client, owner, repo
 			)
 
 			if err != nil {
-				resp.Body.Close()
+				closeBody(resp)
 				return nil, err
 			}
 
@@ -56,11 +62,11 @@ func reposByOwnerAndName(ctx context.Context, client *github.Client, owner, repo
 			)
 
 			if resp.NextPage == 0 {
-				resp.Body.Close()
+				closeBody(resp)
 				break
 			}
 
-			resp.Body.Close()
+			closeBody(resp)
 			opts.Page = resp.NextPage
 		}
 
