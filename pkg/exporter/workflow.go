@@ -94,7 +94,7 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 	)
 
 	for _, record := range records {
-		if alreadyCollected(collected, record.GetRepository().GetFullName()+record.GetName()) {
+		if alreadyCollected(collected, record.GetURL()) {
 			level.Debug(c.logger).Log(
 				"msg", "Already collected workflow",
 				"owner", record.GetRepository().GetFullName(),
@@ -104,7 +104,7 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 			continue
 		}
 
-		collected = append(collected, record.GetRepository().GetFullName()+record.GetName())
+		collected = append(collected, record.GetURL())
 
 		level.Debug(c.logger).Log(
 			"msg", "Collecting workflow",
