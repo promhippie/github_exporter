@@ -112,12 +112,18 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 			"name", record.GetName(),
 		)
 
+		// status label is conclusion or status
+		status := record.GetConclusion()
+		if status == "" {
+			status = record.GetStatus()
+		}
+
 		labels := []string{
 			record.GetRepository().GetOwner().GetLogin(),
 			record.GetRepository().GetName(),
 			record.GetEvent(),
 			record.GetName(),
-			record.GetStatus(),
+			status,
 			record.GetHeadBranch(),
 			strconv.Itoa(record.GetRunNumber()),
 			strconv.FormatInt(record.GetID(), 10),
