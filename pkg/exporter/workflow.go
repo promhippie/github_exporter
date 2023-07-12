@@ -124,10 +124,15 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 			strconv.Itoa(record.GetRunAttempt()),
 		}
 
+		status := record.GetConclusion()
+		if status == "" {
+			status = record.GetStatus()
+		}
+
 		ch <- prometheus.MustNewConstMetric(
 			c.Status,
 			prometheus.GaugeValue,
-			conclusionToGauge(record.GetConclusion()),
+			statusToGauge(status),
 			labels...,
 		)
 
@@ -270,7 +275,7 @@ func (c *WorkflowCollector) pagedRepoWorkflows(ctx context.Context, owner, name 
 	return workflows, nil
 }
 
-func conclusionToGauge(conclusion string) float64 {
+func statusToGauge(conclusion string) float64 {
 	switch conclusion {
 	case "completed":
 		return 1.0
