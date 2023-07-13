@@ -17,8 +17,6 @@ jobs:
       - name: Checkout source
         id: source
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.BOT_ACCESS_TOKEN }}
 
       - name: Generate manifest
         id: kustomize
