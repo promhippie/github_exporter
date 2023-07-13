@@ -1,3 +1,30 @@
+# Changelog for unreleased
+
+The following sections list the changes for unreleased.
+
+## Summary
+
+ * Fix #230: Properly handle workflow status results
+ * Enh #228: Enable app support for GitHub Enterprise
+
+## Details
+
+ * Bugfix #230: Properly handle workflow status results
+
+   While a workflow is running the conclusion property provides an empty string, in order to get a
+   proper value in this case we have changed the metric value to the status property which offers a
+   useable fallback.
+
+   https://github.com/promhippie/github_exporter/issues/230
+
+ * Enhancement #228: Enable app support for GitHub Enterprise
+
+   Previously we had support for GitHub applications for the SaaS version only, with this change
+   you are also able to use application registration for GitHub Enterprise.
+
+   https://github.com/promhippie/github_exporter/issues/228
+
+
 # Changelog for 2.2.1
 
 The following sections list the changes for 2.2.1.
