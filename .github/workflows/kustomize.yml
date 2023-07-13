@@ -20,7 +20,7 @@ jobs:
 
       - name: Generate manifest
         id: kustomize
-        uses: actionhippie/kustomize@v1
+        uses: actionhippie/kustomize@v2
         with:
           version: 4.4.0
           path: deploy/kubernetes/
