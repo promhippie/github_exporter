@@ -35,88 +35,10 @@ func Server(cfg *config.Config, logger log.Logger) error {
 		"go", version.Go,
 	)
 
-	client := github.NewClient(
-		oauth2.NewClient(
-			context.Background(),
-			oauth2.StaticTokenSource(
-				&oauth2.Token{
-					AccessToken: cfg.Target.Token,
-				},
-			),
-		),
-	)
+	client, err := getClient(cfg, logger)
 
-	if cfg.Target.PrivateKey != "" && cfg.Target.AppID != 0 && cfg.Target.InstallID != 0 {
-		privateKey, err := contentOrDecode(cfg.Target.PrivateKey)
-
-		if err != nil {
-			level.Error(logger).Log(
-				"msg", "Failed to read GitHub key",
-				"err", err,
-			)
-
-			return err
-		}
-
-		transport, err := ghinstallation.New(
-			http.DefaultTransport,
-			cfg.Target.AppID,
-			cfg.Target.InstallID,
-			privateKey,
-		)
-
-		if err != nil {
-			level.Error(logger).Log(
-				"msg", "Failed to create GitHub transport",
-				"err", err,
-			)
-
-			return err
-		}
-
-		client = github.NewClient(
-			&http.Client{
-				Transport: transport,
-			},
-		)
-	}
-
-	if cfg.Target.BaseURL != "" {
-		var (
-			err error
-		)
-
-		client, err = github.NewEnterpriseClient(
-			cfg.Target.BaseURL,
-			cfg.Target.BaseURL,
-			oauth2.NewClient(
-				context.WithValue(
-					context.Background(),
-					oauth2.HTTPClient,
-					&http.Client{
-						Transport: &http.Transport{
-							TLSClientConfig: &tls.Config{
-								InsecureSkipVerify: cfg.Target.Insecure,
-							},
-						},
-					},
-				),
-				oauth2.StaticTokenSource(
-					&oauth2.Token{
-						AccessToken: cfg.Target.Token,
-					},
-				),
-			),
-		)
-
-		if err != nil {
-			level.Error(logger).Log(
-				"msg", "Failed to parse base URL",
-				"err", err,
-			)
-
-			return err
-		}
+	if err != nil {
+		return err
 	}
 
 	var gr run.Group
@@ -332,4 +254,150 @@ func contentOrDecode(file string) ([]byte, error) {
 	}
 
 	return decoded, nil
+}
+
+func useEnterprise(cfg *config.Config, _ log.Logger) bool {
+	return cfg.Target.BaseURL != ""
+}
+
+func useApplication(cfg *config.Config, _ log.Logger) bool {
+	return cfg.Target.PrivateKey != "" && cfg.Target.AppID != 0 && cfg.Target.InstallID != 0
+}
+
+func getClient(cfg *config.Config, logger log.Logger) (*github.Client, error) {
+	if useEnterprise(cfg, logger) {
+		return getEnterprise(cfg, logger)
+	}
+
+	if useApplication(cfg, logger) {
+		privateKey, err := contentOrDecode(cfg.Target.PrivateKey)
+
+		if err != nil {
+			level.Error(logger).Log(
+				"msg", "Failed to read GitHub key",
+				"err", err,
+			)
+
+			return nil, err
+		}
+
+		transport, err := ghinstallation.New(
+			http.DefaultTransport,
+			cfg.Target.AppID,
+			cfg.Target.InstallID,
+			privateKey,
+		)
+
+		if err != nil {
+			level.Error(logger).Log(
+				"msg", "Failed to create GitHub transport",
+				"err", err,
+			)
+
+			return nil, err
+		}
+
+		return github.NewClient(
+			&http.Client{
+				Transport: transport,
+			},
+		), nil
+	}
+
+	return github.NewClient(
+		oauth2.NewClient(
+			context.Background(),
+			oauth2.StaticTokenSource(
+				&oauth2.Token{
+					AccessToken: cfg.Target.Token,
+				},
+			),
+		),
+	), nil
+}
+
+func getEnterprise(cfg *config.Config, logger log.Logger) (*github.Client, error) {
+	if useApplication(cfg, logger) {
+		privateKey, err := contentOrDecode(cfg.Target.PrivateKey)
+
+		if err != nil {
+			level.Error(logger).Log(
+				"msg", "Failed to read GitHub key",
+				"err", err,
+			)
+
+			return nil, err
+		}
+
+		transport, err := ghinstallation.New(
+			http.DefaultTransport,
+			cfg.Target.AppID,
+			cfg.Target.InstallID,
+			privateKey,
+		)
+
+		if err != nil {
+			level.Error(logger).Log(
+				"msg", "Failed to create GitHub transport",
+				"err", err,
+			)
+
+			return nil, err
+		}
+
+		transport.BaseURL = cfg.Target.BaseURL
+
+		client, err := github.NewEnterpriseClient(
+			cfg.Target.BaseURL,
+			cfg.Target.BaseURL,
+			&http.Client{
+				Transport: transport,
+			},
+		)
+
+		if err != nil {
+			level.Error(logger).Log(
+				"msg", "Failed to parse base URL",
+				"err", err,
+			)
+
+			return nil, err
+		}
+
+		return client, err
+	}
+
+	client, err := github.NewEnterpriseClient(
+		cfg.Target.BaseURL,
+		cfg.Target.BaseURL,
+		oauth2.NewClient(
+			context.WithValue(
+				context.Background(),
+				oauth2.HTTPClient,
+				&http.Client{
+					Transport: &http.Transport{
+						TLSClientConfig: &tls.Config{
+							InsecureSkipVerify: cfg.Target.Insecure,
+						},
+					},
+				},
+			),
+			oauth2.StaticTokenSource(
+				&oauth2.Token{
+					AccessToken: cfg.Target.Token,
+				},
+			),
+		),
+	)
+
+	if err != nil {
+		level.Error(logger).Log(
+			"msg", "Failed to parse base URL",
+			"err", err,
+		)
+
+		return nil, err
+	}
+
+	return client, err
 }
