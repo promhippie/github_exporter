@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"time"
 
 	"github.com/bradleyfalzon/ghinstallation/v2"
@@ -345,7 +346,12 @@ func getEnterprise(cfg *config.Config, logger log.Logger) (*github.Client, error
 			return nil, err
 		}
 
-		transport.BaseURL = cfg.Target.BaseURL
+		if !strings.HasSuffix(cfg.Target.BaseURL, "/api/v3") &&
+			!strings.HasSuffix(cfg.Target.BaseURL, "/api/v3/") {
+			transport.BaseURL = cfg.Target.BaseURL + "/api/v3"
+		} else {
+			transport.BaseURL = cfg.Target.BaseURL
+		}
 
 		client, err := github.NewEnterpriseClient(
 			cfg.Target.BaseURL,
