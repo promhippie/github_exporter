@@ -1,6 +1,7 @@
 package command
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -47,7 +48,12 @@ func Run() error {
 		Usage:   "Print the current version of that tool",
 	}
 
-	return app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+		return err
+	}
+
+	return nil
 }
 
 // RootFlags defines the available root flags.
@@ -112,9 +118,24 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 		&cli.StringFlag{
 			Name:        "github.token",
 			Value:       "",
-			Usage:       "Access token for the GitHub API",
+			Usage:       "Access token for the GitHub API, string or path",
 			EnvVars:     []string{"GITHUB_EXPORTER_TOKEN"},
 			Destination: &cfg.Target.Token,
+			Action: func(ctx *cli.Context, v string) error {
+				if _, err := os.Stat(v); err == nil {
+					content, err := os.ReadFile(v)
+					if err != nil {
+						return fmt.Errorf("Error reading token file:\n%w", err)
+					}
+					cfg.Target.Token = string(content)
+				} else if os.IsNotExist(err) {
+					cfg.Target.Token = v
+				} else {
+					return fmt.Errorf("Error reading token file:\n%w", err)
+				}
+
+				return nil
+			},
 		},
 		&cli.Int64Flag{
 			Name:        "github.app_id",
