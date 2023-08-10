@@ -98,6 +98,28 @@ directly at [http://localhost:9504/metrics](http://localhost:9504/metrics):
       - GITHUB_EXPORTER_REPO=promhippie/example
 {{< / highlight >}}
 
+It's also possible to provide the token to access the GitHub API gets provided
+by a file, in case you are using some kind of secret provider. For this use case
+you can write the token to a file on any path and reference it with the
+following format:
+
+{{< highlight diff >}}
+  github-exporter:
+    image: promhippie/github-exporter:latest
+    restart: always
+    environment:
+-     - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
++     - GITHUB_EXPORTER_TOKEN=file://path/to/secret/file/with/token
+      - GITHUB_EXPORTER_LOG_PRETTY=true
+      - GITHUB_EXPORTER_ORG=promhippie
+      - GITHUB_EXPORTER_REPO=promhippie/example
+{{< / highlight >}}
+
+Besides the `file://` format we currently also support `base64://` which expects
+the token in a base64 encoded format. This functionality can be used for the
+token and other secret values like the private key for GitHub App authentication
+so far.
+
 If you want to collect the metrics of all repositories within an organization
 you are able to use globbing, but be aware that all repositories matched by
 globbing won't provide metrics for the number of subscribers, the number of

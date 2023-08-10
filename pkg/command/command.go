@@ -192,7 +192,7 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 		&cli.StringFlag{
 			Name:        "github.token",
 			Value:       "",
-			Usage:       "Access token for the GitHub API",
+			Usage:       "Access token for the GitHub API, also supports file:// and base64://",
 			EnvVars:     []string{"GITHUB_EXPORTER_TOKEN"},
 			Destination: &cfg.Target.Token,
 		},
@@ -211,7 +211,7 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 		&cli.StringFlag{
 			Name:        "github.private_key",
 			Value:       "",
-			Usage:       "Private key for the GitHub app, path or base64-encoded",
+			Usage:       "Private key for the GitHub app, also supports file:// and base64://",
 			EnvVars:     []string{"GITHUB_EXPORTER_PRIVATE_KEY"},
 			Destination: &cfg.Target.PrivateKey,
 		},

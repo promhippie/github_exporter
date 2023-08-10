@@ -3,7 +3,6 @@ package action
 import (
 	"context"
 	"crypto/tls"
-	"encoding/base64"
 	"io"
 	"net/http"
 	"os"
@@ -222,9 +221,23 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 
 		if cfg.Collector.Workflows {
 			root.HandleFunc(cfg.Webhook.Path, func(w http.ResponseWriter, r *http.Request) {
+				secret, err := config.Value(cfg.Webhook.Secret)
+
+				if err != nil {
+					level.Error(logger).Log(
+						"msg", "failed to read webhook secret",
+						"error", err,
+					)
+
+					w.Header().Set("Content-Type", "text/plain")
+					w.WriteHeader(http.StatusInternalServerError)
+
+					io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+				}
+
 				payload, err := github.ValidatePayload(
 					r,
-					[]byte(cfg.Webhook.Secret),
+					[]byte(secret),
 				)
 
 				if err != nil {
@@ -297,30 +310,6 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 	return mux
 }
 
-func boolP(i bool) *bool {
-	return &i
-}
-
-func stringP(i string) *string {
-	return &i
-}
-
-func sliceP(i []string) *[]string {
-	return &i
-}
-
-func contentOrDecode(file string) ([]byte, error) {
-	decoded, err := base64.StdEncoding.DecodeString(
-		file,
-	)
-
-	if err != nil {
-		return os.ReadFile(file)
-	}
-
-	return decoded, nil
-}
-
 func useEnterprise(cfg *config.Config, _ log.Logger) bool {
 	return cfg.Target.BaseURL != ""
 }
@@ -335,7 +324,7 @@ func getClient(cfg *config.Config, logger log.Logger) (*github.Client, error) {
 	}
 
 	if useApplication(cfg, logger) {
-		privateKey, err := contentOrDecode(cfg.Target.PrivateKey)
+		privateKey, err := config.Value(cfg.Target.PrivateKey)
 
 		if err != nil {
 			level.Error(logger).Log(
@@ -350,7 +339,7 @@ func getClient(cfg *config.Config, logger log.Logger) (*github.Client, error) {
 			http.DefaultTransport,
 			cfg.Target.AppID,
 			cfg.Target.InstallID,
-			privateKey,
+			[]byte(privateKey),
 		)
 
 		if err != nil {
@@ -369,12 +358,23 @@ func getClient(cfg *config.Config, logger log.Logger) (*github.Client, error) {
 		), nil
 	}
 
+	accessToken, err := config.Value(cfg.Target.Token)
+
+	if err != nil {
+		level.Error(logger).Log(
+			"msg", "Failed to read token",
+			"err", err,
+		)
+
+		return nil, err
+	}
+
 	return github.NewClient(
 		oauth2.NewClient(
 			context.Background(),
 			oauth2.StaticTokenSource(
 				&oauth2.Token{
-					AccessToken: cfg.Target.Token,
+					AccessToken: accessToken,
 				},
 			),
 		),
@@ -383,7 +383,7 @@ func getClient(cfg *config.Config, logger log.Logger) (*github.Client, error) {
 
 func getEnterprise(cfg *config.Config, logger log.Logger) (*github.Client, error) {
 	if useApplication(cfg, logger) {
-		privateKey, err := contentOrDecode(cfg.Target.PrivateKey)
+		privateKey, err := config.Value(cfg.Target.PrivateKey)
 
 		if err != nil {
 			level.Error(logger).Log(
@@ -398,7 +398,7 @@ func getEnterprise(cfg *config.Config, logger log.Logger) (*github.Client, error
 			http.DefaultTransport,
 			cfg.Target.AppID,
 			cfg.Target.InstallID,
-			privateKey,
+			[]byte(privateKey),
 		)
 
 		if err != nil {
@@ -438,6 +438,17 @@ func getEnterprise(cfg *config.Config, logger log.Logger) (*github.Client, error
 		return client, err
 	}
 
+	accessToken, err := config.Value(cfg.Target.Token)
+
+	if err != nil {
+		level.Error(logger).Log(
+			"msg", "Failed to read token",
+			"err", err,
+		)
+
+		return nil, err
+	}
+
 	client, err := github.NewClient(
 		oauth2.NewClient(
 			context.WithValue(
@@ -453,7 +464,7 @@ func getEnterprise(cfg *config.Config, logger log.Logger) (*github.Client, error
 			),
 			oauth2.StaticTokenSource(
 				&oauth2.Token{
-					AccessToken: cfg.Target.Token,
+					AccessToken: accessToken,
 				},
 			),
 		),
