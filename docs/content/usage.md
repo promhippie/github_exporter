@@ -145,6 +145,27 @@ access the exporter at
 [http://localhost:9504/metrics](http://localhost:9504/metrics) and
 [Prometheus][prometheus] at [http://localhost:9090](http://localhost:9090).
 
+If you have enabled the workflows metrics it could happen quite easily that you
+will run into rate limits for the GitHub API. In that case it could already help
+to increase the request timeout and the page size of the requests against the
+GitHub API. Just expand your configuration with values which work best for you:
+
+{{< highlight diff >}}
+  github_exporter:
+    image: promhippie/github-exporter:latest
+    restart: always
+    environment:
++     - GITHUB_EXPORTER_REQUEST_TIMEOUT=5m
++     - GITHUB_EXPORTER_PER_PAGE=5000
+      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
+      - GITHUB_EXPORTER_LOG_PRETTY=true
+      - GITHUB_EXPORTER_ORG=promhippie
+      - GITHUB_EXPORTER_REPO=promhippie/example
+{{< / highlight >}}
+
+Also don't forget to set a higher scrape interval, otherwise Prometheus will
+scrape the exporter more often than needed.
+
 ## Configuration
 
 {{< partial "envvars.md" >}}
