@@ -8,6 +8,7 @@ import (
 	"github.com/go-kit/log/level"
 	"github.com/google/go-github/v53/github"
 	"github.com/prometheus/client_golang/prometheus"
+
 	"github.com/promhippie/github_exporter/pkg/config"
 )
 
@@ -28,6 +29,8 @@ type OrgCollector struct {
 	DiskUsage         *prometheus.Desc
 	PrivateReposTotal *prometheus.Desc
 	PrivateReposOwned *prometheus.Desc
+	Seats             *prometheus.Desc
+	FilledSeats       *prometheus.Desc
 	Created           *prometheus.Desc
 	Updated           *prometheus.Desc
 }
@@ -100,6 +103,18 @@ func NewOrgCollector(logger log.Logger, client *github.Client, failures *prometh
 			labels,
 			nil,
 		),
+		FilledSeats: prometheus.NewDesc(
+			"github_org_filled_seats",
+			"Filled seats for org",
+			labels,
+			nil,
+		),
+		Seats: prometheus.NewDesc(
+			"github_org_seats",
+			"Seats for org",
+			labels,
+			nil,
+		),
 		Created: prometheus.NewDesc(
 			"github_org_create_timestamp",
 			"Timestamp of the creation of org",
@@ -127,6 +142,8 @@ func (c *OrgCollector) Metrics() []*prometheus.Desc {
 		c.DiskUsage,
 		c.PrivateReposTotal,
 		c.PrivateReposOwned,
+		c.FilledSeats,
+		c.Seats,
 		c.Created,
 		c.Updated,
 	}
@@ -143,6 +160,8 @@ func (c *OrgCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.DiskUsage
 	ch <- c.PrivateReposTotal
 	ch <- c.PrivateReposOwned
+	ch <- c.Seats
+	ch <- c.FilledSeats
 	ch <- c.Created
 	ch <- c.Updated
 }
@@ -251,6 +270,20 @@ func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
 			c.PrivateReposOwned,
 			prometheus.GaugeValue,
 			float64(record.GetOwnedPrivateRepos()),
+			labels...,
+		)
+
+		ch <- prometheus.MustNewConstMetric(
+			c.Seats,
+			prometheus.GaugeValue,
+			float64(record.GetPlan().GetSeats()),
+			labels...,
+		)
+
+		ch <- prometheus.MustNewConstMetric(
+			c.FilledSeats,
+			prometheus.GaugeValue,
+			float64(record.GetPlan().GetFilledSeats()),
 			labels...,
 		)
 
