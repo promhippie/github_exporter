@@ -121,6 +121,9 @@ github_org_create_timestamp{<prometheus.ConstrainedLabel Value>}
 github_org_disk_usage{<prometheus.ConstrainedLabel Value>}
 : Used diskspace by the org
 
+github_org_filled_seats{<prometheus.ConstrainedLabel Value>}
+: Filled seats for org
+
 github_org_followers{<prometheus.ConstrainedLabel Value>}
 : Number of followers for org
 
@@ -141,6 +144,9 @@ github_org_public_gists{<prometheus.ConstrainedLabel Value>}
 
 github_org_public_repos{<prometheus.ConstrainedLabel Value>}
 : Number of public repositories from org
+
+github_org_seats{<prometheus.ConstrainedLabel Value>}
+: Seats for org
 
 github_org_updated_timestamp{<prometheus.ConstrainedLabel Value>}
 : Timestamp of the last modification of org
