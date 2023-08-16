@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
-	"github.com/google/go-github/v53/github"
+	"github.com/google/go-github/v54/github"
 	"github.com/prometheus/client_golang/prometheus"
 
 	"github.com/promhippie/github_exporter/pkg/config"
