@@ -353,12 +353,13 @@ func getEnterprise(cfg *config.Config, logger log.Logger) (*github.Client, error
 			transport.BaseURL = cfg.Target.BaseURL
 		}
 
-		client, err := github.NewEnterpriseClient(
-			cfg.Target.BaseURL,
-			cfg.Target.BaseURL,
+		client, err := github.NewClient(
 			&http.Client{
 				Transport: transport,
 			},
+		).WithEnterpriseURLs(
+			cfg.Target.BaseURL,
+			cfg.Target.BaseURL,
 		)
 
 		if err != nil {
@@ -373,9 +374,7 @@ func getEnterprise(cfg *config.Config, logger log.Logger) (*github.Client, error
 		return client, err
 	}
 
-	client, err := github.NewEnterpriseClient(
-		cfg.Target.BaseURL,
-		cfg.Target.BaseURL,
+	client, err := github.NewClient(
 		oauth2.NewClient(
 			context.WithValue(
 				context.Background(),
@@ -394,6 +393,9 @@ func getEnterprise(cfg *config.Config, logger log.Logger) (*github.Client, error
 				},
 			),
 		),
+	).WithEnterpriseURLs(
+		cfg.Target.BaseURL,
+		cfg.Target.BaseURL,
 	)
 
 	if err != nil {
