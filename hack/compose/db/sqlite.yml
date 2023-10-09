@@ -1,0 +1,11 @@
+version: '3.4'
+
+volumes:
+  sqlite:
+
+services:
+  exporter:
+    environment:
+      - GITHUB_EXPORTER_DATABASE_DSN=sqlite:///var/lib/database/exporter.sqlite3
+    volumes:
+      - sqlite:/var/lib/database

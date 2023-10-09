@@ -38,6 +38,8 @@
             packages = with pkgs; [
               gnumake
               go
+              podman-compose
+              sqlite
             ];
           };
         };

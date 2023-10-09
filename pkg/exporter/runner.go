@@ -11,6 +11,7 @@ import (
 	"github.com/google/go-github/v56/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
+	"github.com/promhippie/github_exporter/pkg/store"
 	"github.com/ryanuber/go-glob"
 )
 
@@ -18,6 +19,7 @@ import (
 type RunnerCollector struct {
 	client   *github.Client
 	logger   log.Logger
+	db       store.Store
 	failures *prometheus.CounterVec
 	duration *prometheus.HistogramVec
 	config   config.Target
@@ -31,7 +33,7 @@ type RunnerCollector struct {
 }
 
 // NewRunnerCollector returns a new RunnerCollector.
-func NewRunnerCollector(logger log.Logger, client *github.Client, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *RunnerCollector {
+func NewRunnerCollector(logger log.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *RunnerCollector {
 	if failures != nil {
 		failures.WithLabelValues("runner").Add(0)
 	}
@@ -40,6 +42,7 @@ func NewRunnerCollector(logger log.Logger, client *github.Client, failures *prom
 	return &RunnerCollector{
 		client:   client,
 		logger:   log.With(logger, "collector", "runner"),
+		db:       db,
 		failures: failures,
 		duration: duration,
 		config:   cfg,

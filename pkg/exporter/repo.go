@@ -10,6 +10,7 @@ import (
 	"github.com/google/go-github/v56/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
+	"github.com/promhippie/github_exporter/pkg/store"
 	"github.com/ryanuber/go-glob"
 )
 
@@ -17,6 +18,7 @@ import (
 type RepoCollector struct {
 	client   *github.Client
 	logger   log.Logger
+	db       store.Store
 	failures *prometheus.CounterVec
 	duration *prometheus.HistogramVec
 	config   config.Target
@@ -45,7 +47,7 @@ type RepoCollector struct {
 }
 
 // NewRepoCollector returns a new RepoCollector.
-func NewRepoCollector(logger log.Logger, client *github.Client, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *RepoCollector {
+func NewRepoCollector(logger log.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *RepoCollector {
 	if failures != nil {
 		failures.WithLabelValues("repo").Add(0)
 	}
@@ -54,6 +56,7 @@ func NewRepoCollector(logger log.Logger, client *github.Client, failures *promet
 	return &RepoCollector{
 		client:   client,
 		logger:   log.With(logger, "collector", "repo"),
+		db:       db,
 		failures: failures,
 		duration: duration,
 		config:   cfg,

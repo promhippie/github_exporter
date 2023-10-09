@@ -9,12 +9,14 @@ import (
 	"github.com/google/go-github/v56/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
+	"github.com/promhippie/github_exporter/pkg/store"
 )
 
 // AdminCollector collects metrics about the servers.
 type AdminCollector struct {
 	client   *github.Client
 	logger   log.Logger
+	db       store.Store
 	failures *prometheus.CounterVec
 	duration *prometheus.HistogramVec
 	config   config.Target
@@ -65,7 +67,7 @@ type AdminCollector struct {
 }
 
 // NewAdminCollector returns a new AdminCollector.
-func NewAdminCollector(logger log.Logger, client *github.Client, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *AdminCollector {
+func NewAdminCollector(logger log.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *AdminCollector {
 	if failures != nil {
 		failures.WithLabelValues("admin").Add(0)
 	}
@@ -74,6 +76,7 @@ func NewAdminCollector(logger log.Logger, client *github.Client, failures *prome
 	return &AdminCollector{
 		client:   client,
 		logger:   log.With(logger, "collector", "admin"),
+		db:       db,
 		failures: failures,
 		duration: duration,
 		config:   cfg,

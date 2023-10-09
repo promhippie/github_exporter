@@ -26,32 +26,32 @@ func main() {
 
 	collectors = append(
 		collectors,
-		exporter.NewAdminCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
+		exporter.NewAdminCollector(nil, nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 
 	collectors = append(
 		collectors,
-		exporter.NewOrgCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
+		exporter.NewOrgCollector(nil, nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 
 	collectors = append(
 		collectors,
-		exporter.NewRepoCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
+		exporter.NewRepoCollector(nil, nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 
 	collectors = append(
 		collectors,
-		exporter.NewBillingCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
+		exporter.NewBillingCollector(nil, nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 
 	collectors = append(
 		collectors,
-		exporter.NewWorkflowCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
+		exporter.NewWorkflowCollector(nil, nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 
 	collectors = append(
 		collectors,
-		exporter.NewRunnerCollector(nil, nil, nil, nil, config.Load().Target).Metrics()...,
+		exporter.NewRunnerCollector(nil, nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 
 	metrics := make([]metric, 0)

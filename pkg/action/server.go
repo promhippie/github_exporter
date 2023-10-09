@@ -22,12 +22,13 @@ import (
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/exporter"
 	"github.com/promhippie/github_exporter/pkg/middleware"
+	"github.com/promhippie/github_exporter/pkg/store"
 	"github.com/promhippie/github_exporter/pkg/version"
 	"golang.org/x/oauth2"
 )
 
 // Server handles the server sub-command.
-func Server(cfg *config.Config, logger log.Logger) error {
+func Server(cfg *config.Config, db store.Store, logger log.Logger) error {
 	level.Info(logger).Log(
 		"msg", "Launching GitHub Exporter",
 		"version", version.String,
@@ -47,7 +48,7 @@ func Server(cfg *config.Config, logger log.Logger) error {
 	{
 		server := &http.Server{
 			Addr:         cfg.Server.Addr,
-			Handler:      handler(cfg, logger, client),
+			Handler:      handler(cfg, db, logger, client),
 			ReadTimeout:  5 * time.Second,
 			WriteTimeout: cfg.Server.Timeout,
 		}
@@ -104,7 +105,7 @@ func Server(cfg *config.Config, logger log.Logger) error {
 	return gr.Run()
 }
 
-func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.Mux {
+func handler(cfg *config.Config, db store.Store, logger log.Logger, client *github.Client) *chi.Mux {
 	mux := chi.NewRouter()
 	mux.Use(middleware.Recoverer(logger))
 	mux.Use(middleware.RealIP)
@@ -123,6 +124,7 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 		registry.MustRegister(exporter.NewAdminCollector(
 			logger,
 			client,
+			db,
 			requestFailures,
 			requestDuration,
 			cfg.Target,
@@ -137,6 +139,7 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 		registry.MustRegister(exporter.NewOrgCollector(
 			logger,
 			client,
+			db,
 			requestFailures,
 			requestDuration,
 			cfg.Target,
@@ -151,6 +154,7 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 		registry.MustRegister(exporter.NewRepoCollector(
 			logger,
 			client,
+			db,
 			requestFailures,
 			requestDuration,
 			cfg.Target,
@@ -165,20 +169,7 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 		registry.MustRegister(exporter.NewBillingCollector(
 			logger,
 			client,
-			requestFailures,
-			requestDuration,
-			cfg.Target,
-		))
-	}
-
-	if cfg.Collector.Workflows {
-		level.Debug(logger).Log(
-			"msg", "Workflow collector registered",
-		)
-
-		registry.MustRegister(exporter.NewWorkflowCollector(
-			logger,
-			client,
+			db,
 			requestFailures,
 			requestDuration,
 			cfg.Target,
@@ -193,6 +184,22 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 		registry.MustRegister(exporter.NewRunnerCollector(
 			logger,
 			client,
+			db,
+			requestFailures,
+			requestDuration,
+			cfg.Target,
+		))
+	}
+
+	if cfg.Collector.Workflows {
+		level.Debug(logger).Log(
+			"msg", "Workflow collector registered",
+		)
+
+		registry.MustRegister(exporter.NewWorkflowCollector(
+			logger,
+			client,
+			db,
 			requestFailures,
 			requestDuration,
 			cfg.Target,
@@ -211,9 +218,66 @@ func handler(cfg *config.Config, logger log.Logger, client *github.Client) *chi.
 	})
 
 	mux.Route("/", func(root chi.Router) {
-		root.Get(cfg.Server.Path, func(w http.ResponseWriter, r *http.Request) {
-			reg.ServeHTTP(w, r)
-		})
+		root.Handle(cfg.Server.Path, reg)
+
+		if cfg.Collector.Workflows {
+			root.HandleFunc(cfg.Webhook.Path, func(w http.ResponseWriter, r *http.Request) {
+				payload, err := github.ValidatePayload(
+					r,
+					[]byte(cfg.Webhook.Secret),
+				)
+
+				if err != nil {
+					level.Error(logger).Log(
+						"msg", "failed to parse github webhook",
+						"error", err,
+					)
+
+					w.Header().Set("Content-Type", "text/plain")
+					w.WriteHeader(http.StatusInternalServerError)
+
+					io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+				}
+
+				event, err := github.ParseWebHook(
+					github.WebHookType(r),
+					payload,
+				)
+
+				if err != nil {
+					level.Error(logger).Log(
+						"msg", "failed to parse github event",
+						"error", err,
+					)
+
+					w.Header().Set("Content-Type", "text/plain")
+					w.WriteHeader(http.StatusInternalServerError)
+
+					io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+				}
+
+				switch event := event.(type) {
+				case *github.WorkflowRunEvent:
+					if err := db.StoreWorkflowRunEvent(event); err != nil {
+						level.Error(logger).Log(
+							"msg", "failed to store github event",
+							"type", "workflow_run",
+							"error", err,
+						)
+
+						w.Header().Set("Content-Type", "text/plain")
+						w.WriteHeader(http.StatusInternalServerError)
+
+						io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+					}
+				}
+
+				w.Header().Set("Content-Type", "text/plain")
+				w.WriteHeader(http.StatusOK)
+
+				io.WriteString(w, http.StatusText(http.StatusOK))
+			})
+		}
 
 		root.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "text/plain")

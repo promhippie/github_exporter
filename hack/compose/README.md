@@ -49,6 +49,39 @@ visualizing the metrics you can just add this to the command. You can access
 docker-compose <base from above> -f hack/compose/metrics.yml up
 ```
 
+## Database
+
+Finally you can enable the database support for this exporter which is required
+to work with workflow events sent from GitHub via webhook. Here we got currently
+the following options so far.
+
+### SQLite
+
+This simply configures a named volume for the SQLite storage used as a database
+backend.
+
+```console
+docker-compose <base from above> -f hack/compose/db/sqlite.yml up
+```
+
+### MariaDB
+
+This simply starts an additional container for a MariaDB instance used as a
+database backend.
+
+```console
+docker-compose <base from above> -f hack/compose/db/mariadb.yml up
+```
+
+### PostgreSQL
+
+This simply starts an additional container for a PostgreSQL instance used as a
+database backend.
+
+```console
+docker-compose <base from above> -f hack/compose/db/postgres.yml up
+```
+
 [parca]: https://www.parca.dev/
 [prometheus]: https://prometheus.io/
 [grafana]: https://grafana.com/
