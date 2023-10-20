@@ -78,3 +78,18 @@ type Config struct {
 func Load() *Config {
 	return &Config{}
 }
+
+// Labels defines the default labels used by workflow collector.
+func Labels() *cli.StringSlice {
+	return cli.NewStringSlice(
+		"owner",
+		"repo",
+		"workflow",
+		"event",
+		"name",
+		"status",
+		"branch",
+		"number",
+		"run",
+	)
+}
