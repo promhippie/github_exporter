@@ -1,3 +1,32 @@
+# Changelog for unreleased
+
+The following sections list the changes for unreleased.
+
+## Summary
+
+ * Fix #267: Use right date for workflow durations
+ * Enh #261: Rebuild workflow collector based on webhooks
+
+## Details
+
+ * Bugfix #267: Use right date for workflow durations
+
+   We had used the creation date to detect the workflow duration, this have been replaced by the run
+   started date to show the right duration time for the workflow.
+
+   https://github.com/promhippie/github_exporter/issues/267
+
+ * Enhancement #261: Rebuild workflow collector based on webhooks
+
+   We have rebuilt the workflow collector based on GitHub webhooks to get a more stable behavior
+   and to avoid running into many rate limits. Receiving changes directly from gitHub instead of
+   requesting it should improve the behavior a lot. Please read the docs to see how you can setup the
+   required webhooks within GitHub, opening up the exporter for GitHub should be the most simple
+   part.
+
+   https://github.com/promhippie/github_exporter/issues/261
+
+
 # Changelog for 2.4.0
 
 The following sections list the changes for 2.4.0.
