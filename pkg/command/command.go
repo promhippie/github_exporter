@@ -4,6 +4,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/cenkalti/backoff/v4"
+	"github.com/go-kit/log/level"
 	"github.com/promhippie/github_exporter/pkg/action"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/version"
@@ -30,8 +32,65 @@ func Run() error {
 		},
 		Action: func(c *cli.Context) error {
 			logger := setupLogger(cfg)
+			db, err := setupStorage(cfg, logger)
 
-			return action.Server(cfg, logger)
+			if err != nil {
+				level.Error(logger).Log(
+					"msg", "Failed to setup database",
+					"error", err,
+				)
+
+				return err
+			}
+
+			if db != nil {
+				defer db.Close()
+			}
+
+			if err := backoff.RetryNotify(
+				db.Open,
+				backoff.NewExponentialBackOff(),
+				func(err error, dur time.Duration) {
+					level.Warn(logger).Log(
+						"msg", "Database open failed",
+						"retry", dur,
+					)
+				},
+			); err != nil {
+				level.Error(logger).Log(
+					"msg", "Giving up to connect to db",
+					"error", err,
+				)
+
+				return err
+			}
+
+			if err := backoff.RetryNotify(
+				db.Ping,
+				backoff.NewExponentialBackOff(),
+				func(err error, dur time.Duration) {
+					level.Warn(logger).Log(
+						"msg", "Database ping failed",
+						"retry", dur,
+					)
+				},
+			); err != nil {
+				level.Error(logger).Log(
+					"msg", "Giving up to ping the db",
+					"error", err,
+				)
+
+				return err
+			}
+
+			if err := db.Migrate(); err != nil {
+				level.Error(logger).Log(
+					"msg", "Failed to migrate database",
+					"error", err,
+				)
+			}
+
+			return action.Server(cfg, db, logger)
 		},
 	}
 
@@ -101,6 +160,27 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			Usage:       "Path to web-config file",
 			EnvVars:     []string{"GITHUB_EXPORTER_WEB_CONFIG"},
 			Destination: &cfg.Server.Web,
+		},
+		&cli.StringFlag{
+			Name:        "webhook.path",
+			Value:       "/github",
+			Usage:       "Path to webhook target for GitHub",
+			EnvVars:     []string{"GITHUB_EXPORTER_WEBHOOK_PATH"},
+			Destination: &cfg.Webhook.Path,
+		},
+		&cli.StringFlag{
+			Name:        "webhook.secret",
+			Value:       "",
+			Usage:       "Secret used by GitHub to access webhook",
+			EnvVars:     []string{"GITHUB_EXPORTER_WEBHOOK_SECRET"},
+			Destination: &cfg.Webhook.Secret,
+		},
+		&cli.StringFlag{
+			Name:        "database.dsn",
+			Value:       "sqlite://exporter.sqlite3",
+			Usage:       "DSN for the database connection",
+			EnvVars:     []string{"GITHUB_EXPORTER_DATABASE_DSN"},
+			Destination: &cfg.Database.DSN,
 		},
 		&cli.DurationFlag{
 			Name:        "request.timeout",
@@ -212,19 +292,19 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_WORKFLOWS"},
 			Destination: &cfg.Collector.Workflows,
 		},
-		&cli.StringFlag{
-			Name:        "collector.workflows.status",
-			Value:       "",
-			Usage:       "Query workflows with specific status",
-			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOWS_STATUS"},
-			Destination: &cfg.Target.Workflows.Status,
-		},
 		&cli.DurationFlag{
 			Name:        "collector.workflows.window",
-			Value:       12 * time.Hour,
+			Value:       24 * time.Hour,
 			Usage:       "History window for querying workflows",
 			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOWS_WINDOW"},
 			Destination: &cfg.Target.Workflows.Window,
+		},
+		&cli.StringSliceFlag{
+			Name:        "collector.workflows.labels",
+			Value:       config.Labels(),
+			Usage:       "List of labels used for workflows",
+			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOWS_LABELS"},
+			Destination: &cfg.Target.Workflows.Labels,
 		},
 		&cli.BoolFlag{
 			Name:        "collector.runners",

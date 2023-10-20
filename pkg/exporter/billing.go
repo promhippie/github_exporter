@@ -10,12 +10,14 @@ import (
 	"github.com/google/go-github/v56/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
+	"github.com/promhippie/github_exporter/pkg/store"
 )
 
 // BillingCollector collects metrics about the servers.
 type BillingCollector struct {
 	client   *github.Client
 	logger   log.Logger
+	db       store.Store
 	failures *prometheus.CounterVec
 	duration *prometheus.HistogramVec
 	config   config.Target
@@ -35,7 +37,7 @@ type BillingCollector struct {
 }
 
 // NewBillingCollector returns a new BillingCollector.
-func NewBillingCollector(logger log.Logger, client *github.Client, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *BillingCollector {
+func NewBillingCollector(logger log.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *BillingCollector {
 	if failures != nil {
 		failures.WithLabelValues("billing").Add(0)
 	}
@@ -44,6 +46,7 @@ func NewBillingCollector(logger log.Logger, client *github.Client, failures *pro
 	return &BillingCollector{
 		client:   client,
 		logger:   log.With(logger, "collector", "billing"),
+		db:       db,
 		failures: failures,
 		duration: duration,
 		config:   cfg,

@@ -10,12 +10,14 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 
 	"github.com/promhippie/github_exporter/pkg/config"
+	"github.com/promhippie/github_exporter/pkg/store"
 )
 
 // OrgCollector collects metrics about the servers.
 type OrgCollector struct {
 	client   *github.Client
 	logger   log.Logger
+	db       store.Store
 	failures *prometheus.CounterVec
 	duration *prometheus.HistogramVec
 	config   config.Target
@@ -36,7 +38,7 @@ type OrgCollector struct {
 }
 
 // NewOrgCollector returns a new OrgCollector.
-func NewOrgCollector(logger log.Logger, client *github.Client, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *OrgCollector {
+func NewOrgCollector(logger log.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *OrgCollector {
 	if failures != nil {
 		failures.WithLabelValues("org").Add(0)
 	}
@@ -45,6 +47,7 @@ func NewOrgCollector(logger log.Logger, client *github.Client, failures *prometh
 	return &OrgCollector{
 		client:   client,
 		logger:   log.With(logger, "collector", "org"),
+		db:       db,
 		failures: failures,
 		duration: duration,
 		config:   cfg,

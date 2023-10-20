@@ -1,6 +1,6 @@
 ---
 title: "Usage"
-date: 2022-07-22T00:00:00+00:00
+date: 2023-10-20T00:00:00+00:00
 anchor: "getting-started"
 weight: 10
 ---
@@ -134,6 +134,73 @@ support for it, for details about the config format look at the
       - GITHUB_EXPORTER_REPO=promhippie/example
 {{< / highlight >}}
 
+If you want to use the workfows exporter you are forced to expose the exporter
+on the internet as the exporter got to receive webhooks from GitHub. Otherwise
+you won't be able to receive information about the workflows which could be
+transformed to metrics.
+
+To enable the webhook endpoint you should prepare a random secret which gets
+used by the endpoint and the GitHub webhook, it can have any format and any
+length.
+
+Make sure that the exporter is reachable on the `/github` endpoint and add the
+following environment variables, best would be to use some kind of reverse proxy
+in front of the exporter which enforces connections via HTTPS or to properly
+configure HTTPS access via [web configuration](#web-configuration).
+
+{{< highlight diff >}}
+  github_exporter:
+    image: promhippie/github-exporter:latest
+    restart: always
+    environment:
++     - GITHUB_EXPORTER_COLLECTOR_WORKFLOWS=true
++     - GITHUB_EXPORTER_WEBHOOK_SECRET=your-prepared-random-secret
+      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
+      - GITHUB_EXPORTER_LOG_PRETTY=true
+      - GITHUB_EXPORTER_ORG=promhippie
+      - GITHUB_EXPORTER_REPO=promhippie/example
+{{< / highlight >}}
+
+After you have enabled the workflow collector and made sure that the endpoint is
+reachable by GitHub you can look at the [webhook](#webhook) section of this
+documentation to see how to configure the webhook on your GitHub organization
+or repository.
+
+If you want to use a GitHub application instead of a personal access token
+please take a look at the [application](#application) section and add the
+following environment variables after that:
+
+{{< highlight diff >}}
+  github_exporter:
+    image: promhippie/github-exporter:latest
+    restart: always
+    environment:
++     - GITHUB_EXPORTER_APP_ID=your-application-id
++     - GITHUB_EXPORTER_INSTALLATION_ID=your-installation-id
++     - GITHUB_EXPORTER_PRIVATE_KEY=file://path/to/secret.pem
+-     - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
+      - GITHUB_EXPORTER_LOG_PRETTY=true
+      - GITHUB_EXPORTER_ORG=promhippie
+      - GITHUB_EXPORTER_REPO=promhippie/example
+{{< / highlight >}}
+
+If you prefer to provide the private key as a string instead you could also
+provide is in a base64 encoded format:
+
+{{< highlight diff >}}
+  github_exporter:
+    image: promhippie/github-exporter:latest
+    restart: always
+    environment:
+      - GITHUB_EXPORTER_APP_ID=your-application-id
+      - GITHUB_EXPORTER_INSTALLATION_ID=your-installation-id
++     - GITHUB_EXPORTER_PRIVATE_KEY=base64://Q0VSVElGSUNBVEU=
+-     - GITHUB_EXPORTER_PRIVATE_KEY=file://path/to/secret.pem
+      - GITHUB_EXPORTER_LOG_PRETTY=true
+      - GITHUB_EXPORTER_ORG=promhippie
+      - GITHUB_EXPORTER_REPO=promhippie/example
+{{< / highlight >}}
+
 Finally the exporter should be configured fine, let's start this stack with
 [docker-compose][compose], you just need to execute `docker-compose up` within
 the directory where you have stored the `prometheus.yml` and
@@ -144,27 +211,6 @@ hopefully you will gather interesting metrics and never run into issues. You can
 access the exporter at
 [http://localhost:9504/metrics](http://localhost:9504/metrics) and
 [Prometheus][prometheus] at [http://localhost:9090](http://localhost:9090).
-
-If you have enabled the workflows metrics it could happen quite easily that you
-will run into rate limits for the GitHub API. In that case it could already help
-to increase the request timeout and the page size of the requests against the
-GitHub API. Just expand your configuration with values which work best for you:
-
-{{< highlight diff >}}
-  github_exporter:
-    image: promhippie/github-exporter:latest
-    restart: always
-    environment:
-+     - GITHUB_EXPORTER_REQUEST_TIMEOUT=5m
-+     - GITHUB_EXPORTER_PER_PAGE=5000
-      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
-      - GITHUB_EXPORTER_LOG_PRETTY=true
-      - GITHUB_EXPORTER_ORG=promhippie
-      - GITHUB_EXPORTER_REPO=promhippie/example
-{{< / highlight >}}
-
-Also don't forget to set a higher scrape interval, otherwise Prometheus will
-scrape the exporter more often than needed.
 
 ## Configuration
 

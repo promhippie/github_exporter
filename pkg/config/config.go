@@ -15,6 +15,12 @@ type Server struct {
 	Pprof   bool
 }
 
+// Webhook defines the webhook specific configuration.
+type Webhook struct {
+	Path   string
+	Secret string
+}
+
 // Logs defines the level and color for log configuration.
 type Logs struct {
 	Level  string
@@ -23,8 +29,8 @@ type Logs struct {
 
 // Workflows defines the workflow specific configuration.
 type Workflows struct {
-	Status string
 	Window time.Duration
+	Labels cli.StringSlice
 }
 
 // Target defines the target specific configuration.
@@ -53,15 +59,37 @@ type Collector struct {
 	Runners   bool
 }
 
+// Database defines the database specific configuration.
+type Database struct {
+	DSN string
+}
+
 // Config is a combination of all available configurations.
 type Config struct {
 	Server    Server
+	Webhook   Webhook
 	Logs      Logs
 	Target    Target
 	Collector Collector
+	Database  Database
 }
 
 // Load initializes a default configuration struct.
 func Load() *Config {
 	return &Config{}
+}
+
+// Labels defines the default labels used by workflow collector.
+func Labels() *cli.StringSlice {
+	return cli.NewStringSlice(
+		"owner",
+		"repo",
+		"workflow",
+		"event",
+		"name",
+		"status",
+		"branch",
+		"number",
+		"run",
+	)
 }

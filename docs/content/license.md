@@ -2,7 +2,7 @@
 title: "License"
 date: 2022-07-20T00:00:00+00:00
 anchor: "license"
-weight: 40
+weight: 60
 ---
 
 This project is licensed under the [Apache 2.0][license] license. For the

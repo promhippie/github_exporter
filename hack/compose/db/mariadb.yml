@@ -1,0 +1,22 @@
+version: '3.4'
+
+volumes:
+  mariadb:
+
+services:
+  exporter:
+    environment:
+      - GITHUB_EXPORTER_DATABASE_DSN=mariadb://exporter:exporter@db:3306/exporter
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:11.1
+    restart: always
+    environment:
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_USER=exporter
+      - MARIADB_PASSWORD=exporter
+      - MARIADB_DATABASE=exporter
+    volumes:
+      - mariadb:/var/lib/mysql

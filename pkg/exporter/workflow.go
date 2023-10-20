@@ -1,10 +1,6 @@
 package exporter
 
 import (
-	"context"
-	"fmt"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/go-kit/log"
@@ -12,13 +8,14 @@ import (
 	"github.com/google/go-github/v56/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
-	"github.com/ryanuber/go-glob"
+	"github.com/promhippie/github_exporter/pkg/store"
 )
 
 // WorkflowCollector collects metrics about the servers.
 type WorkflowCollector struct {
 	client   *github.Client
 	logger   log.Logger
+	db       store.Store
 	failures *prometheus.CounterVec
 	duration *prometheus.HistogramVec
 	config   config.Target
@@ -29,15 +26,16 @@ type WorkflowCollector struct {
 }
 
 // NewWorkflowCollector returns a new WorkflowCollector.
-func NewWorkflowCollector(logger log.Logger, client *github.Client, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *WorkflowCollector {
+func NewWorkflowCollector(logger log.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *WorkflowCollector {
 	if failures != nil {
 		failures.WithLabelValues("action").Add(0)
 	}
 
-	labels := []string{"owner", "repo", "event", "name", "status", "head_branch", "run", "run_id", "retry"}
+	labels := cfg.Workflows.Labels.Value()
 	return &WorkflowCollector{
 		client:   client,
 		logger:   log.With(logger, "collector", "workflow"),
+		db:       db,
 		failures: failures,
 		duration: duration,
 		config:   cfg,
@@ -81,11 +79,28 @@ func (c *WorkflowCollector) Describe(ch chan<- *prometheus.Desc) {
 
 // Collect is called by the Prometheus registry when collecting metrics.
 func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
-	collected := make([]string, 0)
+	if err := c.db.PruneWorkflowRuns(
+		c.config.Workflows.Window,
+	); err != nil {
+		level.Error(c.logger).Log(
+			"msg", "Failed to prune workflows",
+			"err", err,
+		)
+	}
 
 	now := time.Now()
-	records := c.repoWorkflows()
-	c.duration.WithLabelValues("runner").Observe(time.Since(now).Seconds())
+	records, err := c.db.GetWorkflowRuns()
+	c.duration.WithLabelValues("workflow").Observe(time.Since(now).Seconds())
+
+	if err != nil {
+		level.Error(c.logger).Log(
+			"msg", "Failed to fetch workflows",
+			"err", err,
+		)
+
+		c.failures.WithLabelValues("workflow").Inc()
+		return
+	}
 
 	level.Debug(c.logger).Log(
 		"msg", "Fetched workflows",
@@ -94,185 +109,44 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 	)
 
 	for _, record := range records {
-		if alreadyCollected(collected, record.GetRepository().GetFullName()+record.GetName()) {
-			level.Debug(c.logger).Log(
-				"msg", "Already collected workflow",
-				"owner", record.GetRepository().GetFullName(),
-				"name", record.GetName(),
-			)
-
-			continue
-		}
-
-		collected = append(collected, record.GetRepository().GetFullName()+record.GetName())
-
 		level.Debug(c.logger).Log(
 			"msg", "Collecting workflow",
-			"owner", record.GetRepository().GetFullName(),
-			"name", record.GetName(),
+			"owner", record.Owner,
+			"repo", record.Repo,
+			"workflow", record.WorkflowID,
+			"number", record.Number,
 		)
 
-		labels := []string{
-			record.GetRepository().GetOwner().GetLogin(),
-			record.GetRepository().GetName(),
-			record.GetEvent(),
-			record.GetName(),
-			record.GetStatus(),
-			record.GetHeadBranch(),
-			strconv.Itoa(record.GetRunNumber()),
-			strconv.FormatInt(record.GetID(), 10),
-			strconv.Itoa(record.GetRunAttempt()),
-		}
+		labels := []string{}
 
-		status := record.GetConclusion()
-		if status == "" {
-			status = record.GetStatus()
+		for _, label := range c.config.Workflows.Labels.Value() {
+			labels = append(
+				labels,
+				record.ByLabel(label),
+			)
 		}
 
 		ch <- prometheus.MustNewConstMetric(
 			c.Status,
 			prometheus.GaugeValue,
-			statusToGauge(status),
+			statusToGauge(record.Status),
 			labels...,
 		)
 
 		ch <- prometheus.MustNewConstMetric(
 			c.Duration,
 			prometheus.GaugeValue,
-			float64((record.GetUpdatedAt().Time.Unix()-record.GetCreatedAt().Time.Unix())*1000),
+			float64((record.UpdatedAt.Unix()-record.StartedAt.Unix())*1000),
 			labels...,
 		)
 
 		ch <- prometheus.MustNewConstMetric(
 			c.Creation,
 			prometheus.GaugeValue,
-			time.Since(record.GetRunStartedAt().Time).Minutes(),
+			time.Since(record.StartedAt).Minutes(),
 			labels...,
 		)
 	}
-}
-
-func (c *WorkflowCollector) repoWorkflows() []*github.WorkflowRun {
-	collected := make([]string, 0)
-	result := make([]*github.WorkflowRun, 0)
-
-	for _, name := range c.config.Repos.Value() {
-		n := strings.Split(name, "/")
-
-		if len(n) != 2 {
-			level.Error(c.logger).Log(
-				"msg", "Invalid repo name",
-				"name", name,
-			)
-
-			c.failures.WithLabelValues("workflow").Inc()
-			continue
-		}
-
-		splitOwner, splitName := n[0], n[1]
-
-		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
-		defer cancel()
-
-		repos, err := reposByOwnerAndName(ctx, c.client, splitOwner, splitName, c.config.PerPage)
-
-		if err != nil {
-			level.Error(c.logger).Log(
-				"msg", "Failed to fetch repos",
-				"name", name,
-				"err", err,
-			)
-
-			c.failures.WithLabelValues("workflow").Inc()
-			continue
-		}
-
-		level.Debug(c.logger).Log(
-			"msg", "Fetched repos for workflows",
-			"count", len(repos),
-		)
-
-		for _, repo := range repos {
-			if !glob.Glob(name, *repo.FullName) {
-				continue
-			}
-
-			if alreadyCollected(collected, repo.GetFullName()) {
-				level.Debug(c.logger).Log(
-					"msg", "Already collected repo",
-					"name", repo.GetFullName(),
-				)
-
-				continue
-			}
-
-			collected = append(collected, repo.GetFullName())
-
-			records, err := c.pagedRepoWorkflows(ctx, *repo.Owner.Login, *repo.Name)
-
-			if err != nil {
-				level.Error(c.logger).Log(
-					"msg", "Failed to fetch repo workflows",
-					"name", name,
-					"err", err,
-				)
-
-				c.failures.WithLabelValues("workflow").Inc()
-				continue
-			}
-
-			result = append(result, records...)
-		}
-	}
-
-	return result
-}
-
-func (c *WorkflowCollector) pagedRepoWorkflows(ctx context.Context, owner, name string) ([]*github.WorkflowRun, error) {
-	startWindow := time.Now().Add(
-		-c.config.Workflows.Window,
-	).Format(time.RFC3339)
-
-	opts := &github.ListWorkflowRunsOptions{
-		Created: fmt.Sprintf(">=%s", startWindow),
-		Status:  c.config.Workflows.Status,
-		ListOptions: github.ListOptions{
-			PerPage: c.config.PerPage,
-		},
-	}
-
-	var (
-		workflows []*github.WorkflowRun
-	)
-
-	for {
-		result, resp, err := c.client.Actions.ListRepositoryWorkflowRuns(
-			ctx,
-			owner,
-			name,
-			opts,
-		)
-
-		if err != nil {
-			closeBody(resp)
-			return nil, err
-		}
-
-		workflows = append(
-			workflows,
-			result.WorkflowRuns...,
-		)
-
-		if resp.NextPage == 0 {
-			closeBody(resp)
-			break
-		}
-
-		closeBody(resp)
-		opts.Page = resp.NextPage
-	}
-
-	return workflows, nil
 }
 
 func statusToGauge(conclusion string) float64 {
