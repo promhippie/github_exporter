@@ -32,7 +32,7 @@ GITHUB_EXPORTER_REQUEST_TIMEOUT
 : Timeout requesting GitHub API, defaults to `5s`
 
 GITHUB_EXPORTER_TOKEN
-: Access token for the GitHub API
+: Access token for the GitHub API, also supports file:// and base64://
 
 GITHUB_EXPORTER_APP_ID
 : App ID for the GitHub app, defaults to `0`
@@ -41,7 +41,7 @@ GITHUB_EXPORTER_INSTALLATION_ID
 : Installation ID for the GitHub app, defaults to `0`
 
 GITHUB_EXPORTER_PRIVATE_KEY
-: Private key for the GitHub app, path or base64-encoded
+: Private key for the GitHub app, also supports file:// and base64://
 
 GITHUB_EXPORTER_BASE_URL
 : URL to access the GitHub Enterprise API
