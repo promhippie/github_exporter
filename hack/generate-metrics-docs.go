@@ -46,12 +46,12 @@ func main() {
 
 	collectors = append(
 		collectors,
-		exporter.NewWorkflowCollector(nil, nil, nil, nil, nil, config.Load().Target).Metrics()...,
+		exporter.NewRunnerCollector(nil, nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 
 	collectors = append(
 		collectors,
-		exporter.NewRunnerCollector(nil, nil, nil, nil, nil, config.Load().Target).Metrics()...,
+		exporter.NewWorkflowCollector(nil, nil, nil, nil, nil, config.Load().Target).Metrics()...,
 	)
 
 	metrics := make([]metric, 0)
@@ -75,7 +75,9 @@ func main() {
 			Labels: make([]string, 0),
 		}
 
-		labels := reflect.ValueOf(desc).Elem().FieldByName("variableLabels")
+		labels := reflect.Indirect(
+			reflect.ValueOf(desc).Elem().FieldByName("variableLabels"),
+		).FieldByName("names")
 
 		for i := 0; i < labels.Len(); i++ {
 			m.Labels = append(m.Labels, labels.Index(i).String())
