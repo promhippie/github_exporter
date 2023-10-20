@@ -19,6 +19,15 @@ GITHUB_EXPORTER_WEB_TIMEOUT
 GITHUB_EXPORTER_WEB_CONFIG
 : Path to web-config file
 
+GITHUB_EXPORTER_WEBHOOK_PATH
+: Path to webhook target for GitHub, defaults to `/github`
+
+GITHUB_EXPORTER_WEBHOOK_SECRET
+: Secret used by GitHub to access webhook
+
+GITHUB_EXPORTER_DATABASE_DSN
+: DSN for the database connection, defaults to `sqlite://exporter.sqlite3`
+
 GITHUB_EXPORTER_REQUEST_TIMEOUT
 : Timeout requesting GitHub API, defaults to `5s`
 
@@ -67,11 +76,11 @@ GITHUB_EXPORTER_COLLECTOR_BILLING
 GITHUB_EXPORTER_COLLECTOR_WORKFLOWS
 : Enable collector for workflows, defaults to `false`
 
-GITHUB_EXPORTER_WORKFLOWS_STATUS
-: Query workflows with specific status
-
 GITHUB_EXPORTER_WORKFLOWS_WINDOW
-: History window for querying workflows, defaults to `12h0m0s`
+: History window for querying workflows, defaults to `24h0m0s`
+
+GITHUB_EXPORTER_WORKFLOWS_LABELS
+: List of labels used for workflows, comma-separated list, defaults to `owner, repo, workflow, event, name, status, branch, number, run`
 
 GITHUB_EXPORTER_COLLECTOR_RUNNERS
 : Enable collector for runners, defaults to `false`
