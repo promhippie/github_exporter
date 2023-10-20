@@ -9,7 +9,7 @@
     <item>
       <title>Usage</title>
       <link>https://promhippie.github.io/github_exporter/usage/</link>
-      <pubDate>Fri, 22 Jul 2022 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 20 Oct 2023 00:00:00 +0000</pubDate>
       
       <guid>https://promhippie.github.io/github_exporter/usage/</guid>
       <description>Installation We won&amp;rsquo;t cover further details how to properly setup Prometheus itself, we will only cover some basic setup based on docker-compose. But if you want to run this exporter without docker-compose you should be able to adopt that to your needs.
@@ -37,6 +37,27 @@ apiVersion: kustomize.config.k8s.io/v1beta1 kind: Kustomization namespace: githu
       <description>As this project is built with Go you need to install Go first. The installation of Go is out of the scope of this document, please follow the official documentation. After the installation of Go you need to get the sources:
 git clone https://github.com/promhippie/github_exporter.git cd github_exporter/ All required tool besides Go itself are bundled, all you need is part of the Makfile:
 make generate build Finally you should have the binary within the bin/ folder now, give it a try with .</description>
+    </item>
+    
+    <item>
+      <title>Webhook</title>
+      <link>https://promhippie.github.io/github_exporter/webhook/</link>
+      <pubDate>Fri, 20 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://promhippie.github.io/github_exporter/webhook/</guid>
+      <description>For the configuration of a webhook on your GitHub repository or your organization you should just follow the defined steps, after that you should receive any webhook related to the defined actions on the exporter if you have followed the instructions from above.
+If you want to configure a webhook for your organization just visit https://github.com/organizations/ORGANIZATION/settings/hooks/new where you got to replace ORGANIZATION with the name of your organization, after that follow the steps from the screenshots.</description>
+    </item>
+    
+    <item>
+      <title>Application</title>
+      <link>https://promhippie.github.io/github_exporter/application/</link>
+      <pubDate>Fri, 20 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://promhippie.github.io/github_exporter/application/</guid>
+      <description>Instead of using personal access tokens you can register a GutHub App. Just head over to https://github.com/organizations/ORGANIZATION/settings/apps/new where you got to replace ORGANIZATION with the name of your organization.
+Feel free to name the application howerever you like, I have named mine by the organization and exporter, e.g. Promhippie Exporter. For the description you can write whatever you want or what sounds best for you:
+Within the Identifying and authorizing users section I have unchecked everything, at least for me this have worked without any problem so far:</description>
     </item>
     
     <item>

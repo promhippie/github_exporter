@@ -83,7 +83,7 @@
 		line-height: 1.6;
 		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 		color: #242424;
-		max-width: 800px;
+		max-width: 900px;
 		margin: 5% auto;
 	}
 
@@ -130,6 +130,7 @@
 	h3 {
 		font-size: 18px;
 		margin-bottom: 0.3em;
+		margin-top: 1.0em;
 	}
 
 	h1 small a {
@@ -230,6 +231,11 @@
 
 	dl dt {
 		font-weight: bold;
+		margin-top: 10px;
+	}
+
+	dl dt:first-child {
+		margin-top: 0px;
 	}
 
 	dl dd {
@@ -379,6 +385,14 @@
 						Building
 					</a>
 				
+					<a href="#webhook">
+						Webhook
+					</a>
+				
+					<a href="#application">
+						Application
+					</a>
+				
 					<a href="#license">
 						License
 					</a>
@@ -507,6 +521,61 @@ support for it, for details about the config format look at the
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_ORG=promhippie
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_REPO=promhippie/example
 </span></span></code></pre></div>
+<p>If you want to use the workfows exporter you are forced to expose the exporter
+on the internet as the exporter got to receive webhooks from GitHub. Otherwise
+you won&rsquo;t be able to receive information about the workflows which could be
+transformed to metrics.</p>
+<p>To enable the webhook endpoint you should prepare a random secret which gets
+used by the endpoint and the GitHub webhook, it can have any format and any
+length.</p>
+<p>Make sure that the exporter is reachable on the <code>/github</code> endpoint and add the
+following environment variables, best would be to use some kind of reverse proxy
+in front of the exporter which enforces connections via HTTPS or to properly
+configure HTTPS access via <a href="#web-configuration">web configuration</a>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">  github_exporter:
+</span></span><span class="line"><span class="cl">    image: promhippie/github-exporter:latest
+</span></span><span class="line"><span class="cl">    restart: always
+</span></span><span class="line"><span class="cl">    environment:
+</span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_COLLECTOR_WORKFLOWS=true
+</span></span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_WEBHOOK_SECRET=your-prepared-random-secret
+</span></span></span><span class="line"><span class="cl"><span class="gi"></span>      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
+</span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_LOG_PRETTY=true
+</span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_ORG=promhippie
+</span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_REPO=promhippie/example
+</span></span></code></pre></div>
+<p>After you have enabled the workflow collector and made sure that the endpoint is
+reachable by GitHub you can look at the <a href="#webhook">webhook</a> section of this
+documentation to see how to configure the webhook on your GitHub organization
+or repository.</p>
+<p>If you want to use a GitHub application instead of a personal access token
+please take a look at the <a href="#application">application</a> section and add the
+following environment variables after that:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">  github_exporter:
+</span></span><span class="line"><span class="cl">    image: promhippie/github-exporter:latest
+</span></span><span class="line"><span class="cl">    restart: always
+</span></span><span class="line"><span class="cl">    environment:
+</span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_APP_ID=your-application-id
+</span></span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_INSTALLATION_ID=your-installation-id
+</span></span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_PRIVATE_KEY=file://path/to/secret.pem
+</span></span></span><span class="line"><span class="cl"><span class="gi"></span><span class="gd">-     - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
+</span></span></span><span class="line"><span class="cl"><span class="gd"></span>      - GITHUB_EXPORTER_LOG_PRETTY=true
+</span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_ORG=promhippie
+</span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_REPO=promhippie/example
+</span></span></code></pre></div>
+<p>If you prefer to provide the private key as a string instead you could also
+provide is in a base64 encoded format:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">  github_exporter:
+</span></span><span class="line"><span class="cl">    image: promhippie/github-exporter:latest
+</span></span><span class="line"><span class="cl">    restart: always
+</span></span><span class="line"><span class="cl">    environment:
+</span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_APP_ID=your-application-id
+</span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_INSTALLATION_ID=your-installation-id
+</span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_PRIVATE_KEY=base64://Q0VSVElGSUNBVEU=
+</span></span></span><span class="line"><span class="cl"><span class="gi"></span><span class="gd">-     - GITHUB_EXPORTER_PRIVATE_KEY=file://path/to/secret.pem
+</span></span></span><span class="line"><span class="cl"><span class="gd"></span>      - GITHUB_EXPORTER_LOG_PRETTY=true
+</span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_ORG=promhippie
+</span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_REPO=promhippie/example
+</span></span></code></pre></div>
 <p>Finally the exporter should be configured fine, let&rsquo;s start this stack with
 <a href="https://docs.docker.com/compose/">docker-compose</a>, you just need to execute <code>docker-compose up</code> within
 the directory where you have stored the <code>prometheus.yml</code> and
@@ -516,23 +585,6 @@ hopefully you will gather interesting metrics and never run into issues. You can
 access the exporter at
 <a href="http://localhost:9504/metrics">http://localhost:9504/metrics</a> and
 <a href="https://prometheus.io">Prometheus</a> at <a href="http://localhost:9090">http://localhost:9090</a>.</p>
-<p>If you have enabled the workflows metrics it could happen quite easily that you
-will run into rate limits for the GitHub API. In that case it could already help
-to increase the request timeout and the page size of the requests against the
-GitHub API. Just expand your configuration with values which work best for you:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">  github_exporter:
-</span></span><span class="line"><span class="cl">    image: promhippie/github-exporter:latest
-</span></span><span class="line"><span class="cl">    restart: always
-</span></span><span class="line"><span class="cl">    environment:
-</span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_REQUEST_TIMEOUT=5m
-</span></span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_PER_PAGE=5000
-</span></span></span><span class="line"><span class="cl"><span class="gi"></span>      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
-</span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_LOG_PRETTY=true
-</span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_ORG=promhippie
-</span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_REPO=promhippie/example
-</span></span></code></pre></div>
-<p>Also don&rsquo;t forget to set a higher scrape interval, otherwise Prometheus will
-scrape the exporter more often than needed.</p>
 <h2 id="configuration">Configuration</h2>
 <dl>
 <dt>GITHUB_EXPORTER_LOG_LEVEL</dt>
@@ -600,13 +652,13 @@ you will always get the standard metrics exported by the Golang client of
 take a look at the <a href="https://github.com/prometheus/client_golang/blob/master/prometheus/process_collector.go">process collector</a> and the
 <a href="https://github.com/prometheus/client_golang/blob/master/prometheus/go_collector.go">Go collector</a>.</p>
 <dl>
-<dt>github_action_billing_included_minutes{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_action_billing_included_minutes{type, name}</dt>
 <dd>Included minutes for this type</dd>
-<dt>github_action_billing_minutes_used{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_action_billing_minutes_used{type, name}</dt>
 <dd>Total action minutes used for this type</dd>
-<dt>github_action_billing_minutes_used_breakdown{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_action_billing_minutes_used_breakdown{type, name, os}</dt>
 <dd>Total action minutes used for this type broken down by operating system</dd>
-<dt>github_action_billing_paid_minutes{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_action_billing_paid_minutes{type, name}</dt>
 <dd>Total paid minutes used for this type</dd>
 <dt>github_admin_comments_commit{}</dt>
 <dd>Number of commit comments</dd>
@@ -676,107 +728,107 @@ take a look at the <a href="https://github.com/prometheus/client_golang/blob/mas
 <dd>Number of suspended users</dd>
 <dt>github_admin_users_total{}</dt>
 <dd>Total number of users</dd>
-<dt>github_org_collaborators{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_org_collaborators{name}</dt>
 <dd>Number of collaborators within org</dd>
-<dt>github_org_create_timestamp{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_org_create_timestamp{name}</dt>
 <dd>Timestamp of the creation of org</dd>
-<dt>github_org_disk_usage{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_org_disk_usage{name}</dt>
 <dd>Used diskspace by the org</dd>
-<dt>github_org_filled_seats{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_org_filled_seats{name}</dt>
 <dd>Filled seats for org</dd>
-<dt>github_org_followers{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_org_followers{name}</dt>
 <dd>Number of followers for org</dd>
-<dt>github_org_following{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_org_following{name}</dt>
 <dd>Number of following other users by org</dd>
-<dt>github_org_private_gists{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_org_private_gists{name}</dt>
 <dd>Number of private gists from org</dd>
-<dt>github_org_private_repos_owned{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_org_private_repos_owned{name}</dt>
 <dd>Owned private repositories by org</dd>
-<dt>github_org_private_repos_total{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_org_private_repos_total{name}</dt>
 <dd>Total amount of private repositories</dd>
-<dt>github_org_public_gists{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_org_public_gists{name}</dt>
 <dd>Number of public gists from org</dd>
-<dt>github_org_public_repos{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_org_public_repos{name}</dt>
 <dd>Number of public repositories from org</dd>
-<dt>github_org_seats{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_org_seats{name}</dt>
 <dd>Seats for org</dd>
-<dt>github_org_updated_timestamp{&lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_org_updated_timestamp{name}</dt>
 <dd>Timestamp of the last modification of org</dd>
-<dt>github_package_billing_gigabytes_bandwidth_used{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_package_billing_gigabytes_bandwidth_used{type, name}</dt>
 <dd>Total bandwidth used by this type in Gigabytes</dd>
-<dt>github_package_billing_included_gigabytes_bandwidth{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_package_billing_included_gigabytes_bandwidth{type, name}</dt>
 <dd>Included bandwidth for this type in Gigabytes</dd>
-<dt>github_package_billing_paid_gigabytes_bandwidth_used{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_package_billing_paid_gigabytes_bandwidth_used{type, name}</dt>
 <dd>Total paid bandwidth used by this type in Gigabytes</dd>
-<dt>github_repo_allow_merge_commit{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_allow_merge_commit{owner, name}</dt>
 <dd>Show if this repository allows merge commits</dd>
-<dt>github_repo_allow_rebase_merge{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_allow_rebase_merge{owner, name}</dt>
 <dd>Show if this repository allows rebase merges</dd>
-<dt>github_repo_allow_squash_merge{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_allow_squash_merge{owner, name}</dt>
 <dd>Show if this repository allows squash merges</dd>
-<dt>github_repo_archived{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_archived{owner, name}</dt>
 <dd>Show if this repository have been archived</dd>
-<dt>github_repo_created_timestamp{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_created_timestamp{owner, name}</dt>
 <dd>Timestamp of the creation of repo</dd>
-<dt>github_repo_forked{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_forked{owner, name}</dt>
 <dd>Show if this repository is a forked repository</dd>
-<dt>github_repo_forks{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_forks{owner, name}</dt>
 <dd>How often has this repository been forked</dd>
-<dt>github_repo_has_downloads{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_has_downloads{owner, name}</dt>
 <dd>Show if this repository got downloads enabled</dd>
-<dt>github_repo_has_issues{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_has_issues{owner, name}</dt>
 <dd>Show if this repository got issues enabled</dd>
-<dt>github_repo_has_pages{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_has_pages{owner, name}</dt>
 <dd>Show if this repository got pages enabled</dd>
-<dt>github_repo_has_projects{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_has_projects{owner, name}</dt>
 <dd>Show if this repository got projects enabled</dd>
-<dt>github_repo_has_wiki{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_has_wiki{owner, name}</dt>
 <dd>Show if this repository got wiki enabled</dd>
-<dt>github_repo_issues{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_issues{owner, name}</dt>
 <dd>Number of open issues on this repository</dd>
-<dt>github_repo_network{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_network{owner, name}</dt>
 <dd>Number of repositories in the network</dd>
-<dt>github_repo_private{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_private{owner, name}</dt>
 <dd>Show iof this repository is private</dd>
-<dt>github_repo_pushed_timestamp{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_pushed_timestamp{owner, name}</dt>
 <dd>Timestamp of the last push to repo</dd>
-<dt>github_repo_size{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_size{owner, name}</dt>
 <dd>Size of the repository content</dd>
-<dt>github_repo_stargazers{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_stargazers{owner, name}</dt>
 <dd>Number of stargazers on this repository</dd>
-<dt>github_repo_subscribers{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_subscribers{owner, name}</dt>
 <dd>Number of subscribers on this repository</dd>
-<dt>github_repo_updated_timestamp{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_updated_timestamp{owner, name}</dt>
 <dd>Timestamp of the last modification of repo</dd>
-<dt>github_repo_watchers{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_repo_watchers{owner, name}</dt>
 <dd>Number of watchers on this repository</dd>
 <dt>github_request_duration_seconds{collector}</dt>
 <dd>Histogram of latencies for requests to the api per collector</dd>
 <dt>github_request_failures_total{collector}</dt>
 <dd>Total number of failed requests to the api per collector</dd>
-<dt>github_runner_enterprise_busy{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_runner_enterprise_busy{owner, id, name, os, status}</dt>
 <dd>1 if the runner is busy, 0 otherwise</dd>
-<dt>github_runner_enterprise_online{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_runner_enterprise_online{owner, id, name, os, status}</dt>
 <dd>Static metrics of runner is online or not</dd>
-<dt>github_runner_org_busy{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_runner_org_busy{owner, id, name, os, status}</dt>
 <dd>1 if the runner is busy, 0 otherwise</dd>
-<dt>github_runner_org_online{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_runner_org_online{owner, id, name, os, status}</dt>
 <dd>Static metrics of runner is online or not</dd>
-<dt>github_runner_repo_busy{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_runner_repo_busy{owner, id, name, os, status}</dt>
 <dd>1 if the runner is busy, 0 otherwise</dd>
-<dt>github_runner_repo_online{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_runner_repo_online{owner, id, name, os, status}</dt>
 <dd>Static metrics of runner is online or not</dd>
-<dt>github_storage_billing_days_left_in_cycle{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_storage_billing_days_left_in_cycle{type, name}</dt>
 <dd>Days left within this billing cycle for this type</dd>
-<dt>github_storage_billing_estimated_paid_storage_for_month{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_storage_billing_estimated_paid_storage_for_month{type, name}</dt>
 <dd>Estimated paid storage for this month for this type</dd>
-<dt>github_storage_billing_estimated_storage_for_month{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_storage_billing_estimated_storage_for_month{type, name}</dt>
 <dd>Estimated total storage for this month for this type</dd>
-<dt>github_workflow_duration_ms{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_workflow_duration_ms{owner, repo, workflow, event, name, status, branch, number, run}</dt>
 <dd>Duration of workflow runs</dd>
-<dt>github_workflow_duration_run_created_minutes{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_workflow_duration_run_created_minutes{owner, repo, workflow, event, name, status, branch, number, run}</dt>
 <dd>Duration since the workflow run creation time in minutes</dd>
-<dt>github_workflow_status{&lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;, &lt;prometheus.ConstrainedLabel Value&gt;}</dt>
+<dt>github_workflow_status{owner, repo, workflow, event, name, status, branch, number, run}</dt>
 <dd>Status of workflow runs</dd>
 </dl>
 
@@ -838,7 +890,7 @@ installation of <a href="https://helm.sh">Helm</a> you just need to execute the 
 </span></span></span><span class="line"><span class="cl"><span class="go">helm install github-exporter promhippie/github-exporter
 </span></span></span></code></pre></div>
 <p>You can also watch that available values and generally the details of the chart
-provided by us within our <a href="https://github.com/promhippie/charts/tree/master/charts/github-exporter">chart</a> repository.</p>
+provided by us within our <a href="https://github.com/promhippie/charts/tree/master/charts/github-exporter">chart</a> repository or on <a href="https://artifacthub.io/packages/helm/promhippie/github-exporter">Artifacthub</a>.</p>
 <p>After applying this manifest the exporter should be directly visible within your
 Prometheus instance depending on your installation if you enabled the
 annotations or the service monitor.</p>
@@ -869,6 +921,94 @@ the sources:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">make generate build</span></span></code></pre></div>
 <p>Finally you should have the binary within the <code>bin/</code> folder now, give it a try
 with <code>./bin/github_exporter -h</code> to see all available options.</p>
+
+			</section>
+		
+			<section id="webhook">
+				<h1>
+					<a href="#webhook">
+						Webhook
+					</a>
+
+					<small>
+						<a href="#html">
+							Back to Top
+						</a>
+					</small>
+				</h1>
+
+				<p>For the configuration of a webhook on your GitHub repository or your
+organization you should just follow the defined steps, after that you should
+receive any webhook related to the defined actions on the exporter if you have
+followed the instructions from above.</p>
+<p>If you want to configure a webhook for your organization just visit
+<code>https://github.com/organizations/ORGANIZATION/settings/hooks/new</code> where you got
+to replace <code>ORGANIZATION</code> with the name of your organization, after that follow
+the steps from the screenshots.</p>
+<p>If you want to configure a webhook for your repository just visit
+<code>https://github.com/ORGANIZATION/REPOSITORY/settings/hooks/new</code> where you got to
+replace <code>ORGANIZATION</code> with your username or organization and <code>REPOSITORY</code> with
+your repository name, after that follow the steps from the screenshots.</p>
+<p><strong>Payload URL</strong> should be the endpoint where GitHub can access the exporter
+through your reverse proxy, or webserver, or whatever you have configured in
+front of the exporter, something like <code>https://exporter.example.com/github</code>.</p>
+<p><strong>Content type</strong> should be set to <code>application/json</code>, but in theory both formats
+should be correctly parsed by the exporter.</p>
+<p><strong>Secret</strong> gets the random password you should have prepared when you have
+configured the exporter, mentioned above.</p>
+<p><strong>Which events would you like to trigger this webhook</strong> got to be set to
+<code>Let me select individual events</code> where you just got to check the last item
+<code>Workflow runs</code>.</p>
+<p>After hitting the <strong>Add webhook</strong> button you are ready to receive first webhooks
+by GitHub. It should also show that the initial test webhook have been executed
+successfully.</p>
+
+			</section>
+		
+			<section id="application">
+				<h1>
+					<a href="#application">
+						Application
+					</a>
+
+					<small>
+						<a href="#html">
+							Back to Top
+						</a>
+					</small>
+				</h1>
+
+				<p>Instead of using personal access tokens you can register a GutHub App. Just head
+over to <code>https://github.com/organizations/ORGANIZATION/settings/apps/new</code> where
+you got to replace <code>ORGANIZATION</code> with the name of your organization.</p>
+<p>Feel free to name the application howerever you like, I have named mine by the
+organization and exporter, e.g. <code>Promhippie Exporter</code>. For the description you
+can write whatever you want or what sounds best for you:</p>
+<p><img src="./screenshots/app01.png" alt="Application 01"></p>
+<p>Within the <strong>Identifying and authorizing users</strong> section I have unchecked
+everything, at least for me this have worked without any problem so far:</p>
+<p><img src="./screenshots/app02.png" alt="Application 02"></p>
+<p>Within the <strong>Post installation</strong> and <strong>Webhook</strong> sections I have also unchecked
+everything as this won&rsquo;t be used by the application:</p>
+<p><img src="./screenshots/app03.png" alt="Application 03"></p>
+<p>The required permissions have been stripped down to the <strong>Administration</strong>
+within <strong>Repository permissions</strong> set to <code>read-only</code> and <strong>Administration</strong> as
+well as <strong>Self-hosted runners</strong> within <strong>Organization permissions</strong> set to
+<code>read-only</code>. You are also able to run the exporter with lesser permissions but
+than you will loose part of the metrics like the runner or storage related.</p>
+<p>Finally I have set the installation to <strong>Only for this account</strong> which seem to
+be fine as nobody else got to install the application.</p>
+<p>After the creation of the application itself you can already copy the <strong>App ID</strong>
+which you will need later to configure the app within the exporter.</p>
+<p>Scroll down to <strong>Private keys</strong> and hit the <strong>Generate a private key</strong> button in
+order to download the required certificate which you will alos need later on.</p>
+<p>Since you are still missing the installation ID click on <strong>Install App</strong> on the
+left sidebar and install the application for your organization, I have enabled
+it far all my repositories. On the page where you are getting redirected to you
+got to copy the installation ID from the URL, it&rsquo;s the last numeric part of it.
+As an example for me it&rsquo;s something like
+<code>https://github.com/.../installations/43103110</code> where <code>43103110</code> shows the
+installation ID you need for the exporter.</p>
 
 			</section>
 		
