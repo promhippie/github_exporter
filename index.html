@@ -601,6 +601,12 @@ access the exporter at
 <dd>Server metrics endpoint timeout, defaults to <code>10s</code></dd>
 <dt>GITHUB_EXPORTER_WEB_CONFIG</dt>
 <dd>Path to web-config file</dd>
+<dt>GITHUB_EXPORTER_WEBHOOK_PATH</dt>
+<dd>Path to webhook target for GitHub, defaults to <code>/github</code></dd>
+<dt>GITHUB_EXPORTER_WEBHOOK_SECRET</dt>
+<dd>Secret used by GitHub to access webhook</dd>
+<dt>GITHUB_EXPORTER_DATABASE_DSN</dt>
+<dd>DSN for the database connection, defaults to <code>sqlite://exporter.sqlite3</code></dd>
 <dt>GITHUB_EXPORTER_REQUEST_TIMEOUT</dt>
 <dd>Timeout requesting GitHub API, defaults to <code>5s</code></dd>
 <dt>GITHUB_EXPORTER_TOKEN</dt>
@@ -633,10 +639,10 @@ access the exporter at
 <dd>Enable collector for billing, defaults to <code>false</code></dd>
 <dt>GITHUB_EXPORTER_COLLECTOR_WORKFLOWS</dt>
 <dd>Enable collector for workflows, defaults to <code>false</code></dd>
-<dt>GITHUB_EXPORTER_WORKFLOWS_STATUS</dt>
-<dd>Query workflows with specific status</dd>
 <dt>GITHUB_EXPORTER_WORKFLOWS_WINDOW</dt>
-<dd>History window for querying workflows, defaults to <code>12h0m0s</code></dd>
+<dd>History window for querying workflows, defaults to <code>24h0m0s</code></dd>
+<dt>GITHUB_EXPORTER_WORKFLOWS_LABELS</dt>
+<dd>List of labels used for workflows, comma-separated list, defaults to <code>owner, repo, workflow, event, name, status, branch, number, run</code></dd>
 <dt>GITHUB_EXPORTER_COLLECTOR_RUNNERS</dt>
 <dd>Enable collector for runners, defaults to <code>false</code></dd>
 </dl>
