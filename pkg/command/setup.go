@@ -45,7 +45,13 @@ func setupLogger(cfg *config.Config) log.Logger {
 }
 
 func setupStorage(cfg *config.Config, logger log.Logger) (store.Store, error) {
-	parsed, err := url.Parse(cfg.Database.DSN)
+	dsn, err := config.Value(cfg.Database.DSN)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to read dsn: %w", err)
+	}
+
+	parsed, err := url.Parse(dsn)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse dsn: %w", err)
@@ -53,11 +59,11 @@ func setupStorage(cfg *config.Config, logger log.Logger) (store.Store, error) {
 
 	switch parsed.Scheme {
 	case "sqlite", "sqlite3":
-		return store.NewGenericStore(cfg.Database, logger)
+		return store.NewGenericStore(dsn, logger)
 	case "mysql", "mariadb":
-		return store.NewGenericStore(cfg.Database, logger)
+		return store.NewGenericStore(dsn, logger)
 	case "postgres", "postgresql":
-		return store.NewGenericStore(cfg.Database, logger)
+		return store.NewGenericStore(dsn, logger)
 	}
 
 	return nil, store.ErrUnknownDriver

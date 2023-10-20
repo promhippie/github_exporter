@@ -21,7 +21,6 @@ import (
 	"github.com/golang-migrate/migrate/v4/source"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
 	"github.com/google/go-github/v56/github"
-	"github.com/promhippie/github_exporter/pkg/config"
 
 	// Import SQLite driver for database/sql
 	_ "modernc.org/sqlite"
@@ -395,8 +394,8 @@ func (s *genericStore) dsn() string {
 }
 
 // NewGenericStore initializes a new generic store.
-func NewGenericStore(cfg config.Database, logger log.Logger) (Store, error) {
-	parsed, err := url.Parse(cfg.DSN)
+func NewGenericStore(dsn string, logger log.Logger) (Store, error) {
+	parsed, err := url.Parse(dsn)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse dsn: %w", err)
