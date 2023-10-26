@@ -114,11 +114,7 @@ release-linux: $(DIST) \
 	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-5 \
 	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-6 \
 	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-7 \
-	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm64 \
-	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips \
-	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64 \
-	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mipsle \
-	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64le
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm64
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-386:
 	GOOS=linux GOARCH=386 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
@@ -137,18 +133,6 @@ $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-7:
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm64:
 	GOOS=linux GOARCH=arm64 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
-
-$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips:
-	GOOS=linux GOARCH=mips $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
-
-$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64:
-	GOOS=linux GOARCH=mips64 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
-
-$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mipsle:
-	GOOS=linux GOARCH=mipsle $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
-
-$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64le:
-	GOOS=linux GOARCH=mips64le $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 .PHONY: release-darwin
 release-darwin: $(DIST) \
