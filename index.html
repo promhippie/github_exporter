@@ -480,7 +480,7 @@ otherwise only <a href="https://prometheus.io">Prometheus</a> will have access t
 debugging purpose or just to discover all available metrics directly you can
 apply this change to your <code>docker-compose.yml</code>, after that you can access it
 directly at <a href="http://localhost:9504/metrics">http://localhost:9504/metrics</a>:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">  github-exporter:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">  github_exporter:
 </span></span><span class="line"><span class="cl">    image: promhippie/github-exporter:latest
 </span></span><span class="line"><span class="cl">    restart: always
 </span></span><span class="line"><span class="cl"><span class="gi">+   ports:
@@ -495,7 +495,7 @@ directly at <a href="http://localhost:9504/metrics">http://localhost:9504/metric
 by a file, in case you are using some kind of secret provider. For this use case
 you can write the token to a file on any path and reference it with the
 following format:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">  github-exporter:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">  github_exporter:
 </span></span><span class="line"><span class="cl">    image: promhippie/github-exporter:latest
 </span></span><span class="line"><span class="cl">    restart: always
 </span></span><span class="line"><span class="cl">    environment:
@@ -515,7 +515,7 @@ globbing won&rsquo;t provide metrics for the number of subscribers, the number o
 repositories in the network, if squash merges are allowed, if rebase merges are
 allowed or merge commits are allowed. These metrics are only present for
 specific repositories like the example mentioned above.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">  github-exporter:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">  github_exporter:
 </span></span><span class="line"><span class="cl">    image: promhippie/github-exporter:latest
 </span></span><span class="line"><span class="cl">    restart: always
 </span></span><span class="line"><span class="cl">    environment:
@@ -914,7 +914,7 @@ installation of <a href="https://helm.sh">Helm</a> you just need to execute the 
 </span></span></span><span class="line"><span class="cl"><span class="go">helm install github-exporter promhippie/github-exporter
 </span></span></span></code></pre></div>
 <p>You can also watch that available values and generally the details of the chart
-provided by us within our <a href="https://github.com/promhippie/charts/tree/master/charts/github-exporter">chart</a> repository or on <a href="https://artifacthub.io/packages/helm/promhippie/github-exporter">Artifacthub</a>.</p>
+provided by us within our <a href="https://github.com/promhippie/charts/tree/master/stable/github-exporter">chart</a> repository or on <a href="https://artifacthub.io/packages/helm/promhippie/github-exporter">Artifacthub</a>.</p>
 <p>After applying this manifest the exporter should be directly visible within your
 Prometheus instance depending on your installation if you enabled the
 annotations or the service monitor.</p>
