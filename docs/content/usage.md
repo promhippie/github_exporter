@@ -86,7 +86,7 @@ apply this change to your `docker-compose.yml`, after that you can access it
 directly at [http://localhost:9504/metrics](http://localhost:9504/metrics):
 
 {{< highlight diff >}}
-  github-exporter:
+  github_exporter:
     image: promhippie/github-exporter:latest
     restart: always
 +   ports:
@@ -104,7 +104,7 @@ you can write the token to a file on any path and reference it with the
 following format:
 
 {{< highlight diff >}}
-  github-exporter:
+  github_exporter:
     image: promhippie/github-exporter:latest
     restart: always
     environment:
@@ -128,7 +128,7 @@ allowed or merge commits are allowed. These metrics are only present for
 specific repositories like the example mentioned above.
 
 {{< highlight diff >}}
-  github-exporter:
+  github_exporter:
     image: promhippie/github-exporter:latest
     restart: always
     environment:

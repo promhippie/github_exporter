@@ -72,5 +72,5 @@ annotations or the service monitor.
 
 [kustomize]: https://github.com/kubernetes-sigs/kustomize
 [helm]: https://helm.sh
-[chart]: https://github.com/promhippie/charts/tree/master/charts/github-exporter
+[chart]: https://github.com/promhippie/charts/tree/master/stable/github-exporter
 [ahub]: https://artifacthub.io/packages/helm/promhippie/github-exporter
