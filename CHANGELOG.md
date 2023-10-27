@@ -1,3 +1,21 @@
+# Changelog for 3.0.1
+
+The following sections list the changes for 3.0.1.
+
+## Summary
+
+ * Fix #270: Correctly store and retrieve records
+
+## Details
+
+ * Bugfix #270: Correctly store and retrieve records
+
+   We had introduced a bug while switching between golang's sqlx and sql packages, with this fix
+   all workflows should be stored and retrieved correctly.
+
+   https://github.com/promhippie/github_exporter/issues/270
+
+
 # Changelog for 3.0.0
 
 The following sections list the changes for 3.0.0.
