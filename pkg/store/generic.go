@@ -90,7 +90,7 @@ func (s *genericStore) StoreWorkflowRunEvent(event *github.WorkflowRunEvent) err
 
 // CreateOrUpdateWorkflowRun creates or updates the record.
 func (s *genericStore) CreateOrUpdateWorkflowRun(record *WorkflowRun) error {
-	exists := WorkflowRun{}
+	identifier := 0
 
 	if err := s.handle.QueryRow(
 		findWorkflowRunQuery,
@@ -98,11 +98,11 @@ func (s *genericStore) CreateOrUpdateWorkflowRun(record *WorkflowRun) error {
 		record.Repo,
 		record.WorkflowID,
 		record.Number,
-	).Scan(&exists); err != nil && !errors.Is(err, sql.ErrNoRows) {
+	).Scan(&identifier); err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return fmt.Errorf("failed to find record: %w", err)
 	}
 
-	if exists.WorkflowID == 0 {
+	if identifier == 0 {
 		if _, err := s.handle.Exec(
 			createWorkflowRunQuery,
 			record.Owner,
@@ -167,21 +167,21 @@ func (s *genericStore) GetWorkflowRuns() ([]*WorkflowRun, error) {
 		record := &WorkflowRun{}
 
 		if err := rows.Scan(
-			record.Owner,
-			record.Repo,
-			record.WorkflowID,
-			record.Number,
-			record.Attempt,
-			record.Event,
-			record.Name,
-			record.Title,
-			record.Status,
-			record.Branch,
-			record.SHA,
-			record.Identifier,
-			record.CreatedAt,
-			record.UpdatedAt,
-			record.StartedAt,
+			&record.Owner,
+			&record.Repo,
+			&record.WorkflowID,
+			&record.Number,
+			&record.Attempt,
+			&record.Event,
+			&record.Name,
+			&record.Title,
+			&record.Status,
+			&record.Branch,
+			&record.SHA,
+			&record.Identifier,
+			&record.CreatedAt,
+			&record.UpdatedAt,
+			&record.StartedAt,
 		); err != nil {
 			return records, err
 		}
@@ -526,7 +526,7 @@ ORDER BY
 
 var findWorkflowRunQuery = `
 SELECT
-	*
+	identifier
 FROM
 	workflow_runs
 WHERE
