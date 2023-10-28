@@ -8,9 +8,22 @@ import (
 	"github.com/go-kit/log/level"
 	"github.com/promhippie/github_exporter/pkg/action"
 	"github.com/promhippie/github_exporter/pkg/config"
+	"github.com/promhippie/github_exporter/pkg/store"
 	"github.com/promhippie/github_exporter/pkg/version"
 	"github.com/urfave/cli/v2"
 )
+
+var (
+	defaultDatabaseDSN = ""
+)
+
+func init() {
+	if _, ok := store.Drivers["genji"]; ok {
+		defaultDatabaseDSN = "genji://storage/exporter"
+	} else if _, ok := store.Drivers["sqlite"]; ok {
+		defaultDatabaseDSN = "sqlite://storage/exporter.sqlite3"
+	}
+}
 
 // Run parses the command line arguments and executes the program.
 func Run() error {
@@ -177,7 +190,7 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 		},
 		&cli.StringFlag{
 			Name:        "database.dsn",
-			Value:       "sqlite://exporter.sqlite3",
+			Value:       defaultDatabaseDSN,
 			Usage:       "DSN for the database connection",
 			EnvVars:     []string{"GITHUB_EXPORTER_DATABASE_DSN"},
 			Destination: &cfg.Database.DSN,

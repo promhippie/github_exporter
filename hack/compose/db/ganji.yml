@@ -1,12 +1,12 @@
 version: '3.4'
 
 volumes:
-  sqlite:
+  ganji:
 
 services:
   exporter:
     environment:
       - GITHUB_EXPORTER_WEBHOOK_SECRET=${GITHUB_EXPORTER_WEBHOOK_SECRET:-p5apVo2ikTZvGQoIrJgqaTOJ}
-      - GITHUB_EXPORTER_DATABASE_DSN=sqlite:///var/lib/database/exporter.sqlite3
+      - GITHUB_EXPORTER_DATABASE_DSN=ganji:///var/lib/database/exporter
     volumes:
-      - sqlite:/var/lib/database
+      - ganji:/var/lib/database

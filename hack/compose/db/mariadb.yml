@@ -6,6 +6,7 @@ volumes:
 services:
   exporter:
     environment:
+      - GITHUB_EXPORTER_WEBHOOK_SECRET=${GITHUB_EXPORTER_WEBHOOK_SECRET:-p5apVo2ikTZvGQoIrJgqaTOJ}
       - GITHUB_EXPORTER_DATABASE_DSN=mariadb://exporter:exporter@db:3306/exporter
     depends_on:
       - db

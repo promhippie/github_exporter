@@ -271,10 +271,23 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 
 				switch event := event.(type) {
 				case *github.WorkflowRunEvent:
+					level.Debug(logger).Log(
+						"msg", "received webhook request",
+						"type", "workflow_run",
+						"owner", event.GetRepo().GetOwner().GetLogin(),
+						"repo", event.GetRepo().GetName(),
+						"workflow", event.GetWorkflowRun().GetWorkflowID(),
+						"number", event.GetWorkflowRun().GetRunNumber(),
+					)
+
 					if err := db.StoreWorkflowRunEvent(event); err != nil {
 						level.Error(logger).Log(
 							"msg", "failed to store github event",
 							"type", "workflow_run",
+							"owner", event.GetRepo().GetOwner().GetLogin(),
+							"repo", event.GetRepo().GetName(),
+							"workflow", event.GetWorkflowRun().GetWorkflowID(),
+							"number", event.GetWorkflowRun().GetRunNumber(),
 							"error", err,
 						)
 
