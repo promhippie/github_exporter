@@ -136,14 +136,14 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 		ch <- prometheus.MustNewConstMetric(
 			c.Duration,
 			prometheus.GaugeValue,
-			float64((record.UpdatedAt.Unix()-record.StartedAt.Unix())*1000),
+			float64((record.UpdatedAt-record.StartedAt)*1000),
 			labels...,
 		)
 
 		ch <- prometheus.MustNewConstMetric(
 			c.Creation,
 			prometheus.GaugeValue,
-			time.Since(record.StartedAt).Minutes(),
+			time.Since(time.Unix(record.StartedAt, 0)).Minutes(),
 			labels...,
 		)
 	}

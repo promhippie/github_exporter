@@ -2,7 +2,6 @@ package command
 
 import (
 	"fmt"
-	"net/url"
 	"os"
 	"strings"
 
@@ -51,20 +50,5 @@ func setupStorage(cfg *config.Config, logger log.Logger) (store.Store, error) {
 		return nil, fmt.Errorf("failed to read dsn: %w", err)
 	}
 
-	parsed, err := url.Parse(dsn)
-
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse dsn: %w", err)
-	}
-
-	switch parsed.Scheme {
-	case "sqlite", "sqlite3":
-		return store.NewGenericStore(dsn, logger)
-	case "mysql", "mariadb":
-		return store.NewGenericStore(dsn, logger)
-	case "postgres", "postgresql":
-		return store.NewGenericStore(dsn, logger)
-	}
-
-	return nil, store.ErrUnknownDriver
+	return store.New(dsn, logger)
 }

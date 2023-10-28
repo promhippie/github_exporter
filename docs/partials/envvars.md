@@ -26,7 +26,7 @@ GITHUB_EXPORTER_WEBHOOK_SECRET
 : Secret used by GitHub to access webhook
 
 GITHUB_EXPORTER_DATABASE_DSN
-: DSN for the database connection, defaults to `sqlite://exporter.sqlite3`
+: DSN for the database connection
 
 GITHUB_EXPORTER_REQUEST_TIMEOUT
 : Timeout requesting GitHub API, defaults to `5s`

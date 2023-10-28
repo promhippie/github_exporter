@@ -96,10 +96,10 @@ install: $(SOURCES)
 build: $(BIN)/$(EXECUTABLE)
 
 $(BIN)/$(EXECUTABLE): $(SOURCES)
-	$(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	$(GOBUILD) -v -tags '$(TAGS) genji sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(BIN)/$(EXECUTABLE)-debug: $(SOURCES)
-	$(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -gcflags '$(GCFLAGS)' -o $@ ./cmd/$(NAME)
+	$(GOBUILD) -v -tags '$(TAGS) genji sqlite' -ldflags '$(LDFLAGS)' -gcflags '$(GCFLAGS)' -o $@ ./cmd/$(NAME)
 
 .PHONY: release
 release: $(DIST) release-linux release-darwin release-windows release-reduce release-checksum
@@ -114,25 +114,41 @@ release-linux: $(DIST) \
 	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-5 \
 	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-6 \
 	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-7 \
-	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm64
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm64 \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64 \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mipsle \
+	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64le
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-386:
-	GOOS=linux GOARCH=386 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=linux GOARCH=386 $(GOBUILD) -v -tags '$(TAGS) sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-amd64:
-	GOOS=linux GOARCH=amd64 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=linux GOARCH=amd64 $(GOBUILD) -v -tags '$(TAGS) genji sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-5:
-	GOOS=linux GOARCH=arm GOARM=5 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=linux GOARCH=arm GOARM=5 $(GOBUILD) -v -tags '$(TAGS) sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-6:
-	GOOS=linux GOARCH=arm GOARM=6 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=linux GOARCH=arm GOARM=6 $(GOBUILD) -v -tags '$(TAGS) sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-7:
-	GOOS=linux GOARCH=arm GOARM=7 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=linux GOARCH=arm GOARM=7 $(GOBUILD) -v -tags '$(TAGS) sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm64:
-	GOOS=linux GOARCH=arm64 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=linux GOARCH=arm64 $(GOBUILD) -v -tags '$(TAGS) genji sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips:
+	GOOS=linux GOARCH=mips $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64:
+	GOOS=linux GOARCH=mips64 $(GOBUILD) -v -tags '$(TAGS) genji' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mipsle:
+	GOOS=linux GOARCH=mipsle $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+
+$(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64le:
+	GOOS=linux GOARCH=mips64le $(GOBUILD) -v -tags '$(TAGS) genji' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 .PHONY: release-darwin
 release-darwin: $(DIST) \
@@ -140,10 +156,10 @@ release-darwin: $(DIST) \
 	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-arm64
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-amd64:
-	GOOS=darwin GOARCH=amd64 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=darwin GOARCH=amd64 $(GOBUILD) -v -tags '$(TAGS) genji sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-arm64:
-	GOOS=darwin GOARCH=arm64 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=darwin GOARCH=arm64 $(GOBUILD) -v -tags '$(TAGS) genji sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 .PHONY: release-windows
 release-windows: $(DIST) \
@@ -154,7 +170,7 @@ $(DIST)/$(EXECUTABLE)-$(OUTPUT)-windows-4.0-386.exe:
 	GOOS=windows GOARCH=386 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-windows-4.0-amd64.exe:
-	GOOS=windows GOARCH=amd64 $(GOBUILD) -v -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=windows GOARCH=amd64 $(GOBUILD) -v -tags '$(TAGS) genji sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 .PHONY: release-reduce
 release-reduce:

@@ -2,26 +2,25 @@ package store
 
 import (
 	"strconv"
-	"time"
 )
 
 // WorkflowRun defines the type returned by GitHub.
 type WorkflowRun struct {
-	Owner      string    `db:"owner"`
-	Repo       string    `db:"repo"`
-	WorkflowID int64     `db:"workflow_id"`
-	Event      string    `db:"event"`
-	Name       string    `db:"name"`
-	Title      string    `db:"title"`
-	Status     string    `db:"status"`
-	Branch     string    `db:"branch"`
-	SHA        string    `db:"sha"`
-	Number     int       `db:"number"`
-	Attempt    int       `db:"attempt"`
-	Identifier int64     `db:"identifier"`
-	CreatedAt  time.Time `db:"created_at"`
-	UpdatedAt  time.Time `db:"updated_at"`
-	StartedAt  time.Time `db:"started_at"`
+	Owner      string `db:"owner"`
+	Repo       string `db:"repo"`
+	WorkflowID int64  `db:"workflow_id"`
+	Event      string `db:"event"`
+	Name       string `db:"name"`
+	Title      string `db:"title"`
+	Status     string `db:"status"`
+	Branch     string `db:"branch"`
+	SHA        string `db:"sha"`
+	Number     int    `db:"number"`
+	Attempt    int    `db:"attempt"`
+	Identifier int64  `db:"identifier"`
+	CreatedAt  int64  `db:"created_at"`
+	UpdatedAt  int64  `db:"updated_at"`
+	StartedAt  int64  `db:"started_at"`
 }
 
 // ByLabel returns values by the defined list of labels.

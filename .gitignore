@@ -4,4 +4,4 @@ coverage.out
 /bin
 /dist
 
-exporter.sqlite3*
+storage/
