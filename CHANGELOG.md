@@ -5,6 +5,7 @@ The following sections list the changes for 3.0.1.
 ## Summary
 
  * Fix #270: Correctly store and retrieve records
+ * Fix #272: Add SQLite and Genji if supported
 
 ## Details
 
@@ -13,7 +14,18 @@ The following sections list the changes for 3.0.1.
    We had introduced a bug while switching between golang's sqlx and sql packages, with this fix
    all workflows should be stored and retrieved correctly.
 
+   You got to make sure to delete the database which have been created with the 3.0.0 release as the
+   migration setup have been changed.
+
    https://github.com/promhippie/github_exporter/issues/270
+
+ * Bugfix #272: Add SQLite and Genji if supported
+
+   We haven't been able to build all supported binaries as some have been lacking support for the
+   use libraries for SQLite and Genji. We have added build tags which enables or disables the
+   database drivers if needed.
+
+   https://github.com/promhippie/github_exporter/pull/272
 
 
 # Changelog for 3.0.0
