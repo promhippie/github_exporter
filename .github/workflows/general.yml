@@ -2,10 +2,10 @@
 name: general
 
 "on":
-  push:
+  pull_request:
     branches:
       - master
-  pull_request:
+  push:
     branches:
       - master
 
