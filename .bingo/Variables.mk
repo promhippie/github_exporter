@@ -17,11 +17,11 @@ GO     ?= $(shell which go)
 #	@echo "Running bingo"
 #	@$(BINGO) <flags/args..>
 #
-BINGO := $(GOBIN)/bingo-v0.8.0
+BINGO := $(GOBIN)/bingo-v0.8.1-0.20230820182247-0568407746a2
 $(BINGO): $(BINGO_DIR)/bingo.mod
 	@# Install binary/ries using Go 1.14+ build command. This is using bwplotka/bingo-controlled, separate go module with pinned dependencies.
-	@echo "(re)installing $(GOBIN)/bingo-v0.8.0"
-	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=bingo.mod -o=$(GOBIN)/bingo-v0.8.0 "github.com/bwplotka/bingo"
+	@echo "(re)installing $(GOBIN)/bingo-v0.8.1-0.20230820182247-0568407746a2"
+	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=bingo.mod -o=$(GOBIN)/bingo-v0.8.1-0.20230820182247-0568407746a2 "github.com/bwplotka/bingo"
 
 CALENS := $(GOBIN)/calens-v0.3.0
 $(CALENS): $(BINGO_DIR)/calens.mod
@@ -35,15 +35,15 @@ $(REFLEX): $(BINGO_DIR)/reflex.mod
 	@echo "(re)installing $(GOBIN)/reflex-v0.3.1"
 	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=reflex.mod -o=$(GOBIN)/reflex-v0.3.1 "github.com/cespare/reflex"
 
-REVIVE := $(GOBIN)/revive-v1.2.5
+REVIVE := $(GOBIN)/revive-v1.3.4
 $(REVIVE): $(BINGO_DIR)/revive.mod
 	@# Install binary/ries using Go 1.14+ build command. This is using bwplotka/bingo-controlled, separate go module with pinned dependencies.
-	@echo "(re)installing $(GOBIN)/revive-v1.2.5"
-	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=revive.mod -o=$(GOBIN)/revive-v1.2.5 "github.com/mgechev/revive"
+	@echo "(re)installing $(GOBIN)/revive-v1.3.4"
+	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=revive.mod -o=$(GOBIN)/revive-v1.3.4 "github.com/mgechev/revive"
 
-STATICCHECK := $(GOBIN)/staticcheck-v0.4.2
+STATICCHECK := $(GOBIN)/staticcheck-v0.4.6
 $(STATICCHECK): $(BINGO_DIR)/staticcheck.mod
 	@# Install binary/ries using Go 1.14+ build command. This is using bwplotka/bingo-controlled, separate go module with pinned dependencies.
-	@echo "(re)installing $(GOBIN)/staticcheck-v0.4.2"
-	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=staticcheck.mod -o=$(GOBIN)/staticcheck-v0.4.2 "honnef.co/go/tools/cmd/staticcheck"
+	@echo "(re)installing $(GOBIN)/staticcheck-v0.4.6"
+	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=staticcheck.mod -o=$(GOBIN)/staticcheck-v0.4.6 "honnef.co/go/tools/cmd/staticcheck"
 
