@@ -22,38 +22,6 @@ repository:
   enable_automated_security_fixes: true
   enable_vulnerability_alerts: true
 
-labels:
-  - name: bug
-    color: d73a4a
-    description: Something isn't working
-  - name: duplicate
-    color: cfd3d7
-    description: This issue or pull request already exists
-  - name: enhancement
-    color: a2eeef
-    description: New feature or request
-  - name: good first issue
-    color: 7057ff
-    description: Good for newcomers
-  - name: help wanted
-    color: 008672
-    description: Extra attention is needed
-  - name: invalid
-    color: e4e669
-    description: This doesn't seem right
-  - name: question
-    color: d876e3
-    description: Further information is requested
-  - name: renovate
-    color: e99695
-    description: Automated action from Renovate
-  - name: wontfix
-    color: ffffff
-    description: This will not be worked on
-  - name: outdated
-    color: cccccc
-    description: This is out of scope and outdated
-
 branches:
   - name: master
     protection:
@@ -66,6 +34,7 @@ branches:
       restrictions:
         apps:
           - renovate
+          - promhippie
         users: []
         teams:
           - admins
