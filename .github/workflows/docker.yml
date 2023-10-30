@@ -21,16 +21,20 @@ jobs:
           - platform: linux/386
             goos: linux
             goarch: 386
+            tags: netgo sqlite
           - platform: linux/amd64
             goos: linux
             goarch: amd64
-          - platform: linux/arm64
-            goos: linux
-            goarch: arm64
+            tags: netgo genji sqlite
           - platform: linux/arm/6
             goos: linux
             goarch: arm
             goarm: 6
+            tags: netgo sqlite
+          - platform: linux/arm64
+            goos: linux
+            goarch: arm64
+            tags: netgo genji sqlite
 
     steps:
       - name: Checkout source
@@ -49,6 +53,7 @@ jobs:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
           GOARM: ${{ matrix.goarm }}
+          TAGS: ${{ matrix.tags }}
         run: make generate
 
       - name: Run build
@@ -57,6 +62,7 @@ jobs:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
           GOARM: ${{ matrix.goarm }}
+          TAGS: ${{ matrix.tags }}
         run: make build
 
       - name: Docker meta
