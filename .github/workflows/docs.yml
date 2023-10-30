@@ -5,6 +5,9 @@ name: docs
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   docs:
@@ -13,7 +16,7 @@ jobs:
     steps:
       - name: Checkout source
         id: source
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@v4
 
       - name: Setup hugo
         id: hugo
@@ -28,6 +31,7 @@ jobs:
 
       - name: Deploy pages
         id: deploy
+        if: github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
