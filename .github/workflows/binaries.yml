@@ -3,6 +3,11 @@ name: binaries
 
 "on":
   push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
     tags:
       - v*
 
@@ -13,7 +18,7 @@ jobs:
     steps:
       - name: Checkout source
         id: source
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@v4
 
       - name: Setup golang
         id: golang
@@ -31,6 +36,7 @@ jobs:
 
       - name: Sign release
         id: gpgsign
+        if: startsWith(github.ref, 'refs/tags/')
         uses: actionhippie/gpgsign@v1
         with:
           private_key: ${{ secrets.GNUPG_KEY }}
