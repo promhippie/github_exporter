@@ -10,6 +10,9 @@ name: changes
     branches:
       - master
 
+permissions:
+  contents: read
+
 jobs:
   changelog:
     runs-on: ubuntu-latest

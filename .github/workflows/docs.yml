@@ -10,6 +10,9 @@ name: docs
     branches:
       - master
 
+permissions:
+  contents: write
+
 jobs:
   docs:
     runs-on: ubuntu-latest

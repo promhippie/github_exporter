@@ -12,6 +12,10 @@ name: docker
     tags:
       - v*
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -70,7 +74,6 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           images: |
             promhippie/github-exporter
             quay.io/promhippie/github-exporter
@@ -119,7 +122,7 @@ jobs:
         if: github.event_name != 'pull_request'
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: bothippie
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image
@@ -149,7 +152,6 @@ jobs:
         id: hubTags
         uses: docker/metadata-action@v5
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           images: promhippie/github-exporter
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
@@ -172,7 +174,6 @@ jobs:
         id: quayTags
         uses: docker/metadata-action@v5
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           images: quay.io/promhippie/github-exporter
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
@@ -197,7 +198,6 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: docker/metadata-action@v5
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           images: ghcr.io/promhippie/github-exporter
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
@@ -210,7 +210,7 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: actionhippie/manifest@v1
         with:
-          username: ${{ github.actor }}
+          username: bothippie
           password: ${{ secrets.GITHUB_TOKEN }}
           platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v6
           template: ghcr.io/promhippie/github-exporter:VERSION-OS-ARCH

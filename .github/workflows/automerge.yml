@@ -1,0 +1,49 @@
+---
+name: automerge
+
+"on":
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - master
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+
+    steps:
+      - name: Generate token
+        id: token
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ secrets.TOKEN_EXCHANGE_APP }}
+          installation_retrieval_mode: id
+          installation_retrieval_payload: ${{ secrets.TOKEN_EXCHANGE_INSTALL }}
+          private_key: ${{ secrets.TOKEN_EXCHANGE_KEY }}
+          permissions: >-
+            {"contents": "write", "pull_requests": "write", "issues": "write"}
+
+      - name: Fetch metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Approve request
+        id: approve
+        run: gh pr review --approve "${{github.event.pull_request.html_url}}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable automerge
+        id: automerge
+        run: gh pr merge --rebase --auto "${{github.event.pull_request.html_url}}"
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+
+...

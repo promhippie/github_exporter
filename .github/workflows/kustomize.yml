@@ -10,6 +10,9 @@ name: kustomize
     branches:
       - master
 
+permissions:
+  contents: read
+
 jobs:
   generate:
     runs-on: ubuntu-latest
@@ -23,7 +26,7 @@ jobs:
         id: kustomize
         uses: actionhippie/kustomize@v2
         with:
-          version: 4.4.0
+          version: 5.2.1
           path: deploy/kubernetes/
           target: deploy/kubernetes/bundle.yml
 

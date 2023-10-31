@@ -10,6 +10,9 @@ name: general
     branches:
       - master
 
+permissions:
+  contents: read
+
 jobs:
   testing:
     runs-on: ubuntu-latest
