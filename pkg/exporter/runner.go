@@ -2,6 +2,7 @@ package exporter
 
 import (
 	"context"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -38,7 +39,7 @@ func NewRunnerCollector(logger log.Logger, client *github.Client, db store.Store
 		failures.WithLabelValues("runner").Add(0)
 	}
 
-	labels := []string{"owner", "id", "name", "os", "status"}
+	labels := []string{"owner", "id", "name", "os", "status", "labels"}
 	return &RunnerCollector{
 		client:   client,
 		logger:   log.With(logger, "collector", "runner"),
@@ -56,7 +57,7 @@ func NewRunnerCollector(logger log.Logger, client *github.Client, db store.Store
 		RepoBusy: prometheus.NewDesc(
 			"github_runner_repo_busy",
 			"1 if the runner is busy, 0 otherwise",
-			labels,
+			append(labels, "busy"),
 			nil,
 		),
 		EnterpriseOnline: prometheus.NewDesc(
@@ -68,7 +69,7 @@ func NewRunnerCollector(logger log.Logger, client *github.Client, db store.Store
 		EnterpriseBusy: prometheus.NewDesc(
 			"github_runner_enterprise_busy",
 			"1 if the runner is busy, 0 otherwise",
-			labels,
+			append(labels, "busy"),
 			nil,
 		),
 		OrgOnline: prometheus.NewDesc(
@@ -80,7 +81,7 @@ func NewRunnerCollector(logger log.Logger, client *github.Client, db store.Store
 		OrgBusy: prometheus.NewDesc(
 			"github_runner_org_busy",
 			"1 if the runner is busy, 0 otherwise",
-			labels,
+			append(labels, "busy"),
 			nil,
 		),
 	}
@@ -106,6 +107,19 @@ func (c *RunnerCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.EnterpriseBusy
 	ch <- c.OrgOnline
 	ch <- c.OrgBusy
+}
+
+// AggregateLabels Aggregate custom labels into comma delimited string
+func (r *runner) AggregateLabels() string {
+	var aggLabels []string
+	for _, label := range r.Labels {
+		if label != nil && label.Type != nil && *label.Type == "custom" {
+			aggLabels = append(aggLabels, *label.Name)
+		}
+	}
+
+	sort.Strings(aggLabels)
+	return strings.Join(aggLabels, ",")
 }
 
 // Collect is called by the Prometheus registry when collecting metrics.
@@ -150,6 +164,7 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 				record.GetName(),
 				record.GetOS(),
 				record.GetStatus(),
+				record.AggregateLabels(),
 			}
 
 			if record.GetStatus() == "online" {
@@ -163,11 +178,12 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 				labels...,
 			)
 
+			busyLabels := append(labels, strconv.FormatBool(*record.Busy))
 			ch <- prometheus.MustNewConstMetric(
 				c.RepoBusy,
 				prometheus.GaugeValue,
 				boolToFloat64(*record.Busy),
-				labels...,
+				busyLabels...,
 			)
 		}
 	}
@@ -212,6 +228,7 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 				record.GetName(),
 				record.GetOS(),
 				record.GetStatus(),
+				record.AggregateLabels(),
 			}
 
 			if record.GetStatus() == "online" {
@@ -225,11 +242,12 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 				labels...,
 			)
 
+			busyLabels := append(labels, strconv.FormatBool(*record.Busy))
 			ch <- prometheus.MustNewConstMetric(
 				c.EnterpriseBusy,
 				prometheus.GaugeValue,
 				boolToFloat64(*record.Busy),
-				labels...,
+				busyLabels...,
 			)
 		}
 	}
@@ -274,6 +292,7 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 				record.GetName(),
 				record.GetOS(),
 				record.GetStatus(),
+				record.AggregateLabels(),
 			}
 
 			if record.GetStatus() == "online" {
@@ -287,11 +306,12 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 				labels...,
 			)
 
+			busyLabels := append(labels, strconv.FormatBool(*record.Busy))
 			ch <- prometheus.MustNewConstMetric(
 				c.OrgBusy,
 				prometheus.GaugeValue,
 				boolToFloat64(*record.Busy),
-				labels...,
+				busyLabels...,
 			)
 		}
 	}
