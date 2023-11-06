@@ -26,6 +26,8 @@ make generate build
 
 ./bin/github_exporter -h
 ```
+Inorder to run it in debug mode (from an IDE: goland etc) , ensure `GITHUB_EXPORTER_DATABASE_DSN` is set to a
+local write access path. Please add `-tags sqlite` in go tool arguments.
 
 ## Security
 
