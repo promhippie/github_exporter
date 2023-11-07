@@ -5,6 +5,7 @@ package store
 import (
 	"fmt"
 	"net/url"
+	"os"
 	"path"
 	"time"
 
@@ -61,6 +62,12 @@ func init() {
 
 // Open simply opens the database connection.
 func (s *sqliteStore) Open() (err error) {
+	if dir := path.Dir(s.database); dir != "." {
+		if err := os.MkdirAll(dir, 0770); err != nil {
+			return fmt.Errorf("failed to create database dir: %w", err)
+		}
+	}
+
 	s.handle, err = sqlx.Open(
 		s.driver,
 		s.dsn(),
