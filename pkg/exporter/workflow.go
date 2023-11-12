@@ -23,6 +23,9 @@ type WorkflowCollector struct {
 	Status   *prometheus.Desc
 	Duration *prometheus.Desc
 	Creation *prometheus.Desc
+	Created  *prometheus.Desc
+	Updated  *prometheus.Desc
+	Started  *prometheus.Desc
 }
 
 // NewWorkflowCollector returns a new WorkflowCollector.
@@ -58,6 +61,24 @@ func NewWorkflowCollector(logger log.Logger, client *github.Client, db store.Sto
 			labels,
 			nil,
 		),
+		Created: prometheus.NewDesc(
+			"github_workflow_created_timestamp",
+			"Timestammp when the workflow run have been created",
+			labels,
+			nil,
+		),
+		Updated: prometheus.NewDesc(
+			"github_workflow_updated_timestamp",
+			"Timestammp when the workflow run have been updated",
+			labels,
+			nil,
+		),
+		Started: prometheus.NewDesc(
+			"github_workflow_started_timestamp",
+			"Timestammp when the workflow run have been started",
+			labels,
+			nil,
+		),
 	}
 }
 
@@ -67,6 +88,9 @@ func (c *WorkflowCollector) Metrics() []*prometheus.Desc {
 		c.Status,
 		c.Duration,
 		c.Creation,
+		c.Created,
+		c.Updated,
+		c.Started,
 	}
 }
 
@@ -75,6 +99,9 @@ func (c *WorkflowCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.Status
 	ch <- c.Duration
 	ch <- c.Creation
+	ch <- c.Created
+	ch <- c.Updated
+	ch <- c.Started
 }
 
 // Collect is called by the Prometheus registry when collecting metrics.
@@ -144,6 +171,27 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 			c.Creation,
 			prometheus.GaugeValue,
 			time.Since(time.Unix(record.StartedAt, 0)).Minutes(),
+			labels...,
+		)
+
+		ch <- prometheus.MustNewConstMetric(
+			c.Created,
+			prometheus.GaugeValue,
+			float64(record.CreatedAt),
+			labels...,
+		)
+
+		ch <- prometheus.MustNewConstMetric(
+			c.Updated,
+			prometheus.GaugeValue,
+			float64(record.UpdatedAt),
+			labels...,
+		)
+
+		ch <- prometheus.MustNewConstMetric(
+			c.Started,
+			prometheus.GaugeValue,
+			float64(record.StartedAt),
 			labels...,
 		)
 	}
