@@ -256,11 +256,20 @@ github_storage_billing_estimated_paid_storage_for_month{type, name}
 github_storage_billing_estimated_storage_for_month{type, name}
 : Estimated total storage for this month for this type
 
+github_workflow_created_timestamp{owner, repo, workflow, event, name, status, branch, number, run}
+: Timestammp when the workflow run have been created
+
 github_workflow_duration_ms{owner, repo, workflow, event, name, status, branch, number, run}
 : Duration of workflow runs
 
 github_workflow_duration_run_created_minutes{owner, repo, workflow, event, name, status, branch, number, run}
 : Duration since the workflow run creation time in minutes
 
+github_workflow_started_timestamp{owner, repo, workflow, event, name, status, branch, number, run}
+: Timestammp when the workflow run have been started
+
 github_workflow_status{owner, repo, workflow, event, name, status, branch, number, run}
 : Status of workflow runs
+
+github_workflow_updated_timestamp{owner, repo, workflow, event, name, status, branch, number, run}
+: Timestammp when the workflow run have been updated
