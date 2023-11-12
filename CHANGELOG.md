@@ -5,6 +5,7 @@ The following sections list the changes for unreleased.
 ## Summary
 
  * Fix #278: Create SQLite directory if it doesn't exist
+ * Enh #281: Add metrics for workflow timestamps
 
 ## Details
 
@@ -15,6 +16,14 @@ The following sections list the changes for unreleased.
    create the directory for the database file.
 
    https://github.com/promhippie/github_exporter/issues/278
+
+ * Enhancement #281: Add metrics for workflow timestamps
+
+   We added new metrics to show multiple timestamps for the workflows like when the workflow have
+   been created, updated and started. Please look at the documentation for the exact naming of
+   these new metrics.
+
+   https://github.com/promhippie/github_exporter/issues/281
 
 
 # Changelog for 3.0.1
