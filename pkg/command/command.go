@@ -326,5 +326,12 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_RUNNERS"},
 			Destination: &cfg.Collector.Runners,
 		},
+		&cli.StringSliceFlag{
+			Name:        "collector.runners.labels",
+			Value:       config.RunnerLabels(),
+			Usage:       "List of labels used for runners",
+			EnvVars:     []string{"GITHUB_EXPORTER_RUNNERS_LABELS"},
+			Destination: &cfg.Target.Runners.Labels,
+		},
 	}
 }

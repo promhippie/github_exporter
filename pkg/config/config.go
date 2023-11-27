@@ -37,6 +37,11 @@ type Workflows struct {
 	Labels cli.StringSlice
 }
 
+// Runners defines the runner specific configuration.
+type Runners struct {
+	Labels cli.StringSlice
+}
+
 // Target defines the target specific configuration.
 type Target struct {
 	Token       string
@@ -51,6 +56,7 @@ type Target struct {
 	Timeout     time.Duration
 	PerPage     int
 	Workflows   Workflows
+	Runners     Runners
 }
 
 // Collector defines the collector specific configuration.
@@ -95,6 +101,13 @@ func Labels() *cli.StringSlice {
 		"branch",
 		"number",
 		"run",
+	)
+}
+
+// Labels defines the default labels used by runner collector.
+func RunnerLabels() *cli.StringSlice {
+	return cli.NewStringSlice(
+		"owner", "id", "name", "os", "status", "labels",
 	)
 }
 
