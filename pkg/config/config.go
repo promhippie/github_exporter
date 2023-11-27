@@ -104,7 +104,7 @@ func Labels() *cli.StringSlice {
 	)
 }
 
-// Labels defines the default labels used by runner collector.
+// RunnerLabels defines the default labels used by runner collector.
 func RunnerLabels() *cli.StringSlice {
 	return cli.NewStringSlice(
 		"owner", "id", "name", "os", "status",
