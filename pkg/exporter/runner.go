@@ -2,6 +2,7 @@ package exporter
 
 import (
 	"context"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -38,7 +39,7 @@ func NewRunnerCollector(logger log.Logger, client *github.Client, db store.Store
 		failures.WithLabelValues("runner").Add(0)
 	}
 
-	labels := []string{"owner", "id", "name", "os", "status"}
+	labels := cfg.Runners.Labels.Value()
 	return &RunnerCollector{
 		client:   client,
 		logger:   log.With(logger, "collector", "runner"),
@@ -144,12 +145,13 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 				"name", record.GetName(),
 			)
 
-			labels := []string{
-				record.Owner,
-				strconv.FormatInt(record.GetID(), 10),
-				record.GetName(),
-				record.GetOS(),
-				record.GetStatus(),
+			labels := []string{}
+
+			for _, label := range c.config.Runners.Labels.Value() {
+				labels = append(
+					labels,
+					record.ByLabel(label),
+				)
 			}
 
 			if record.GetStatus() == "online" {
@@ -206,12 +208,13 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 				"name", record.GetName(),
 			)
 
-			labels := []string{
-				record.Owner,
-				strconv.FormatInt(record.GetID(), 10),
-				record.GetName(),
-				record.GetOS(),
-				record.GetStatus(),
+			labels := []string{}
+
+			for _, label := range c.config.Runners.Labels.Value() {
+				labels = append(
+					labels,
+					record.ByLabel(label),
+				)
 			}
 
 			if record.GetStatus() == "online" {
@@ -268,12 +271,13 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 				"name", record.GetName(),
 			)
 
-			labels := []string{
-				record.Owner,
-				strconv.FormatInt(record.GetID(), 10),
-				record.GetName(),
-				record.GetOS(),
-				record.GetStatus(),
+			labels := []string{}
+
+			for _, label := range c.config.Runners.Labels.Value() {
+				labels = append(
+					labels,
+					record.ByLabel(label),
+				)
 			}
 
 			if record.GetStatus() == "online" {
@@ -558,4 +562,36 @@ func (c *RunnerCollector) pagedOrgRunners(ctx context.Context, name string) ([]*
 type runner struct {
 	Owner string
 	*github.Runner
+}
+
+// AggregateLabels Aggregate custom labels into comma delimited string
+func (r *runner) AggregateLabels() string {
+	var aggLabels []string
+	for _, label := range r.Labels {
+		if label != nil && label.Type != nil {
+			aggLabels = append(aggLabels, *label.Name)
+		}
+	}
+
+	sort.Strings(aggLabels)
+	return strings.Join(aggLabels, ",")
+}
+
+func (r *runner) ByLabel(label string) string {
+	switch label {
+	case "owner":
+		return r.Owner
+	case "id":
+		return strconv.FormatInt(r.GetID(), 10)
+	case "name":
+		return r.GetName()
+	case "os":
+		return r.GetOS()
+	case "status":
+		return r.GetStatus()
+	case "labels":
+		return r.AggregateLabels()
+	}
+
+	return ""
 }

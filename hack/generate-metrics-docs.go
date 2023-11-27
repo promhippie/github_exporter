@@ -26,6 +26,7 @@ func main() {
 
 	cfg := config.Load().Target
 	cfg.Workflows.Labels = *config.Labels()
+	cfg.Runners.Labels = *config.RunnerLabels()
 
 	collectors = append(
 		collectors,
