@@ -1,10 +1,11 @@
-# Changelog for unreleased
+# Changelog for 3.1.0
 
-The following sections list the changes for unreleased.
+The following sections list the changes for 3.1.0.
 
 ## Summary
 
  * Fix #278: Create SQLite directory if it doesn't exist
+ * Enh #277: Configurable labels for runner metrics
  * Enh #281: Add metrics for workflow timestamps
 
 ## Details
@@ -16,6 +17,15 @@ The following sections list the changes for unreleased.
    create the directory for the database file.
 
    https://github.com/promhippie/github_exporter/issues/278
+
+ * Enhancement #277: Configurable labels for runner metrics
+
+   Initially we had a static list of available labels for the runner metrics, with this change we
+   are getting more labels like the GitHub runner labels as Prometheus labels while they are
+   configurable to avoid a high cardinality of Prometheus labels. Now you are able to get labels
+   for `owner`, `id`, `name`, `os`, `status` and optionally `labels`.
+
+   https://github.com/promhippie/github_exporter/issues/277
 
  * Enhancement #281: Add metrics for workflow timestamps
 
