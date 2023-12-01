@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/go-github/v56/github"
+	"github.com/google/go-github/v57/github"
 	"github.com/jmoiron/sqlx"
 )
 
