@@ -32,7 +32,7 @@ jobs:
 
       - name: Setup golang
         id: golang
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ^1.21.0
 
@@ -70,7 +70,7 @@ jobs:
 
       - name: Setup golang
         id: golang
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ^1.21.0
 
@@ -108,7 +108,7 @@ jobs:
 
       - name: Setup golang
         id: golang
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ^1.21.0
 
