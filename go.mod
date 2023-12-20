@@ -9,7 +9,7 @@ require (
 	github.com/bradleyfalzon/ghinstallation/v2 v2.8.0
 	github.com/cenkalti/backoff/v4 v4.2.1
 	github.com/genjidb/genji v0.15.3
-	github.com/go-chi/chi/v5 v5.0.10
+	github.com/go-chi/chi/v5 v5.0.11
 	github.com/go-kit/log v0.2.1
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/google/go-github/v57 v57.0.0
