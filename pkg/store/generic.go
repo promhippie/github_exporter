@@ -62,6 +62,10 @@ func createOrUpdateWorkflowRun(handle *sqlx.DB, record *WorkflowRun) error {
 			return fmt.Errorf("failed to create record: %w", err)
 		}
 	} else {
+		if existing.UpdatedAt > record.UpdatedAt {
+			return nil
+		}
+
 		if _, err := handle.NamedExec(
 			updateWorkflowRunQuery,
 			record,
