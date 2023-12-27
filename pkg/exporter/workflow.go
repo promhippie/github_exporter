@@ -140,8 +140,16 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 			"msg", "Collecting workflow",
 			"owner", record.Owner,
 			"repo", record.Repo,
-			"workflow", record.WorkflowID,
+			"workflow_id", record.WorkflowID,
 			"number", record.Number,
+			"id", record.Identifier,
+			"run_number", record.Number,
+			"event", record.Event,
+			"conclusion/status", record.Status,
+			"created_at", record.CreatedAt,
+			"updated_at", record.UpdatedAt,
+			"run_started_at", record.StartedAt,
+			"title", record.Title,
 		)
 
 		labels := []string{}
