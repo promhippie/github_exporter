@@ -1,6 +1,6 @@
-# Changelog for unreleased
+# Changelog for 3.1.1
 
-The following sections list the changes for unreleased.
+The following sections list the changes for 3.1.1.
 
 ## Summary
 
