@@ -19,7 +19,7 @@ PACKAGES ?= $(shell go list ./...)
 SOURCES ?= $(shell find . -name "*.go" -type f)
 GENERATE ?= $(PACKAGES)
 
-TAGS ?= netgo genji sqlite
+TAGS ?= netgo chai sqlite
 
 ifndef OUTPUT
 	ifeq ($(GITHUB_REF_TYPE), tag)
@@ -124,7 +124,7 @@ $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-386:
 	GOOS=linux GOARCH=386 $(GOBUILD) -v -tags 'netgo sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-amd64:
-	GOOS=linux GOARCH=amd64 $(GOBUILD) -v -tags 'netgo genji sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=linux GOARCH=amd64 $(GOBUILD) -v -tags 'netgo chai sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-5:
 	GOOS=linux GOARCH=arm GOARM=5 $(GOBUILD) -v -tags 'netgo sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
@@ -136,19 +136,19 @@ $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm-7:
 	GOOS=linux GOARCH=arm GOARM=7 $(GOBUILD) -v -tags 'netgo sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-arm64:
-	GOOS=linux GOARCH=arm64 $(GOBUILD) -v -tags 'netgo genji sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=linux GOARCH=arm64 $(GOBUILD) -v -tags 'netgo chai sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips:
 	GOOS=linux GOARCH=mips $(GOBUILD) -v -tags 'netgo' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64:
-	GOOS=linux GOARCH=mips64 $(GOBUILD) -v -tags 'netgo genji' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=linux GOARCH=mips64 $(GOBUILD) -v -tags 'netgo chai' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mipsle:
 	GOOS=linux GOARCH=mipsle $(GOBUILD) -v -tags 'netgo' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-linux-mips64le:
-	GOOS=linux GOARCH=mips64le $(GOBUILD) -v -tags 'netgo genji' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=linux GOARCH=mips64le $(GOBUILD) -v -tags 'netgo chai' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 .PHONY: release-darwin
 release-darwin: $(DIST) \
@@ -156,10 +156,10 @@ release-darwin: $(DIST) \
 	$(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-arm64
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-amd64:
-	GOOS=darwin GOARCH=amd64 $(GOBUILD) -v -tags 'genji sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=darwin GOARCH=amd64 $(GOBUILD) -v -tags 'chai sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-darwin-arm64:
-	GOOS=darwin GOARCH=arm64 $(GOBUILD) -v -tags 'genji sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=darwin GOARCH=arm64 $(GOBUILD) -v -tags 'chai sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 .PHONY: release-windows
 release-windows: $(DIST) \
@@ -170,7 +170,7 @@ $(DIST)/$(EXECUTABLE)-$(OUTPUT)-windows-4.0-386.exe:
 	GOOS=windows GOARCH=386 $(GOBUILD) -v -tags '' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 $(DIST)/$(EXECUTABLE)-$(OUTPUT)-windows-4.0-amd64.exe:
-	GOOS=windows GOARCH=amd64 $(GOBUILD) -v -tags 'genji sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
+	GOOS=windows GOARCH=amd64 $(GOBUILD) -v -tags 'chai sqlite' -ldflags '$(LDFLAGS)' -o $@ ./cmd/$(NAME)
 
 .PHONY: release-reduce
 release-reduce:

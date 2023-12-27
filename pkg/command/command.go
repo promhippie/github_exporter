@@ -18,8 +18,8 @@ var (
 )
 
 func init() {
-	if _, ok := store.Drivers["genji"]; ok {
-		defaultDatabaseDSN = "genji://storage/exporter"
+	if _, ok := store.Drivers["chai"]; ok {
+		defaultDatabaseDSN = "chai://storage/exporter"
 	} else if _, ok := store.Drivers["sqlite"]; ok {
 		defaultDatabaseDSN = "sqlite://storage/exporter.sqlite3"
 	}

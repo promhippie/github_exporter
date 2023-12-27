@@ -8,7 +8,7 @@ require (
 	github.com/GuiaBolso/darwin v0.0.0-20191218124601-fd6d2aa3d244
 	github.com/bradleyfalzon/ghinstallation/v2 v2.8.0
 	github.com/cenkalti/backoff/v4 v4.2.1
-	github.com/genjidb/genji v0.16.0
+	github.com/chaisql/chai v0.16.0
 	github.com/go-chi/chi/v5 v5.0.11
 	github.com/go-kit/log v0.2.1
 	github.com/go-sql-driver/mysql v1.7.1
@@ -45,6 +45,7 @@ require (
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
+	github.com/golang-module/carbon/v2 v2.2.14 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-github/v56 v56.0.0 // indirect

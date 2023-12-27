@@ -1,4 +1,4 @@
-//go:build genji
+//go:build chai
 
 package store
 
@@ -14,12 +14,12 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/promhippie/github_exporter/pkg/migration/dialect"
 
-	// Import Genji driver for database/sql
-	_ "github.com/genjidb/genji/driver"
+	// Import Chai driver for database/sql
+	_ "github.com/chaisql/chai/driver"
 )
 
 var (
-	genjiMigrations = []darwin.Migration{
+	chaiMigrations = []darwin.Migration{
 		{
 			Version:     1,
 			Description: "Creating table workflow_runs",
@@ -46,11 +46,12 @@ var (
 )
 
 func init() {
-	register("genji", NewGenjiStore)
+	register("chai", NewChaiStore)
+	register("genji", NewChaiStore)
 }
 
-// genjiStore implements the Store interface for Genji.
-type genjiStore struct {
+// chaiStore implements the Store interface for Chai.
+type chaiStore struct {
 	logger   log.Logger
 	driver   string
 	database string
@@ -59,7 +60,7 @@ type genjiStore struct {
 }
 
 // Open simply opens the database connection.
-func (s *genjiStore) Open() (err error) {
+func (s *chaiStore) Open() (err error) {
 	s.handle, err = sqlx.Open(
 		s.driver,
 		s.dsn(),
@@ -73,23 +74,23 @@ func (s *genjiStore) Open() (err error) {
 }
 
 // Close simply closes the database connection.
-func (s *genjiStore) Close() error {
+func (s *chaiStore) Close() error {
 	return s.handle.Close()
 }
 
 // Ping just tests the database connection.
-func (s *genjiStore) Ping() error {
+func (s *chaiStore) Ping() error {
 	return s.handle.Ping()
 }
 
 // Migrate executes required db migrations.
-func (s *genjiStore) Migrate() error {
+func (s *chaiStore) Migrate() error {
 	driver := darwin.New(
 		darwin.NewGenericDriver(
 			s.handle.DB,
-			dialect.GenjiDialect{},
+			dialect.ChaiDialect{},
 		),
-		genjiMigrations,
+		chaiMigrations,
 		nil,
 	)
 
@@ -101,21 +102,21 @@ func (s *genjiStore) Migrate() error {
 }
 
 // StoreWorkflowRunEvent implements the Store interface.
-func (s *genjiStore) StoreWorkflowRunEvent(event *github.WorkflowRunEvent) error {
+func (s *chaiStore) StoreWorkflowRunEvent(event *github.WorkflowRunEvent) error {
 	return storeWorkflowRunEvent(s.handle, event)
 }
 
 // GetWorkflowRuns implements the Store interface.
-func (s *genjiStore) GetWorkflowRuns() ([]*WorkflowRun, error) {
+func (s *chaiStore) GetWorkflowRuns() ([]*WorkflowRun, error) {
 	return getWorkflowRuns(s.handle)
 }
 
 // PruneWorkflowRuns implements the Store interface.
-func (s *genjiStore) PruneWorkflowRuns(timeframe time.Duration) error {
+func (s *chaiStore) PruneWorkflowRuns(timeframe time.Duration) error {
 	return pruneWorkflowRuns(s.handle, timeframe)
 }
 
-func (s *genjiStore) dsn() string {
+func (s *chaiStore) dsn() string {
 	if len(s.meta) > 0 {
 		return fmt.Sprintf(
 			"%s?%s",
@@ -127,17 +128,17 @@ func (s *genjiStore) dsn() string {
 	return s.database
 }
 
-// NewGenjiStore initializes a new MySQL store.
-func NewGenjiStore(dsn string, logger log.Logger) (Store, error) {
+// NewChaiStore initializes a new MySQL store.
+func NewChaiStore(dsn string, logger log.Logger) (Store, error) {
 	parsed, err := url.Parse(dsn)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse dsn: %w", err)
 	}
 
-	client := &genjiStore{
+	client := &chaiStore{
 		logger:   logger,
-		driver:   "genji",
+		driver:   "chai",
 		database: path.Join(parsed.Host, parsed.Path),
 		meta:     parsed.Query(),
 	}
