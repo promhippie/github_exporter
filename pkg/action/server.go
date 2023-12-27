@@ -276,17 +276,15 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 						"type", "workflow_run",
 						"owner", event.GetRepo().GetOwner().GetLogin(),
 						"repo", event.GetRepo().GetName(),
-						"workflow_id", event.GetWorkflowRun().GetWorkflowID(),
+						"workflow", event.GetWorkflowRun().GetWorkflowID(),
 						"number", event.GetWorkflowRun().GetRunNumber(),
 						"id", event.GetWorkflowRun().GetID(),
-						"run_number", event.GetWorkflowRun().GetRunNumber(),
 						"event", event.GetWorkflowRun().GetEvent(),
 						"status", event.GetWorkflowRun().GetStatus(),
 						"conclusion", event.GetWorkflowRun().GetConclusion(),
 						"created_at", event.GetWorkflowRun().GetCreatedAt().Time.Unix(),
 						"updated_at", event.GetWorkflowRun().GetUpdatedAt().Time.Unix(),
-						"run_started_at", event.GetWorkflowRun().GetRunStartedAt().Time.Unix(),
-						"title", event.GetWorkflowRun().GetDisplayTitle(),
+						"started_at", event.GetWorkflowRun().GetRunStartedAt().Time.Unix(),
 					)
 
 					if err := db.StoreWorkflowRunEvent(event); err != nil {
