@@ -8,7 +8,7 @@ require (
 	github.com/GuiaBolso/darwin v0.0.0-20191218124601-fd6d2aa3d244
 	github.com/bradleyfalzon/ghinstallation/v2 v2.8.0
 	github.com/cenkalti/backoff/v4 v4.2.1
-	github.com/genjidb/genji v0.15.3
+	github.com/genjidb/genji v0.16.0
 	github.com/go-chi/chi/v5 v5.0.11
 	github.com/go-kit/log v0.2.1
 	github.com/go-sql-driver/mysql v1.7.1
@@ -21,7 +21,7 @@ require (
 	github.com/prometheus/exporter-toolkit v0.11.0
 	github.com/ryanuber/go-glob v1.0.0
 	github.com/stretchr/testify v1.8.4
-	github.com/urfave/cli/v2 v2.26.0
+	github.com/urfave/cli/v2 v2.27.0
 	golang.org/x/oauth2 v0.15.0
 	modernc.org/sqlite v1.28.0
 )
