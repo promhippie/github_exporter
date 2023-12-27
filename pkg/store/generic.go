@@ -151,7 +151,8 @@ ORDER BY
 
 var findWorkflowRunQuery = `
 SELECT
-	identifier
+	identifier,
+	updated_at
 FROM
 	workflow_runs
 WHERE
