@@ -12,7 +12,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.11
 	github.com/go-kit/log v0.2.1
 	github.com/go-sql-driver/mysql v1.7.1
-	github.com/google/go-github/v57 v57.0.0
+	github.com/google/go-github/v58 v58.0.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
@@ -48,6 +48,7 @@ require (
 	github.com/golang-module/carbon/v2 v2.2.14 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
+	github.com/google/go-github/v57 v57.0.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
