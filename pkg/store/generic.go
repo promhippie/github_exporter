@@ -64,6 +64,11 @@ func createOrUpdateWorkflowRun(handle *sqlx.DB, record *WorkflowRun) error {
 	} else {
 		if existing.UpdatedAt > record.UpdatedAt {
 			return nil
+		} else if existing.UpdatedAt == record.UpdatedAt && existing.Status == "completed" {
+			// The updatedAt timestamp is in seconds, so if the existing record has
+			// the same timestamp as the new record, and the status is "completed",
+			// we can safely ignore the update.
+			return nil
 		}
 
 		if _, err := handle.NamedExec(
