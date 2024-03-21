@@ -6,7 +6,7 @@ toolchain go1.21.3
 
 require (
 	github.com/GuiaBolso/darwin v0.0.0-20191218124601-fd6d2aa3d244
-	github.com/bradleyfalzon/ghinstallation/v2 v2.9.0
+	github.com/bradleyfalzon/ghinstallation/v2 v2.10.0
 	github.com/cenkalti/backoff/v4 v4.2.1
 	github.com/chaisql/chai v0.16.0
 	github.com/go-chi/chi/v5 v5.0.12
@@ -49,7 +49,6 @@ require (
 	github.com/golang-module/carbon/v2 v2.2.14 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
-	github.com/google/go-github/v57 v57.0.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
