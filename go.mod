@@ -7,7 +7,7 @@ toolchain go1.21.3
 require (
 	github.com/GuiaBolso/darwin v0.0.0-20191218124601-fd6d2aa3d244
 	github.com/bradleyfalzon/ghinstallation/v2 v2.10.0
-	github.com/cenkalti/backoff/v4 v4.2.1
+	github.com/cenkalti/backoff/v4 v4.3.0
 	github.com/chaisql/chai v0.16.0
 	github.com/go-chi/chi/v5 v5.0.12
 	github.com/go-kit/log v0.2.1
