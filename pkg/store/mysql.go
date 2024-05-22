@@ -10,7 +10,7 @@ import (
 
 	"github.com/GuiaBolso/darwin"
 	"github.com/go-kit/log"
-	"github.com/google/go-github/v61/github"
+	"github.com/google/go-github/v62/github"
 	"github.com/jmoiron/sqlx"
 	"github.com/promhippie/github_exporter/pkg/migration/dialect"
 

@@ -12,7 +12,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.12
 	github.com/go-kit/log v0.2.1
 	github.com/go-sql-driver/mysql v1.8.1
-	github.com/google/go-github/v61 v61.0.0
+	github.com/google/go-github/v62 v62.0.0
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
