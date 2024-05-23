@@ -6,4 +6,3 @@ timestamp, by preferring an already recorded `completed` event
 https://github.com/promhippie/github_exporter/issues/296
 https://github.com/promhippie/github_exporter/pull/298
 https://github.com/promhippie/github_exporter/pull/312
-
