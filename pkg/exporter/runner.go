@@ -383,8 +383,10 @@ func (c *RunnerCollector) repoRunners() []runner {
 }
 
 func (c *RunnerCollector) pagedRepoRunners(ctx context.Context, owner, name string) ([]*github.Runner, error) {
-	opts := &github.ListOptions{
-		PerPage: c.config.PerPage,
+	opts := &github.ListRunnersOptions{
+		ListOptions: github.ListOptions{
+			PerPage: c.config.PerPage,
+		},
 	}
 
 	var (
@@ -522,8 +524,10 @@ func (c *RunnerCollector) orgRunners() []runner {
 }
 
 func (c *RunnerCollector) pagedOrgRunners(ctx context.Context, name string) ([]*github.Runner, error) {
-	opts := &github.ListOptions{
-		PerPage: c.config.PerPage,
+	opts := &github.ListRunnersOptions{
+		ListOptions: github.ListOptions{
+			PerPage: c.config.PerPage,
+		},
 	}
 
 	var (
