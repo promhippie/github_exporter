@@ -455,8 +455,10 @@ func (c *RunnerCollector) enterpriseRunners() []runner {
 }
 
 func (c *RunnerCollector) pagedEnterpriseRunners(ctx context.Context, name string) ([]*github.Runner, error) {
-	opts := &github.ListOptions{
-		PerPage: c.config.PerPage,
+	opts := &github.ListRunnersOptions{
+		ListOptions: github.ListOptions{
+			PerPage: c.config.PerPage,
+		},
 	}
 
 	var (
