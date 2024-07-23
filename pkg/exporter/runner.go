@@ -9,7 +9,7 @@ import (
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
-	"github.com/google/go-github/v62/github"
+	"github.com/google/go-github/v63/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
@@ -455,8 +455,10 @@ func (c *RunnerCollector) enterpriseRunners() []runner {
 }
 
 func (c *RunnerCollector) pagedEnterpriseRunners(ctx context.Context, name string) ([]*github.Runner, error) {
-	opts := &github.ListOptions{
-		PerPage: c.config.PerPage,
+	opts := &github.ListRunnersOptions{
+		ListOptions: github.ListOptions{
+			PerPage: c.config.PerPage,
+		},
 	}
 
 	var (
