@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/go-kit/log"
-	"github.com/google/go-github/v62/github"
+	"github.com/google/go-github/v63/github"
 )
 
 var (

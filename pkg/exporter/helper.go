@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/google/go-github/v62/github"
+	"github.com/google/go-github/v63/github"
 )
 
 func closeBody(resp *github.Response) {
