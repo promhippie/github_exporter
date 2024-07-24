@@ -1,0 +1,56 @@
+---
+name: flake
+
+"on":
+  workflow_dispatch:
+  schedule:
+    - cron: "0 8 * * 1"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  flake:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate token
+        id: token
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ secrets.TOKEN_EXCHANGE_APP }}
+          installation_retrieval_mode: id
+          installation_retrieval_payload: ${{ secrets.TOKEN_EXCHANGE_INSTALL }}
+          private_key: ${{ secrets.TOKEN_EXCHANGE_KEY }}
+          permissions: >-
+            {"contents": "write", "pull_requests": "write"}
+
+      - name: Checkout source
+        id: source
+        uses: actions/checkout@v4
+
+      - name: Install nix
+        id: nix
+        uses: cachix/install-nix-action@v27
+
+      - name: Update flake
+        id: flake
+        uses: DeterminateSystems/update-flake-lock@v23
+        with:
+          commit-msg: "chore(flake): updated lockfile"
+          pr-title: "chore: automated flake update"
+          pr-body: "New flakelock generated, automerge should handle that!"
+          pr-labels: renovate
+          git-author-name: GitHub Actions
+          git-author-email: github@webhippie.de
+          token: ${{ steps.token.outputs.token }}
+
+      - name: Enable automerge
+        id: automerge
+        if: steps.flake.outputs.pull-request-operation == 'created'
+        run: gh pr merge --rebase --auto "${{ steps.flake.outputs.pull-request-number }}"
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+
+...

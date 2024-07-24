@@ -1,7 +1,8 @@
 .direnv
+.devenv
 coverage.out
 
 /bin
 /dist
 
-storage/
+/storage
