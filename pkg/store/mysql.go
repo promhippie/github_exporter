@@ -36,6 +36,7 @@ var (
 				branch VARCHAR(255),
 				sha VARCHAR(255),
 				identifier BIGINT,
+				actor VARCHAR(255),
 				created_at BIGINT,
 				updated_at BIGINT,
 				started_at BIGINT,

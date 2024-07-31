@@ -36,6 +36,7 @@ var (
 				branch TEXT,
 				sha TEXT,
 				identifier INTEGER,
+				actor TEXT,
 				created_at INTEGER,
 				updated_at INTEGER,
 				started_at INTEGER,

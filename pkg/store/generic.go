@@ -29,6 +29,7 @@ func storeWorkflowRunEvent(handle *sqlx.DB, event *github.WorkflowRunEvent) erro
 		Branch:     event.GetWorkflowRun().GetHeadBranch(),
 		SHA:        event.GetWorkflowRun().GetHeadSHA(),
 		Identifier: event.GetWorkflowRun().GetID(),
+		Actor:      event.GetWorkflowRun().GetActor().GetLogin(),
 		CreatedAt:  createdAt,
 		UpdatedAt:  updatedAt,
 		StartedAt:  startedAt,
@@ -146,6 +147,7 @@ SELECT
 	branch,
 	sha,
 	identifier,
+	actor,
 	created_at,
 	updated_at,
 	started_at
@@ -177,6 +179,7 @@ INSERT INTO workflow_runs (
 	branch,
 	sha,
 	identifier,
+	actor,
 	created_at,
 	updated_at,
 	started_at
@@ -193,6 +196,7 @@ INSERT INTO workflow_runs (
 	:branch,
 	:sha,
 	:identifier,
+	:actor,
 	:created_at,
 	:updated_at,
 	:started_at
@@ -210,6 +214,7 @@ SET
 	branch=:branch,
 	sha=:sha,
 	identifier=:identifier,
+	actor=:actor,
 	created_at=:created_at,
 	updated_at=:updated_at,
 	started_at=:started_at

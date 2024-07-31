@@ -36,6 +36,7 @@ var (
 				branch TEXT,
 				sha TEXT,
 				identifier BIGINT,
+				actor TEXT,
 				created_at BIGINT,
 				updated_at BIGINT,
 				started_at BIGINT,
