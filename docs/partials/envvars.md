@@ -80,7 +80,7 @@ GITHUB_EXPORTER_WORKFLOWS_WINDOW
 : History window for querying workflows, defaults to `24h0m0s`
 
 GITHUB_EXPORTER_WORKFLOWS_LABELS
-: List of labels used for workflows, comma-separated list, defaults to `owner, repo, workflow, event, name, status, branch, number, run`
+: List of labels used for workflows, comma-separated list, defaults to `owner, repo, workflow, event, name, status, branch, number, run, actor`
 
 GITHUB_EXPORTER_COLLECTOR_RUNNERS
 : Enable collector for runners, defaults to `false`
