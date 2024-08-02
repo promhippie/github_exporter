@@ -36,13 +36,17 @@ var (
 				branch TEXT,
 				sha TEXT,
 				identifier INTEGER,
-				actor TEXT,
 				created_at INTEGER,
 				updated_at INTEGER,
 				started_at INTEGER,
 				PRIMARY KEY(owner, repo, workflow_id, number)
 			);`,
 		},
+        {
+            Version:     2,
+            Description: "Adding actor column to workflow_runs table",
+            Script: `ALTER TABLE workflow_runs ADD COLUMN actor TEXT;`,
+        },
 	}
 )
 

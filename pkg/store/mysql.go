@@ -36,13 +36,17 @@ var (
 				branch VARCHAR(255),
 				sha VARCHAR(255),
 				identifier BIGINT,
-				actor VARCHAR(255),
 				created_at BIGINT,
 				updated_at BIGINT,
 				started_at BIGINT,
 				PRIMARY KEY(owner, repo, workflow_id, number)
 			) ENGINE=InnoDB CHARACTER SET=utf8;`,
 		},
+        {
+            Version:     2,
+            Description: "Altering table workflow_runs to add actor column",
+            Script: `ALTER TABLE workflow_runs ADD COLUMN actor VARCHAR(255);`,
+        },
 	}
 )
 
