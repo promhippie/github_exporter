@@ -101,7 +101,6 @@ func Labels() *cli.StringSlice {
 		"branch",
 		"number",
 		"run",
-		"actor",
 	)
 }
 
