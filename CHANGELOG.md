@@ -1,3 +1,20 @@
+# Changelog for unreleased
+
+The following sections list the changes for unreleased.
+
+## Summary
+
+ * Enh #368: Add actor.login label to workflow collector
+
+## Details
+
+ * Enhancement #368: Add actor.login label to workflow collector
+
+   Export `actor.login` label for workflow collector
+
+   https://github.com/promhippie/github_exporter/issues/368
+
+
 # Changelog for 3.1.2
 
 The following sections list the changes for 3.1.2.
