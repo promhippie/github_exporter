@@ -282,6 +282,7 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 						"event", event.GetWorkflowRun().GetEvent(),
 						"status", event.GetWorkflowRun().GetStatus(),
 						"conclusion", event.GetWorkflowRun().GetConclusion(),
+						"actor", event.GetWorkflowRun().GetActor().GetLogin(),
 						"created_at", event.GetWorkflowRun().GetCreatedAt().Time.Unix(),
 						"updated_at", event.GetWorkflowRun().GetUpdatedAt().Time.Unix(),
 						"started_at", event.GetWorkflowRun().GetRunStartedAt().Time.Unix(),

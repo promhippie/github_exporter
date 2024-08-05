@@ -17,6 +17,7 @@ type WorkflowRun struct {
 	SHA        string `db:"sha"`
 	Number     int    `db:"number"`
 	Attempt    int    `db:"attempt"`
+	Actor	   string `db:"actor"`
 	Identifier int64  `db:"identifier"`
 	CreatedAt  int64  `db:"created_at"`
 	UpdatedAt  int64  `db:"updated_at"`
@@ -50,6 +51,8 @@ func (r *WorkflowRun) ByLabel(label string) string {
 		return strconv.Itoa(r.Attempt)
 	case "run":
 		return strconv.FormatInt(r.Identifier, 10)
+	case "actor":
+		return r.Actor
 	}
 
 	return ""
