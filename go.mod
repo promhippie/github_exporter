@@ -23,7 +23,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	github.com/urfave/cli/v2 v2.27.3
 	golang.org/x/oauth2 v0.22.0
-	modernc.org/sqlite v1.31.1
+	modernc.org/sqlite v1.32.0
 )
 
 require (
