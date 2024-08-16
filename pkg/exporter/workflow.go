@@ -63,19 +63,19 @@ func NewWorkflowCollector(logger log.Logger, client *github.Client, db store.Sto
 		),
 		Created: prometheus.NewDesc(
 			"github_workflow_created_timestamp",
-			"Timestammp when the workflow run have been created",
+			"Timestamp when the workflow run have been created",
 			labels,
 			nil,
 		),
 		Updated: prometheus.NewDesc(
 			"github_workflow_updated_timestamp",
-			"Timestammp when the workflow run have been updated",
+			"Timestamp when the workflow run have been updated",
 			labels,
 			nil,
 		),
 		Started: prometheus.NewDesc(
 			"github_workflow_started_timestamp",
-			"Timestammp when the workflow run have been started",
+			"Timestamp when the workflow run have been started",
 			labels,
 			nil,
 		),

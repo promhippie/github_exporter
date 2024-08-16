@@ -38,7 +38,7 @@ After the creation of the application itself you can already copy the **App ID**
 which you will need later to configure the app within the exporter.
 
 Scroll down to **Private keys** and hit the **Generate a private key** button in
-order to download the required certificate which you will alos need later on.
+order to download the required certificate which you will also need later on.
 
 Since you are still missing the installation ID click on **Install App** on the
 left sidebar and install the application for your organization, I have enabled
