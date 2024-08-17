@@ -32,7 +32,7 @@ scrape_configs:
 After preparing the configuration we need to create the `docker-compose.yml`
 within the same folder, this `docker-compose.yml` starts a simple
 [Prometheus][prometheus] instance together with the exporter. Don't forget to
-update the envrionment variables with the required credentials.
+update the environment variables with the required credentials.
 
 {{< highlight yaml >}}
 version: '2'
@@ -156,7 +156,7 @@ support for it, for details about the config format look at the
       - GITHUB_EXPORTER_REPO=promhippie/example
 {{< / highlight >}}
 
-If you want to use the workfows exporter you are forced to expose the exporter
+If you want to use the workflows exporter you are forced to expose the exporter
 on the internet as the exporter got to receive webhooks from GitHub. Otherwise
 you won't be able to receive information about the workflows which could be
 transformed to metrics.
@@ -241,8 +241,8 @@ access the exporter at
 ### Web Configuration
 
 If you want to secure the service by TLS or by some basic authentication you can
-provide a `YAML` configuration file whch follows the [Prometheus][prometheus]
-toolkit format. You can see a full configration example within the
+provide a `YAML` configuration file which follows the [Prometheus][prometheus]
+toolkit format. You can see a full configuration example within the
 [toolkit documentation][toolkit].
 
 ## Metrics

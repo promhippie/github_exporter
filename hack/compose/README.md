@@ -30,8 +30,8 @@ docker-compose -f hack/compose/base.yml -f hack/compose/image.yml up
 
 ## Parca
 
-To gather some insights about the memory allocation adn the cpu usage you could
-optionally launcher [Parca][parca] to continously fetch pprof details. You can
+To gather some insights about the memory allocation and the cpu usage you could
+optionally launcher [Parca][parca] to continuously fetch pprof details. You can
 access [Parca][parca] on [http://localhost:7070](http://localhost:7070).
 
 ```console

@@ -26,7 +26,7 @@ getting free help.
 
 We are using Github Issues for submitting known issues, e.g. bugs, features,
 etc. Some issues will have someone assigned, meaning that there's already
-someone that takes responsability for fixing said issue. This is not done to
+someone that takes responsibility for fixing said issue. This is not done to
 discourage contributions, rather to not step in the work that has already been
 done by the assignee. If you want to work on a known issue with someone already
 assigned to it, please consider contacting the assignee first, e.g. by
@@ -50,7 +50,7 @@ maintain your code after it gets merged.
 ## Mind the Style
 
 We believe that in order to have a healthy codebase we need to abide to a
-certain code style. We use `gofmt` with Go and `eslint` with Javscript for this
+certain code style. We use `gofmt` with Go and `eslint` with Javascript for this
 matter, which are tools that has proved to be useful. So, before submitting your
 pull request, make sure that `gofmt` and if viable `eslint` are passing for you.
 
