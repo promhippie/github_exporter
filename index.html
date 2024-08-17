@@ -2,7 +2,7 @@
 
 <html id="html" lang="en-us">
 	<head>
-	<meta name="generator" content="Hugo 0.131.0">
+	<meta name="generator" content="Hugo 0.132.2">
 		<meta http-equiv="content-type" content="text/html;charset=utf-8">
 		<meta name="viewport" content="width=device-width"/>
 
@@ -435,7 +435,7 @@ name as a hostname:</p>
 <p>After preparing the configuration we need to create the <code>docker-compose.yml</code>
 within the same folder, this <code>docker-compose.yml</code> starts a simple
 <a href="https://prometheus.io">Prometheus</a> instance together with the exporter. Don&rsquo;t forget to
-update the envrionment variables with the required credentials.</p>
+update the environment variables with the required credentials.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;2&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">volumes</span><span class="p">:</span><span class="w">
@@ -539,7 +539,7 @@ support for it, for details about the config format look at the
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_ORG=promhippie
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_REPO=promhippie/example
 </span></span></code></pre></div>
-<p>If you want to use the workfows exporter you are forced to expose the exporter
+<p>If you want to use the workflows exporter you are forced to expose the exporter
 on the internet as the exporter got to receive webhooks from GitHub. Otherwise
 you won&rsquo;t be able to receive information about the workflows which could be
 transformed to metrics.</p>
@@ -668,8 +668,8 @@ access the exporter at
 </dl>
 <h3 id="web-configuration">Web Configuration</h3>
 <p>If you want to secure the service by TLS or by some basic authentication you can
-provide a <code>YAML</code> configuration file whch follows the <a href="https://prometheus.io">Prometheus</a>
-toolkit format. You can see a full configration example within the
+provide a <code>YAML</code> configuration file which follows the <a href="https://prometheus.io">Prometheus</a>
+toolkit format. You can see a full configuration example within the
 <a href="https://github.com/prometheus/exporter-toolkit/blob/master/docs/web-configuration.md">toolkit documentation</a>.</p>
 <h2 id="metrics">Metrics</h2>
 <p>You can a rough list of available metrics below, additionally to these metrics
@@ -851,17 +851,17 @@ take a look at the <a href="https://github.com/prometheus/client_golang/blob/mas
 <dt>github_storage_billing_estimated_storage_for_month{type, name}</dt>
 <dd>Estimated total storage for this month for this type</dd>
 <dt>github_workflow_created_timestamp{owner, repo, workflow, event, name, status, branch, number, run}</dt>
-<dd>Timestammp when the workflow run have been created</dd>
+<dd>Timestamp when the workflow run have been created</dd>
 <dt>github_workflow_duration_ms{owner, repo, workflow, event, name, status, branch, number, run}</dt>
 <dd>Duration of workflow runs</dd>
 <dt>github_workflow_duration_run_created_minutes{owner, repo, workflow, event, name, status, branch, number, run}</dt>
 <dd>Duration since the workflow run creation time in minutes</dd>
 <dt>github_workflow_started_timestamp{owner, repo, workflow, event, name, status, branch, number, run}</dt>
-<dd>Timestammp when the workflow run have been started</dd>
+<dd>Timestamp when the workflow run have been started</dd>
 <dt>github_workflow_status{owner, repo, workflow, event, name, status, branch, number, run}</dt>
 <dd>Status of workflow runs</dd>
 <dt>github_workflow_updated_timestamp{owner, repo, workflow, event, name, status, branch, number, run}</dt>
-<dd>Timestammp when the workflow run have been updated</dd>
+<dd>Timestamp when the workflow run have been updated</dd>
 </dl>
 
 			</section>
@@ -949,7 +949,7 @@ the sources:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">git clone https://github.com/promhippie/github_exporter.git
 </span></span><span class="line"><span class="cl">cd github_exporter/</span></span></code></pre></div>
 <p>All required tool besides Go itself are bundled, all you need is part of the
-<code>Makfile</code>:</p>
+<code>Makefile</code>:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">make generate build</span></span></code></pre></div>
 <p>Finally you should have the binary within the <code>bin/</code> folder now, give it a try
 with <code>./bin/github_exporter -h</code> to see all available options.</p>
@@ -1033,7 +1033,7 @@ be fine as nobody else got to install the application.</p>
 <p>After the creation of the application itself you can already copy the <strong>App ID</strong>
 which you will need later to configure the app within the exporter.</p>
 <p>Scroll down to <strong>Private keys</strong> and hit the <strong>Generate a private key</strong> button in
-order to download the required certificate which you will alos need later on.</p>
+order to download the required certificate which you will also need later on.</p>
 <p>Since you are still missing the installation ID click on <strong>Install App</strong> on the
 left sidebar and install the application for your organization, I have enabled
 it far all my repositories. On the page where you are getting redirected to you
