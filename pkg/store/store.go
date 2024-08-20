@@ -1,9 +1,11 @@
 package store
 
 import (
-	"errors"
 	"fmt"
+	"maps"
 	"net/url"
+	"slices"
+	"strings"
 	"time"
 
 	"github.com/go-kit/log"
@@ -11,9 +13,6 @@ import (
 )
 
 var (
-	// ErrUnknownDriver defines a named error for unknown driver.
-	ErrUnknownDriver = errors.New("unknown database driver")
-
 	// Drivers defines the list of registered database drivers.
 	Drivers = make(map[string]driver, 0)
 )
@@ -22,9 +21,14 @@ type driver func(dsn string, logger log.Logger) (Store, error)
 
 // Store provides the interface for the store implementations.
 type Store interface {
+	// WorkflowRunEvent
 	StoreWorkflowRunEvent(*github.WorkflowRunEvent) error
 	GetWorkflowRuns() ([]*WorkflowRun, error)
 	PruneWorkflowRuns(time.Duration) error
+	// WorkflowJobEvent
+	StoreWorkflowJobEvent(*github.WorkflowJobEvent) error
+	GetWorkflowJobs() ([]*WorkflowJob, error)
+	PruneWorkflowJobs(time.Duration) error
 
 	Open() error
 	Close() error
@@ -44,7 +48,7 @@ func New(dsn string, logger log.Logger) (Store, error) {
 		return val(dsn, logger)
 	}
 
-	return nil, ErrUnknownDriver
+	return nil, fmt.Errorf("unknown database driver %s. available drivers are %v", parsed.Scheme, strings.Join(slices.Collect(maps.Keys(Drivers)), ", "))
 }
 
 func register(name string, f driver) {

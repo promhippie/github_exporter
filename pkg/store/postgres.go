@@ -42,11 +42,11 @@ var (
 				PRIMARY KEY(owner, repo, workflow_id, number)
 			);`,
 		},
-        {
-            Version:     2,
-            Description: "Adding actor column to workflow_runs table",
-            Script: `ALTER TABLE workflow_runs ADD COLUMN actor TEXT;`,
-        },
+		{
+			Version:     2,
+			Description: "Adding actor column to workflow_runs table",
+			Script:      `ALTER TABLE workflow_runs ADD COLUMN actor TEXT;`,
+		},
 	}
 )
 
@@ -130,6 +130,21 @@ func (s *postgresStore) GetWorkflowRuns() ([]*WorkflowRun, error) {
 // PruneWorkflowRuns implements the Store interface.
 func (s *postgresStore) PruneWorkflowRuns(timeframe time.Duration) error {
 	return pruneWorkflowRuns(s.handle, timeframe)
+}
+
+// StoreWorkflowJobEvent implements the Store interface.
+func (s *postgresStore) StoreWorkflowJobEvent(event *github.WorkflowJobEvent) error {
+	return storeWorkflowJobEvent(s.handle, event)
+}
+
+// GetWorkflowJobs implements the Store interface.
+func (s *postgresStore) GetWorkflowJobs() ([]*WorkflowJob, error) {
+	return getWorkflowJobs(s.handle)
+}
+
+// PruneWorkflowJobs implements the Store interface.
+func (s *postgresStore) PruneWorkflowJobs(timeframe time.Duration) error {
+	return pruneWorkflowJobs(s.handle, timeframe)
 }
 
 func (s *postgresStore) dsn() string {
