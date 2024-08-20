@@ -1,4 +1,5 @@
 .direnv
+.envrc
 .devenv
 coverage.out
 

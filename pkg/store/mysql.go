@@ -42,11 +42,11 @@ var (
 				PRIMARY KEY(owner, repo, workflow_id, number)
 			) ENGINE=InnoDB CHARACTER SET=utf8;`,
 		},
-        {
-            Version:     2,
-            Description: "Altering table workflow_runs to add actor column",
-            Script: `ALTER TABLE workflow_runs ADD COLUMN actor VARCHAR(255);`,
-        },
+		{
+			Version:     2,
+			Description: "Altering table workflow_runs to add actor column",
+			Script:      `ALTER TABLE workflow_runs ADD COLUMN actor VARCHAR(255);`,
+		},
 	}
 )
 
@@ -130,6 +130,21 @@ func (s *mysqlStore) GetWorkflowRuns() ([]*WorkflowRun, error) {
 // PruneWorkflowRuns implements the Store interface.
 func (s *mysqlStore) PruneWorkflowRuns(timeframe time.Duration) error {
 	return pruneWorkflowRuns(s.handle, timeframe)
+}
+
+// StoreWorkflowJobEvent implements the Store interface.
+func (s *mysqlStore) StoreWorkflowJobEvent(event *github.WorkflowJobEvent) error {
+	return storeWorkflowJobEvent(s.handle, event)
+}
+
+// GetWorkflowJobs implements the Store interface.
+func (s *mysqlStore) GetWorkflowJobs() ([]*WorkflowJob, error) {
+	return getWorkflowJobs(s.handle)
+}
+
+// PruneWorkflowJobs implements the Store interface.
+func (s *mysqlStore) PruneWorkflowJobs(timeframe time.Duration) error {
+	return pruneWorkflowJobs(s.handle, timeframe)
 }
 
 func (s *mysqlStore) dsn() string {
