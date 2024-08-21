@@ -11,7 +11,7 @@ import (
 
 	"github.com/GuiaBolso/darwin"
 	"github.com/go-kit/log"
-	"github.com/google/go-github/v63/github"
+	"github.com/google/go-github/v64/github"
 	"github.com/jmoiron/sqlx"
 	"github.com/promhippie/github_exporter/pkg/migration/dialect"
 
@@ -43,11 +43,11 @@ var (
 				PRIMARY KEY(owner, repo, workflow_id, number)
 			);`,
 		},
-        {
-            Version:     2,
-            Description: "Adding actor column to workflow_runs table",
-            Script: `ALTER TABLE workflow_runs ADD COLUMN actor TEXT;`,
-        },
+		{
+			Version:     2,
+			Description: "Adding actor column to workflow_runs table",
+			Script:      `ALTER TABLE workflow_runs ADD COLUMN actor TEXT;`,
+		},
 	}
 )
 
