@@ -10,7 +10,7 @@ import (
 
 	"github.com/GuiaBolso/darwin"
 	"github.com/go-kit/log"
-	"github.com/google/go-github/v63/github"
+	"github.com/google/go-github/v64/github"
 	"github.com/jmoiron/sqlx"
 	"github.com/promhippie/github_exporter/pkg/migration/dialect"
 
@@ -42,11 +42,11 @@ var (
 				PRIMARY KEY(owner, repo, workflow_id, number)
 			) ENGINE=InnoDB CHARACTER SET=utf8;`,
 		},
-        {
-            Version:     2,
-            Description: "Altering table workflow_runs to add actor column",
-            Script: `ALTER TABLE workflow_runs ADD COLUMN actor VARCHAR(255);`,
-        },
+		{
+			Version:     2,
+			Description: "Altering table workflow_runs to add actor column",
+			Script:      `ALTER TABLE workflow_runs ADD COLUMN actor VARCHAR(255);`,
+		},
 	}
 )
 
