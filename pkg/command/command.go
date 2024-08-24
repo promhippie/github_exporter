@@ -43,7 +43,7 @@ func Run() error {
 		Commands: []*cli.Command{
 			Health(cfg),
 		},
-		Action: func(c *cli.Context) error {
+		Action: func(_ *cli.Context) error {
 			logger := setupLogger(cfg)
 			db, err := setupStorage(cfg, logger)
 
@@ -63,7 +63,7 @@ func Run() error {
 			if err := backoff.RetryNotify(
 				db.Open,
 				backoff.NewExponentialBackOff(),
-				func(err error, dur time.Duration) {
+				func(_ error, dur time.Duration) {
 					level.Warn(logger).Log(
 						"msg", "Database open failed",
 						"retry", dur,
@@ -81,7 +81,7 @@ func Run() error {
 			if err := backoff.RetryNotify(
 				db.Ping,
 				backoff.NewExponentialBackOff(),
-				func(err error, dur time.Duration) {
+				func(_ error, dur time.Duration) {
 					level.Warn(logger).Log(
 						"msg", "Database ping failed",
 						"retry", dur,

@@ -15,7 +15,7 @@ func Health(cfg *config.Config) *cli.Command {
 		Name:  "health",
 		Usage: "Perform health checks",
 		Flags: HealthFlags(cfg),
-		Action: func(c *cli.Context) error {
+		Action: func(_ *cli.Context) error {
 			logger := setupLogger(cfg)
 
 			resp, err := http.Get(
