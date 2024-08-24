@@ -1,8 +1,6 @@
 module github.com/promhippie/github_exporter
 
-go 1.21
-
-toolchain go1.23.0
+go 1.23.0
 
 require (
 	github.com/GuiaBolso/darwin v0.0.0-20191218124601-fd6d2aa3d244
