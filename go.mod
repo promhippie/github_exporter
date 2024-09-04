@@ -20,7 +20,7 @@ require (
 	github.com/ryanuber/go-glob v1.0.0
 	github.com/stretchr/testify v1.9.0
 	github.com/urfave/cli/v2 v2.27.4
-	golang.org/x/oauth2 v0.22.0
+	golang.org/x/oauth2 v0.23.0
 	modernc.org/sqlite v1.32.0
 )
 
