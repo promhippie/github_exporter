@@ -1,4 +1,4 @@
-FROM i386/alpine:3.20@sha256:fa66aa594ffa884dff44f4a97821756545834505df611c375a30c45926402f89 AS build
+FROM i386/alpine:3.20@sha256:b3e87f642f5c48cdc7556c3e03a0d63916bd0055ba6edba7773df3cb1a76f224 AS build
 RUN apk add --no-cache ca-certificates mailcap
 
 FROM scratch
