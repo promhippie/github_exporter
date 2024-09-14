@@ -5,6 +5,7 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"reflect"
 	"sort"
@@ -30,32 +31,32 @@ func main() {
 
 	collectors = append(
 		collectors,
-		exporter.NewAdminCollector(nil, nil, nil, nil, nil, cfg).Metrics()...,
+		exporter.NewAdminCollector(slog.Default(), nil, nil, nil, nil, cfg).Metrics()...,
 	)
 
 	collectors = append(
 		collectors,
-		exporter.NewOrgCollector(nil, nil, nil, nil, nil, cfg).Metrics()...,
+		exporter.NewOrgCollector(slog.Default(), nil, nil, nil, nil, cfg).Metrics()...,
 	)
 
 	collectors = append(
 		collectors,
-		exporter.NewRepoCollector(nil, nil, nil, nil, nil, cfg).Metrics()...,
+		exporter.NewRepoCollector(slog.Default(), nil, nil, nil, nil, cfg).Metrics()...,
 	)
 
 	collectors = append(
 		collectors,
-		exporter.NewBillingCollector(nil, nil, nil, nil, nil, cfg).Metrics()...,
+		exporter.NewBillingCollector(slog.Default(), nil, nil, nil, nil, cfg).Metrics()...,
 	)
 
 	collectors = append(
 		collectors,
-		exporter.NewRunnerCollector(nil, nil, nil, nil, nil, cfg).Metrics()...,
+		exporter.NewRunnerCollector(slog.Default(), nil, nil, nil, nil, cfg).Metrics()...,
 	)
 
 	collectors = append(
 		collectors,
-		exporter.NewWorkflowCollector(nil, nil, nil, nil, nil, cfg).Metrics()...,
+		exporter.NewWorkflowCollector(slog.Default(), nil, nil, nil, nil, cfg).Metrics()...,
 	)
 
 	metrics := make([]metric, 0)
