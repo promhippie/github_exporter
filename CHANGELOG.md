@@ -4,13 +4,24 @@ The following sections list the changes for unreleased.
 
 ## Summary
 
- * Enh #368: Add actor.login label to workflow collector
+ * Chg #393: Switch to official logging library
+ * Enh #368: Add `actor.login` label to workflow collector
 
 ## Details
 
- * Enhancement #368: Add actor.login label to workflow collector
+ * Change #393: Switch to official logging library
 
-   Export `actor.login` label for workflow collector
+   Since there have been a structured logger part of the Go standard library we
+   thought it's time to replace the library with that. Be aware that log messages
+   should change a little bit.
+
+   https://github.com/promhippie/github_exporter/issues/393
+
+ * Enhancement #368: Add `actor.login` label to workflow collector
+
+   Export an `actor.login` label for workflow collector which could be added to the
+   labels optionally, please keep the label cardinality in mind while enabling this
+   label.
 
    https://github.com/promhippie/github_exporter/issues/368
 
