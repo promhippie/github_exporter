@@ -2,6 +2,7 @@ package store
 
 import (
 	"fmt"
+	"log/slog"
 	"net"
 	"net/url"
 	"strconv"
@@ -9,7 +10,6 @@ import (
 	"time"
 
 	"github.com/GuiaBolso/darwin"
-	"github.com/go-kit/log"
 	"github.com/google/go-github/v64/github"
 	"github.com/jmoiron/sqlx"
 	"github.com/promhippie/github_exporter/pkg/migration/dialect"
@@ -57,7 +57,7 @@ func init() {
 
 // postgresStore implements the Store interface for PostgreSQL.
 type postgresStore struct {
-	logger          log.Logger
+	logger          *slog.Logger
 	driver          string
 	host            string
 	port            string
@@ -157,7 +157,7 @@ func (s *postgresStore) dsn() string {
 }
 
 // NewPostgresStore initializes a new PostgreSQL store.
-func NewPostgresStore(dsn string, logger log.Logger) (Store, error) {
+func NewPostgresStore(dsn string, logger *slog.Logger) (Store, error) {
 	parsed, err := url.Parse(dsn)
 
 	if err != nil {

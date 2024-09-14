@@ -3,10 +3,9 @@ package exporter
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"time"
 
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 	"github.com/google/go-github/v64/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
@@ -16,7 +15,7 @@ import (
 // BillingCollector collects metrics about the servers.
 type BillingCollector struct {
 	client   *github.Client
-	logger   log.Logger
+	logger   *slog.Logger
 	db       store.Store
 	failures *prometheus.CounterVec
 	duration *prometheus.HistogramVec
@@ -37,7 +36,7 @@ type BillingCollector struct {
 }
 
 // NewBillingCollector returns a new BillingCollector.
-func NewBillingCollector(logger log.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *BillingCollector {
+func NewBillingCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *BillingCollector {
 	if failures != nil {
 		failures.WithLabelValues("billing").Add(0)
 	}
@@ -45,7 +44,7 @@ func NewBillingCollector(logger log.Logger, client *github.Client, db store.Stor
 	labels := []string{"type", "name"}
 	return &BillingCollector{
 		client:   client,
-		logger:   log.With(logger, "collector", "billing"),
+		logger:   logger.With("collector", "billing"),
 		db:       db,
 		failures: failures,
 		duration: duration,
@@ -153,16 +152,14 @@ func (c *BillingCollector) Collect(ch chan<- prometheus.Metric) {
 		billing := c.getActionBilling()
 		c.duration.WithLabelValues("action").Observe(time.Since(now).Seconds())
 
-		level.Debug(c.logger).Log(
-			"msg", "Fetched action billing",
+		c.logger.Debug("Fetched action billing",
 			"count", len(billing),
 			"duration", time.Since(now),
 		)
 
 		for _, record := range billing {
 			if alreadyCollected(collected, record.Name) {
-				level.Debug(c.logger).Log(
-					"msg", "Already collected action billing",
+				c.logger.Debug("Already collected action billing",
 					"type", record.Type,
 					"name", record.Name,
 				)
@@ -172,8 +169,7 @@ func (c *BillingCollector) Collect(ch chan<- prometheus.Metric) {
 
 			collected = append(collected, record.Name)
 
-			level.Debug(c.logger).Log(
-				"msg", "Collecting action billing",
+			c.logger.Debug("Collecting action billing",
 				"type", record.Type,
 				"name", record.Name,
 			)
@@ -222,16 +218,14 @@ func (c *BillingCollector) Collect(ch chan<- prometheus.Metric) {
 		billing := c.getPackageBilling()
 		c.duration.WithLabelValues("action").Observe(time.Since(now).Seconds())
 
-		level.Debug(c.logger).Log(
-			"msg", "Fetched package billing",
+		c.logger.Debug("Fetched package billing",
 			"count", len(billing),
 			"duration", time.Since(now),
 		)
 
 		for _, record := range billing {
 			if alreadyCollected(collected, record.Name) {
-				level.Debug(c.logger).Log(
-					"msg", "Already collected package billing",
+				c.logger.Debug("Already collected package billing",
 					"type", record.Type,
 					"name", record.Name,
 				)
@@ -241,8 +235,7 @@ func (c *BillingCollector) Collect(ch chan<- prometheus.Metric) {
 
 			collected = append(collected, record.Name)
 
-			level.Debug(c.logger).Log(
-				"msg", "Collecting package billing",
+			c.logger.Debug("Collecting package billing",
 				"type", record.Type,
 				"name", record.Name,
 			)
@@ -282,16 +275,14 @@ func (c *BillingCollector) Collect(ch chan<- prometheus.Metric) {
 		billing := c.getStorageBilling()
 		c.duration.WithLabelValues("action").Observe(time.Since(now).Seconds())
 
-		level.Debug(c.logger).Log(
-			"msg", "Fetched storage billing",
+		c.logger.Debug("Fetched storage billing",
 			"count", len(billing),
 			"duration", time.Since(now),
 		)
 
 		for _, record := range billing {
 			if alreadyCollected(collected, record.Name) {
-				level.Debug(c.logger).Log(
-					"msg", "Already collected storage billing",
+				c.logger.Debug("Already collected storage billing",
 					"type", record.Type,
 					"name", record.Name,
 				)
@@ -301,8 +292,7 @@ func (c *BillingCollector) Collect(ch chan<- prometheus.Metric) {
 
 			collected = append(collected, record.Name)
 
-			level.Debug(c.logger).Log(
-				"msg", "Collecting storage billing",
+			c.logger.Debug("Collecting storage billing",
 				"type", record.Type,
 				"name", record.Name,
 			)
@@ -356,8 +346,7 @@ func (c *BillingCollector) getActionBilling() []*actionBilling {
 		)
 
 		if err != nil {
-			level.Error(c.logger).Log(
-				"msg", "Failed to prepare action request",
+			c.logger.Error("Failed to prepare action request",
 				"type", "enterprise",
 				"name", name,
 				"err", err,
@@ -371,8 +360,7 @@ func (c *BillingCollector) getActionBilling() []*actionBilling {
 		resp, err := c.client.Do(ctx, req, record)
 
 		if err != nil {
-			level.Error(c.logger).Log(
-				"msg", "Failed to fetch action billing",
+			c.logger.Error("Failed to fetch action billing",
 				"type", "enterprise",
 				"name", name,
 				"err", err,
@@ -396,8 +384,7 @@ func (c *BillingCollector) getActionBilling() []*actionBilling {
 		defer closeBody(resp)
 
 		if err != nil {
-			level.Error(c.logger).Log(
-				"msg", "Failed to fetch action billing",
+			c.logger.Error("Failed to fetch action billing",
 				"type", "org",
 				"name", name,
 				"err", err,
@@ -437,8 +424,7 @@ func (c *BillingCollector) getPackageBilling() []*packageBilling {
 		)
 
 		if err != nil {
-			level.Error(c.logger).Log(
-				"msg", "Failed to prepare package request",
+			c.logger.Error("Failed to prepare package request",
 				"type", "enterprise",
 				"name", name,
 				"err", err,
@@ -452,8 +438,7 @@ func (c *BillingCollector) getPackageBilling() []*packageBilling {
 		resp, err := c.client.Do(ctx, req, record)
 
 		if err != nil {
-			level.Error(c.logger).Log(
-				"msg", "Failed to fetch package billing",
+			c.logger.Error("Failed to fetch package billing",
 				"type", "enterprise",
 				"name", name,
 				"err", err,
@@ -480,8 +465,7 @@ func (c *BillingCollector) getPackageBilling() []*packageBilling {
 		defer closeBody(resp)
 
 		if err != nil {
-			level.Error(c.logger).Log(
-				"msg", "Failed to fetch package billing",
+			c.logger.Error("Failed to fetch package billing",
 				"type", "org",
 				"name", name,
 				"err", err,
@@ -521,8 +505,7 @@ func (c *BillingCollector) getStorageBilling() []*storageBilling {
 		)
 
 		if err != nil {
-			level.Error(c.logger).Log(
-				"msg", "Failed to prepare storage request",
+			c.logger.Error("Failed to prepare storage request",
 				"type", "enterprise",
 				"name", name,
 				"err", err,
@@ -536,8 +519,7 @@ func (c *BillingCollector) getStorageBilling() []*storageBilling {
 		resp, err := c.client.Do(ctx, req, record)
 
 		if err != nil {
-			level.Error(c.logger).Log(
-				"msg", "Failed to fetch storage billing",
+			c.logger.Error("Failed to fetch storage billing",
 				"type", "enterprise",
 				"name", name,
 				"err", err,
@@ -564,8 +546,7 @@ func (c *BillingCollector) getStorageBilling() []*storageBilling {
 		defer closeBody(resp)
 
 		if err != nil {
-			level.Error(c.logger).Log(
-				"msg", "Failed to fetch storage billing",
+			c.logger.Error("Failed to fetch storage billing",
 				"type", "org",
 				"name", name,
 				"err", err,

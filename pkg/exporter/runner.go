@@ -2,13 +2,12 @@ package exporter
 
 import (
 	"context"
+	"log/slog"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 	"github.com/google/go-github/v64/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
@@ -19,7 +18,7 @@ import (
 // RunnerCollector collects metrics about the runners.
 type RunnerCollector struct {
 	client   *github.Client
-	logger   log.Logger
+	logger   *slog.Logger
 	db       store.Store
 	failures *prometheus.CounterVec
 	duration *prometheus.HistogramVec
@@ -34,7 +33,7 @@ type RunnerCollector struct {
 }
 
 // NewRunnerCollector returns a new RunnerCollector.
-func NewRunnerCollector(logger log.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *RunnerCollector {
+func NewRunnerCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *RunnerCollector {
 	if failures != nil {
 		failures.WithLabelValues("runner").Add(0)
 	}
@@ -42,7 +41,7 @@ func NewRunnerCollector(logger log.Logger, client *github.Client, db store.Store
 	labels := cfg.Runners.Labels.Value()
 	return &RunnerCollector{
 		client:   client,
-		logger:   log.With(logger, "collector", "runner"),
+		logger:   logger.With("collector", "runner"),
 		db:       db,
 		failures: failures,
 		duration: duration,
@@ -118,16 +117,14 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 		records := c.repoRunners()
 		c.duration.WithLabelValues("runner").Observe(time.Since(now).Seconds())
 
-		level.Debug(c.logger).Log(
-			"msg", "Fetched repo runners",
+		c.logger.Debug("Fetched repo runners",
 			"count", len(records),
 			"duration", time.Since(now),
 		)
 
 		for _, record := range records {
 			if alreadyCollected(collected, record.GetName()) {
-				level.Debug(c.logger).Log(
-					"msg", "Already collected repo runner",
+				c.logger.Debug("Already collected repo runner",
 					"name", record.GetName(),
 				)
 
@@ -140,8 +137,7 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 				online float64
 			)
 
-			level.Debug(c.logger).Log(
-				"msg", "Collecting repo runner",
+			c.logger.Debug("Collecting repo runner",
 				"name", record.GetName(),
 			)
 
@@ -181,16 +177,14 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 		records := c.enterpriseRunners()
 		c.duration.WithLabelValues("runner").Observe(time.Since(now).Seconds())
 
-		level.Debug(c.logger).Log(
-			"msg", "Fetched enterprise runners",
+		c.logger.Debug("Fetched enterprise runners",
 			"count", len(records),
 			"duration", time.Since(now),
 		)
 
 		for _, record := range records {
 			if alreadyCollected(collected, record.GetName()) {
-				level.Debug(c.logger).Log(
-					"msg", "Already collected enterprise runner",
+				c.logger.Debug("Already collected enterprise runner",
 					"name", record.GetName(),
 				)
 
@@ -203,8 +197,7 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 				online float64
 			)
 
-			level.Debug(c.logger).Log(
-				"msg", "Collecting enterprise runner",
+			c.logger.Debug("Collecting enterprise runner",
 				"name", record.GetName(),
 			)
 
@@ -244,16 +237,14 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 		records := c.orgRunners()
 		c.duration.WithLabelValues("runner").Observe(time.Since(now).Seconds())
 
-		level.Debug(c.logger).Log(
-			"msg", "Fetched org runners",
+		c.logger.Debug("Fetched org runners",
 			"count", len(records),
 			"duration", time.Since(now),
 		)
 
 		for _, record := range records {
 			if alreadyCollected(collected, record.GetName()) {
-				level.Debug(c.logger).Log(
-					"msg", "Already collected org runner",
+				c.logger.Debug("Already collected org runner",
 					"name", record.GetName(),
 				)
 
@@ -266,8 +257,7 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 				online float64
 			)
 
-			level.Debug(c.logger).Log(
-				"msg", "Collecting org runner",
+			c.logger.Debug("Collecting org runner",
 				"name", record.GetName(),
 			)
 
@@ -309,8 +299,7 @@ func (c *RunnerCollector) repoRunners() []runner {
 		n := strings.Split(name, "/")
 
 		if len(n) != 2 {
-			level.Error(c.logger).Log(
-				"msg", "Invalid repo name",
+			c.logger.Error("Invalid repo name",
 				"name", name,
 			)
 
@@ -326,8 +315,7 @@ func (c *RunnerCollector) repoRunners() []runner {
 		repos, err := reposByOwnerAndName(ctx, c.client, splitOwner, splitName, c.config.PerPage)
 
 		if err != nil {
-			level.Error(c.logger).Log(
-				"msg", "Failed to fetch repos",
+			c.logger.Error("Failed to fetch repos",
 				"name", name,
 				"err", err,
 			)
@@ -336,8 +324,7 @@ func (c *RunnerCollector) repoRunners() []runner {
 			continue
 		}
 
-		level.Debug(c.logger).Log(
-			"msg", "Fetched repos for runners",
+		c.logger.Debug("Fetched repos for runners",
 			"count", len(repos),
 		)
 
@@ -347,8 +334,7 @@ func (c *RunnerCollector) repoRunners() []runner {
 			}
 
 			if alreadyCollected(collected, repo.GetFullName()) {
-				level.Debug(c.logger).Log(
-					"msg", "Already collected repo",
+				c.logger.Debug("Already collected repo",
 					"name", repo.GetFullName(),
 				)
 
@@ -360,8 +346,7 @@ func (c *RunnerCollector) repoRunners() []runner {
 			records, err := c.pagedRepoRunners(ctx, *repo.Owner.Login, *repo.Name)
 
 			if err != nil {
-				level.Error(c.logger).Log(
-					"msg", "Failed to fetch repo runners",
+				c.logger.Error("Failed to fetch repo runners",
 					"name", name,
 					"err", err,
 				)
@@ -433,8 +418,7 @@ func (c *RunnerCollector) enterpriseRunners() []runner {
 		records, err := c.pagedEnterpriseRunners(ctx, name)
 
 		if err != nil {
-			level.Error(c.logger).Log(
-				"msg", "Failed to fetch enterprise runners",
+			c.logger.Error("Failed to fetch enterprise runners",
 				"name", name,
 				"err", err,
 			)
@@ -504,8 +488,7 @@ func (c *RunnerCollector) orgRunners() []runner {
 		records, err := c.pagedOrgRunners(ctx, name)
 
 		if err != nil {
-			level.Error(c.logger).Log(
-				"msg", "Failed to fetch org runners",
+			c.logger.Error("Failed to fetch org runners",
 				"name", name,
 				"err", err,
 			)

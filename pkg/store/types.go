@@ -17,7 +17,7 @@ type WorkflowRun struct {
 	SHA        string `db:"sha"`
 	Number     int    `db:"number"`
 	Attempt    int    `db:"attempt"`
-	Actor	   string `db:"actor"`
+	Actor      string `db:"actor"`
 	Identifier int64  `db:"identifier"`
 	CreatedAt  int64  `db:"created_at"`
 	UpdatedAt  int64  `db:"updated_at"`

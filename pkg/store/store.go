@@ -3,10 +3,10 @@ package store
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/url"
 	"time"
 
-	"github.com/go-kit/log"
 	"github.com/google/go-github/v64/github"
 )
 
@@ -18,7 +18,7 @@ var (
 	Drivers = make(map[string]driver, 0)
 )
 
-type driver func(dsn string, logger log.Logger) (Store, error)
+type driver func(dsn string, logger *slog.Logger) (Store, error)
 
 // Store provides the interface for the store implementations.
 type Store interface {
@@ -33,7 +33,7 @@ type Store interface {
 }
 
 // New initializes a new database driver supported by current os.
-func New(dsn string, logger log.Logger) (Store, error) {
+func New(dsn string, logger *slog.Logger) (Store, error) {
 	parsed, err := url.Parse(dsn)
 
 	if err != nil {

@@ -2,9 +2,8 @@ package action
 
 import (
 	"fmt"
+	"log/slog"
 
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/promhippie/github_exporter/pkg/version"
@@ -49,11 +48,9 @@ func init() {
 }
 
 type promLogger struct {
-	logger log.Logger
+	logger *slog.Logger
 }
 
 func (pl promLogger) Println(v ...interface{}) {
-	level.Error(pl.logger).Log(
-		"msg", fmt.Sprintln(v...),
-	)
+	pl.logger.Error(fmt.Sprintln(v...))
 }

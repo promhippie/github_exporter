@@ -4,12 +4,12 @@ package store
 
 import (
 	"fmt"
+	"log/slog"
 	"net/url"
 	"path"
 	"time"
 
 	"github.com/GuiaBolso/darwin"
-	"github.com/go-kit/log"
 	"github.com/google/go-github/v64/github"
 	"github.com/jmoiron/sqlx"
 	"github.com/promhippie/github_exporter/pkg/migration/dialect"
@@ -57,7 +57,7 @@ func init() {
 
 // chaiStore implements the Store interface for Chai.
 type chaiStore struct {
-	logger   log.Logger
+	logger   *slog.Logger
 	driver   string
 	database string
 	meta     url.Values
@@ -134,7 +134,7 @@ func (s *chaiStore) dsn() string {
 }
 
 // NewChaiStore initializes a new MySQL store.
-func NewChaiStore(dsn string, logger log.Logger) (Store, error) {
+func NewChaiStore(dsn string, logger *slog.Logger) (Store, error) {
 	parsed, err := url.Parse(dsn)
 
 	if err != nil {

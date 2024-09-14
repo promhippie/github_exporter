@@ -1,10 +1,9 @@
 package exporter
 
 import (
+	"log/slog"
 	"time"
 
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 	"github.com/google/go-github/v64/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
@@ -14,7 +13,7 @@ import (
 // WorkflowCollector collects metrics about the servers.
 type WorkflowCollector struct {
 	client   *github.Client
-	logger   log.Logger
+	logger   *slog.Logger
 	db       store.Store
 	failures *prometheus.CounterVec
 	duration *prometheus.HistogramVec
@@ -29,7 +28,7 @@ type WorkflowCollector struct {
 }
 
 // NewWorkflowCollector returns a new WorkflowCollector.
-func NewWorkflowCollector(logger log.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *WorkflowCollector {
+func NewWorkflowCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *WorkflowCollector {
 	if failures != nil {
 		failures.WithLabelValues("action").Add(0)
 	}
@@ -37,7 +36,7 @@ func NewWorkflowCollector(logger log.Logger, client *github.Client, db store.Sto
 	labels := cfg.Workflows.Labels.Value()
 	return &WorkflowCollector{
 		client:   client,
-		logger:   log.With(logger, "collector", "workflow"),
+		logger:   logger.With("collector", "workflow"),
 		db:       db,
 		failures: failures,
 		duration: duration,
@@ -109,8 +108,7 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 	if err := c.db.PruneWorkflowRuns(
 		c.config.Workflows.Window,
 	); err != nil {
-		level.Error(c.logger).Log(
-			"msg", "Failed to prune workflows",
+		c.logger.Error("Failed to prune workflows",
 			"err", err,
 		)
 	}
@@ -120,8 +118,7 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 	c.duration.WithLabelValues("workflow").Observe(time.Since(now).Seconds())
 
 	if err != nil {
-		level.Error(c.logger).Log(
-			"msg", "Failed to fetch workflows",
+		c.logger.Error("Failed to fetch workflows",
 			"err", err,
 		)
 
@@ -129,15 +126,13 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 		return
 	}
 
-	level.Debug(c.logger).Log(
-		"msg", "Fetched workflows",
+	c.logger.Debug("Fetched workflows",
 		"count", len(records),
 		"duration", time.Since(now),
 	)
 
 	for _, record := range records {
-		level.Debug(c.logger).Log(
-			"msg", "Collecting workflow",
+		c.logger.Debug("Collecting workflow",
 			"owner", record.Owner,
 			"repo", record.Repo,
 			"workflow", record.WorkflowID,

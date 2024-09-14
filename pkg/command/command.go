@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
-	"github.com/go-kit/log/level"
 	"github.com/promhippie/github_exporter/pkg/action"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
@@ -48,8 +47,7 @@ func Run() error {
 			db, err := setupStorage(cfg, logger)
 
 			if err != nil {
-				level.Error(logger).Log(
-					"msg", "Failed to setup database",
+				logger.Error("Failed to setup database",
 					"error", err,
 				)
 
@@ -64,14 +62,12 @@ func Run() error {
 				db.Open,
 				backoff.NewExponentialBackOff(),
 				func(_ error, dur time.Duration) {
-					level.Warn(logger).Log(
-						"msg", "Database open failed",
+					logger.Warn("Database open failed",
 						"retry", dur,
 					)
 				},
 			); err != nil {
-				level.Error(logger).Log(
-					"msg", "Giving up to connect to db",
+				logger.Error("Giving up to connect to database",
 					"error", err,
 				)
 
@@ -82,14 +78,12 @@ func Run() error {
 				db.Ping,
 				backoff.NewExponentialBackOff(),
 				func(_ error, dur time.Duration) {
-					level.Warn(logger).Log(
-						"msg", "Database ping failed",
+					logger.Warn("Database ping failed",
 						"retry", dur,
 					)
 				},
 			); err != nil {
-				level.Error(logger).Log(
-					"msg", "Giving up to ping the db",
+				logger.Error("Giving up to ping the database",
 					"error", err,
 				)
 
@@ -97,8 +91,7 @@ func Run() error {
 			}
 
 			if err := db.Migrate(); err != nil {
-				level.Error(logger).Log(
-					"msg", "Failed to migrate database",
+				logger.Error("Failed to migrate database",
 					"error", err,
 				)
 			}
