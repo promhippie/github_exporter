@@ -2,10 +2,9 @@ package exporter
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 	"github.com/google/go-github/v64/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
@@ -15,7 +14,7 @@ import (
 // AdminCollector collects metrics about the servers.
 type AdminCollector struct {
 	client   *github.Client
-	logger   log.Logger
+	logger   *slog.Logger
 	db       store.Store
 	failures *prometheus.CounterVec
 	duration *prometheus.HistogramVec
@@ -67,7 +66,7 @@ type AdminCollector struct {
 }
 
 // NewAdminCollector returns a new AdminCollector.
-func NewAdminCollector(logger log.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *AdminCollector {
+func NewAdminCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *AdminCollector {
 	if failures != nil {
 		failures.WithLabelValues("admin").Add(0)
 	}
@@ -75,7 +74,7 @@ func NewAdminCollector(logger log.Logger, client *github.Client, db store.Store,
 	labels := []string{}
 	return &AdminCollector{
 		client:   client,
-		logger:   log.With(logger, "collector", "admin"),
+		logger:   logger.With("collector", "admin"),
 		db:       db,
 		failures: failures,
 		duration: duration,
@@ -386,8 +385,7 @@ func (c *AdminCollector) Collect(ch chan<- prometheus.Metric) {
 	defer closeBody(resp)
 
 	if err != nil {
-		level.Error(c.logger).Log(
-			"msg", "Failed to fetch admin stats",
+		c.logger.Error("Failed to fetch admin stats",
 			"err", err,
 		)
 
@@ -395,8 +393,8 @@ func (c *AdminCollector) Collect(ch chan<- prometheus.Metric) {
 		return
 	}
 
-	level.Debug(c.logger).Log(
-		"msg", "Fetched admin stats",
+	c.logger.Debug(
+		"Fetched admin stats",
 	)
 
 	labels := []string{}

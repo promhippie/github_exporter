@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"io"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -12,8 +13,6 @@ import (
 
 	"github.com/bradleyfalzon/ghinstallation/v2"
 	"github.com/go-chi/chi/v5"
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 	"github.com/google/go-github/v64/github"
 	"github.com/oklog/run"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -27,9 +26,8 @@ import (
 )
 
 // Server handles the server sub-command.
-func Server(cfg *config.Config, db store.Store, logger log.Logger) error {
-	level.Info(logger).Log(
-		"msg", "Launching GitHub Exporter",
+func Server(cfg *config.Config, db store.Store, logger *slog.Logger) error {
+	logger.Info("Launching GitHub Exporter",
 		"version", version.String,
 		"revision", version.Revision,
 		"date", version.Date,
@@ -53,9 +51,8 @@ func Server(cfg *config.Config, db store.Store, logger log.Logger) error {
 		}
 
 		gr.Add(func() error {
-			level.Info(logger).Log(
-				"msg", "Starting metrics server",
-				"addr", cfg.Server.Addr,
+			logger.Info("Starting metrics server",
+				"address", cfg.Server.Addr,
 			)
 
 			return web.ListenAndServe(
@@ -72,16 +69,14 @@ func Server(cfg *config.Config, db store.Store, logger log.Logger) error {
 			defer cancel()
 
 			if err := server.Shutdown(ctx); err != nil {
-				level.Error(logger).Log(
-					"msg", "Failed to shutdown metrics gracefully",
+				logger.Error("Failed to shutdown metrics gracefully",
 					"err", err,
 				)
 
 				return
 			}
 
-			level.Info(logger).Log(
-				"msg", "Metrics shutdown gracefully",
+			logger.Info("Metrics shutdown gracefully",
 				"reason", reason,
 			)
 		})
@@ -104,7 +99,7 @@ func Server(cfg *config.Config, db store.Store, logger log.Logger) error {
 	return gr.Run()
 }
 
-func handler(cfg *config.Config, db store.Store, logger log.Logger, client *github.Client) *chi.Mux {
+func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *github.Client) *chi.Mux {
 	mux := chi.NewRouter()
 	mux.Use(middleware.Recoverer(logger))
 	mux.Use(middleware.RealIP)
@@ -116,9 +111,7 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 	}
 
 	if cfg.Collector.Admin {
-		level.Debug(logger).Log(
-			"msg", "Admin collector registered",
-		)
+		logger.Debug("Admin collector registered")
 
 		registry.MustRegister(exporter.NewAdminCollector(
 			logger,
@@ -131,9 +124,7 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 	}
 
 	if cfg.Collector.Orgs {
-		level.Debug(logger).Log(
-			"msg", "Org collector registered",
-		)
+		logger.Debug("Org collector registered")
 
 		registry.MustRegister(exporter.NewOrgCollector(
 			logger,
@@ -146,9 +137,7 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 	}
 
 	if cfg.Collector.Repos {
-		level.Debug(logger).Log(
-			"msg", "Repo collector registered",
-		)
+		logger.Debug("Repo collector registered")
 
 		registry.MustRegister(exporter.NewRepoCollector(
 			logger,
@@ -161,9 +150,7 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 	}
 
 	if cfg.Collector.Billing {
-		level.Debug(logger).Log(
-			"msg", "Billing collector registered",
-		)
+		logger.Debug("Billing collector registered")
 
 		registry.MustRegister(exporter.NewBillingCollector(
 			logger,
@@ -176,9 +163,7 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 	}
 
 	if cfg.Collector.Runners {
-		level.Debug(logger).Log(
-			"msg", "Runner collector registered",
-		)
+		logger.Debug("Runner collector registered")
 
 		registry.MustRegister(exporter.NewRunnerCollector(
 			logger,
@@ -191,9 +176,7 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 	}
 
 	if cfg.Collector.Workflows {
-		level.Debug(logger).Log(
-			"msg", "Workflow collector registered",
-		)
+		logger.Debug("Workflow collector registered")
 
 		registry.MustRegister(exporter.NewWorkflowCollector(
 			logger,
@@ -224,8 +207,7 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 				secret, err := config.Value(cfg.Webhook.Secret)
 
 				if err != nil {
-					level.Error(logger).Log(
-						"msg", "failed to read webhook secret",
+					logger.Error("Failed to read webhook secret",
 						"error", err,
 					)
 
@@ -241,8 +223,7 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 				)
 
 				if err != nil {
-					level.Error(logger).Log(
-						"msg", "failed to parse github webhook",
+					logger.Error("Failed to parse github webhook",
 						"error", err,
 					)
 
@@ -258,8 +239,7 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 				)
 
 				if err != nil {
-					level.Error(logger).Log(
-						"msg", "failed to parse github event",
+					logger.Error("Failed to parse github event",
 						"error", err,
 					)
 
@@ -271,8 +251,7 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 
 				switch event := event.(type) {
 				case *github.WorkflowRunEvent:
-					level.Debug(logger).Log(
-						"msg", "received webhook request",
+					logger.Debug("Received webhook request",
 						"type", "workflow_run",
 						"owner", event.GetRepo().GetOwner().GetLogin(),
 						"repo", event.GetRepo().GetName(),
@@ -289,8 +268,7 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 					)
 
 					if err := db.StoreWorkflowRunEvent(event); err != nil {
-						level.Error(logger).Log(
-							"msg", "failed to store github event",
+						logger.Error("Failed to store github event",
 							"type", "workflow_run",
 							"owner", event.GetRepo().GetOwner().GetLogin(),
 							"repo", event.GetRepo().GetName(),
@@ -331,15 +309,15 @@ func handler(cfg *config.Config, db store.Store, logger log.Logger, client *gith
 	return mux
 }
 
-func useEnterprise(cfg *config.Config, _ log.Logger) bool {
+func useEnterprise(cfg *config.Config, _ *slog.Logger) bool {
 	return cfg.Target.BaseURL != ""
 }
 
-func useApplication(cfg *config.Config, _ log.Logger) bool {
+func useApplication(cfg *config.Config, _ *slog.Logger) bool {
 	return cfg.Target.PrivateKey != "" && cfg.Target.AppID != 0 && cfg.Target.InstallID != 0
 }
 
-func getClient(cfg *config.Config, logger log.Logger) (*github.Client, error) {
+func getClient(cfg *config.Config, logger *slog.Logger) (*github.Client, error) {
 	if useEnterprise(cfg, logger) {
 		return getEnterprise(cfg, logger)
 	}
@@ -348,8 +326,7 @@ func getClient(cfg *config.Config, logger log.Logger) (*github.Client, error) {
 		privateKey, err := config.Value(cfg.Target.PrivateKey)
 
 		if err != nil {
-			level.Error(logger).Log(
-				"msg", "Failed to read GitHub key",
+			logger.Error("Failed to read GitHub key",
 				"err", err,
 			)
 
@@ -364,8 +341,7 @@ func getClient(cfg *config.Config, logger log.Logger) (*github.Client, error) {
 		)
 
 		if err != nil {
-			level.Error(logger).Log(
-				"msg", "Failed to create GitHub transport",
+			logger.Error("Failed to create GitHub transport",
 				"err", err,
 			)
 
@@ -382,8 +358,7 @@ func getClient(cfg *config.Config, logger log.Logger) (*github.Client, error) {
 	accessToken, err := config.Value(cfg.Target.Token)
 
 	if err != nil {
-		level.Error(logger).Log(
-			"msg", "Failed to read token",
+		logger.Error("Failed to read token",
 			"err", err,
 		)
 
@@ -402,13 +377,12 @@ func getClient(cfg *config.Config, logger log.Logger) (*github.Client, error) {
 	), nil
 }
 
-func getEnterprise(cfg *config.Config, logger log.Logger) (*github.Client, error) {
+func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, error) {
 	if useApplication(cfg, logger) {
 		privateKey, err := config.Value(cfg.Target.PrivateKey)
 
 		if err != nil {
-			level.Error(logger).Log(
-				"msg", "Failed to read GitHub key",
+			logger.Error("Failed to read GitHub key",
 				"err", err,
 			)
 
@@ -423,8 +397,7 @@ func getEnterprise(cfg *config.Config, logger log.Logger) (*github.Client, error
 		)
 
 		if err != nil {
-			level.Error(logger).Log(
-				"msg", "Failed to create GitHub transport",
+			logger.Error("Failed to create GitHub transport",
 				"err", err,
 			)
 
@@ -448,8 +421,7 @@ func getEnterprise(cfg *config.Config, logger log.Logger) (*github.Client, error
 		)
 
 		if err != nil {
-			level.Error(logger).Log(
-				"msg", "Failed to parse base URL",
+			logger.Error("Failed to parse base URL",
 				"err", err,
 			)
 
@@ -462,8 +434,7 @@ func getEnterprise(cfg *config.Config, logger log.Logger) (*github.Client, error
 	accessToken, err := config.Value(cfg.Target.Token)
 
 	if err != nil {
-		level.Error(logger).Log(
-			"msg", "Failed to read token",
+		logger.Error("Failed to read token",
 			"err", err,
 		)
 
@@ -495,8 +466,7 @@ func getEnterprise(cfg *config.Config, logger log.Logger) (*github.Client, error
 	)
 
 	if err != nil {
-		level.Error(logger).Log(
-			"msg", "Failed to parse base URL",
+		logger.Error("Failed to parse base URL",
 			"err", err,
 		)
 

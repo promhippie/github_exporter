@@ -2,10 +2,9 @@ package exporter
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 	"github.com/google/go-github/v64/github"
 	"github.com/prometheus/client_golang/prometheus"
 
@@ -16,7 +15,7 @@ import (
 // OrgCollector collects metrics about the servers.
 type OrgCollector struct {
 	client   *github.Client
-	logger   log.Logger
+	logger   *slog.Logger
 	db       store.Store
 	failures *prometheus.CounterVec
 	duration *prometheus.HistogramVec
@@ -38,7 +37,7 @@ type OrgCollector struct {
 }
 
 // NewOrgCollector returns a new OrgCollector.
-func NewOrgCollector(logger log.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *OrgCollector {
+func NewOrgCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *OrgCollector {
 	if failures != nil {
 		failures.WithLabelValues("org").Add(0)
 	}
@@ -46,7 +45,7 @@ func NewOrgCollector(logger log.Logger, client *github.Client, db store.Store, f
 	labels := []string{"name"}
 	return &OrgCollector{
 		client:   client,
-		logger:   log.With(logger, "collector", "org"),
+		logger:   logger.With("collector", "org"),
 		db:       db,
 		failures: failures,
 		duration: duration,
@@ -175,8 +174,7 @@ func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
 
 	for _, name := range c.config.Orgs.Value() {
 		if alreadyCollected(collected, name) {
-			level.Debug(c.logger).Log(
-				"msg", "Already collected org",
+			c.logger.Debug("Already collected org",
 				"name", name,
 			)
 
@@ -194,8 +192,7 @@ func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
 		defer closeBody(resp)
 
 		if err != nil {
-			level.Error(c.logger).Log(
-				"msg", "Failed to fetch org",
+			c.logger.Error("Failed to fetch org",
 				"name", name,
 				"err", err,
 			)
@@ -204,8 +201,7 @@ func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
 			continue
 		}
 
-		level.Debug(c.logger).Log(
-			"msg", "Collecting org",
+		c.logger.Debug("Collecting org",
 			"name", name,
 		)
 

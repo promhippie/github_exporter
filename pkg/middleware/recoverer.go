@@ -1,21 +1,18 @@
 package middleware
 
 import (
+	"log/slog"
 	"net/http"
 	"runtime/debug"
-
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 )
 
 // Recoverer initializes a recoverer middleware.
-func Recoverer(logger log.Logger) func(next http.Handler) http.Handler {
+func Recoverer(logger *slog.Logger) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
 			defer func() {
 				if rvr := recover(); rvr != nil {
-					level.Error(logger).Log(
-						"msg", rvr.(string),
+					logger.Error(rvr.(string),
 						"trace", string(debug.Stack()),
 					)
 

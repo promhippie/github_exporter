@@ -2,48 +2,46 @@ package command
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"strings"
 
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
 )
 
-func setupLogger(cfg *config.Config) log.Logger {
-	var logger log.Logger
-
+func setupLogger(cfg *config.Config) *slog.Logger {
 	if cfg.Logs.Pretty {
-		logger = log.NewSyncLogger(
-			log.NewLogfmtLogger(os.Stdout),
-		)
-	} else {
-		logger = log.NewSyncLogger(
-			log.NewJSONLogger(os.Stdout),
+		return slog.New(
+			slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+				Level: loggerLevel(cfg),
+			}),
 		)
 	}
 
-	switch strings.ToLower(cfg.Logs.Level) {
-	case "error":
-		logger = level.NewFilter(logger, level.AllowError())
-	case "warn":
-		logger = level.NewFilter(logger, level.AllowWarn())
-	case "info":
-		logger = level.NewFilter(logger, level.AllowInfo())
-	case "debug":
-		logger = level.NewFilter(logger, level.AllowDebug())
-	default:
-		logger = level.NewFilter(logger, level.AllowInfo())
-	}
-
-	return log.With(
-		logger,
-		"ts", log.DefaultTimestampUTC,
+	return slog.New(
+		slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+			Level: loggerLevel(cfg),
+		}),
 	)
 }
 
-func setupStorage(cfg *config.Config, logger log.Logger) (store.Store, error) {
+func loggerLevel(cfg *config.Config) slog.Leveler {
+	switch strings.ToLower(cfg.Logs.Level) {
+	case "error":
+		return slog.LevelError
+	case "warn":
+		return slog.LevelWarn
+	case "info":
+		return slog.LevelInfo
+	case "debug":
+		return slog.LevelDebug
+	}
+
+	return slog.LevelInfo
+}
+
+func setupStorage(cfg *config.Config, logger *slog.Logger) (store.Store, error) {
 	dsn, err := config.Value(cfg.Database.DSN)
 
 	if err != nil {

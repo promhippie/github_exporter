@@ -4,13 +4,13 @@ package store
 
 import (
 	"fmt"
+	"log/slog"
 	"net/url"
 	"os"
 	"path"
 	"time"
 
 	"github.com/GuiaBolso/darwin"
-	"github.com/go-kit/log"
 	"github.com/google/go-github/v64/github"
 	"github.com/jmoiron/sqlx"
 	"github.com/promhippie/github_exporter/pkg/migration/dialect"
@@ -53,7 +53,7 @@ var (
 
 // sqliteStore implements the Store interface for SQLite.
 type sqliteStore struct {
-	logger   log.Logger
+	logger   *slog.Logger
 	driver   string
 	database string
 	meta     url.Values
@@ -142,7 +142,7 @@ func (s *sqliteStore) dsn() string {
 }
 
 // NewSqliteStore initializes a new SQLite store.
-func NewSqliteStore(dsn string, logger log.Logger) (Store, error) {
+func NewSqliteStore(dsn string, logger *slog.Logger) (Store, error) {
 	parsed, err := url.Parse(dsn)
 
 	if err != nil {
