@@ -8,9 +8,8 @@ require (
 	github.com/cenkalti/backoff/v4 v4.3.0
 	github.com/chaisql/chai v0.16.0
 	github.com/go-chi/chi/v5 v5.1.0
-	github.com/go-kit/log v0.2.1
 	github.com/go-sql-driver/mysql v1.8.1
-	github.com/google/go-github/v64 v64.0.0
+	github.com/google/go-github/v65 v65.0.0
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
@@ -41,7 +40,6 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/getsentry/sentry-go v0.25.0 // indirect
-	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/golang-module/carbon/v2 v2.2.14 // indirect
