@@ -37,6 +37,12 @@ type Workflows struct {
 	Labels cli.StringSlice
 }
 
+// WorkflowJobs defines the workflow job specific configuration.
+type WorkflowJobs struct {
+	Window time.Duration
+	Labels cli.StringSlice
+}
+
 // Runners defines the runner specific configuration.
 type Runners struct {
 	Labels cli.StringSlice
@@ -44,29 +50,31 @@ type Runners struct {
 
 // Target defines the target specific configuration.
 type Target struct {
-	Token       string
-	PrivateKey  string
-	AppID       int64
-	InstallID   int64
-	BaseURL     string
-	Insecure    bool
-	Enterprises cli.StringSlice
-	Orgs        cli.StringSlice
-	Repos       cli.StringSlice
-	Timeout     time.Duration
-	PerPage     int
-	Workflows   Workflows
-	Runners     Runners
+	Token        string
+	PrivateKey   string
+	AppID        int64
+	InstallID    int64
+	BaseURL      string
+	Insecure     bool
+	Enterprises  cli.StringSlice
+	Orgs         cli.StringSlice
+	Repos        cli.StringSlice
+	Timeout      time.Duration
+	PerPage      int
+	Workflows    Workflows
+	WorkflowJobs WorkflowJobs
+	Runners      Runners
 }
 
 // Collector defines the collector specific configuration.
 type Collector struct {
-	Admin     bool
-	Orgs      bool
-	Repos     bool
-	Billing   bool
-	Workflows bool
-	Runners   bool
+	Admin        bool
+	Orgs         bool
+	Repos        bool
+	Billing      bool
+	Workflows    bool
+	WorkflowJobs bool
+	Runners      bool
 }
 
 // Database defines the database specific configuration.
@@ -104,6 +112,21 @@ func Labels() *cli.StringSlice {
 	)
 }
 
+// JobLabels defines the default labels used by workflow_job collector.
+func JobLabels() *cli.StringSlice {
+	return cli.NewStringSlice(
+		"owner",
+		"repo",
+		"name",
+		"title",
+		"branch",
+		"sha",
+		"run_id",
+		"run_attempt",
+		"labels",
+	)
+}
+
 // RunnerLabels defines the default labels used by runner collector.
 func RunnerLabels() *cli.StringSlice {
 	return cli.NewStringSlice(
@@ -117,7 +140,6 @@ func Value(val string) (string, error) {
 		content, err := os.ReadFile(
 			strings.TrimPrefix(val, "file://"),
 		)
-
 		if err != nil {
 			return "", fmt.Errorf("failed to parse secret file: %w", err)
 		}
@@ -129,7 +151,6 @@ func Value(val string) (string, error) {
 		content, err := base64.StdEncoding.DecodeString(
 			strings.TrimPrefix(val, "base64://"),
 		)
-
 		if err != nil {
 			return "", fmt.Errorf("failed to parse base64 value: %w", err)
 		}

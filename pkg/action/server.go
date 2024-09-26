@@ -35,7 +35,6 @@ func Server(cfg *config.Config, db store.Store, logger *slog.Logger) error {
 	)
 
 	client, err := getClient(cfg, logger)
-
 	if err != nil {
 		return err
 	}
@@ -188,6 +187,19 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 		))
 	}
 
+	if cfg.Collector.WorkflowJobs {
+		logger.Debug("WorkflowJob collector registered")
+
+		registry.MustRegister(exporter.NewWorkflowJobCollector(
+			logger,
+			client,
+			db,
+			requestFailures,
+			requestDuration,
+			cfg.Target,
+		))
+	}
+
 	reg := promhttp.HandlerFor(
 		registry,
 		promhttp.HandlerOpts{
@@ -202,10 +214,9 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 	mux.Route("/", func(root chi.Router) {
 		root.Handle(cfg.Server.Path, reg)
 
-		if cfg.Collector.Workflows {
+		if cfg.Collector.Workflows || cfg.Collector.WorkflowJobs {
 			root.HandleFunc(cfg.Webhook.Path, func(w http.ResponseWriter, r *http.Request) {
 				secret, err := config.Value(cfg.Webhook.Secret)
-
 				if err != nil {
 					logger.Error("Failed to read webhook secret",
 						"error", err,
@@ -221,7 +232,6 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 					r,
 					[]byte(secret),
 				)
-
 				if err != nil {
 					logger.Error("Failed to parse github webhook",
 						"error", err,
@@ -237,7 +247,6 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 					github.WebHookType(r),
 					payload,
 				)
-
 				if err != nil {
 					logger.Error("Failed to parse github event",
 						"error", err,
@@ -283,31 +292,30 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 						io.WriteString(w, http.StatusText(http.StatusInternalServerError))
 					}
 				case *github.WorkflowJobEvent:
-					wf_job := event.WorkflowJob
-					level.Debug(logger).Log(
-						"msg", "received webhook request",
+					wfJob := event.GetWorkflowJob()
+					logger.Debug("received webhook request",
 						"type", "workflow_job",
-						"owner", event.Repo.Owner.Login,
-						"repo", event.Repo.Name,
-						"id", wf_job.ID,
-						"name", wf_job.Name,
-						"attempt", wf_job.RunAttempt,
-						"status", wf_job.Status,
-						"conclusion", wf_job.Conclusion,
-						"created_at", wf_job.CreatedAt.Time.Unix(),
-						"started_at", wf_job.StartedAt.Time.Unix(),
-						"completed_at", wf_job.GetCompletedAt().Time.Unix(),
-						"labels", strings.Join(event.WorkflowJob.Labels, ", "),
+						"owner", event.GetRepo().GetOwner().GetLogin(),
+						"repo", event.GetRepo().GetName(),
+						"id", wfJob.GetID(),
+						"name", wfJob.GetName(),
+						"attempt", wfJob.GetRunAttempt(),
+						"status", wfJob.GetStatus(),
+						"conclusion", wfJob.GetConclusion(),
+						"created_at", wfJob.GetCreatedAt().Time.Unix(),
+						"started_at", wfJob.GetStartedAt().Time.Unix(),
+						"completed_at", wfJob.GetCompletedAt().Time.Unix(),
+						"labels", strings.Join(wfJob.Labels, ", "),
 					)
 
 					if err := db.StoreWorkflowJobEvent(event); err != nil {
-						level.Error(logger).Log(
-							"msg", "failed to store github event",
+						logger.Error(
+							"failed to store github event",
 							"type", "workflow_job",
-							"owner", event.Repo.Owner.Login,
-							"repo", event.Repo.Name,
-							"name", wf_job.Name,
-							"id", wf_job.ID,
+							"owner", event.GetRepo().GetOwner().GetLogin(),
+							"repo", event.GetRepo().GetName(),
+							"name", wfJob.GetName(),
+							"id", wfJob.GetID(),
 							"error", err,
 						)
 
@@ -358,7 +366,6 @@ func getClient(cfg *config.Config, logger *slog.Logger) (*github.Client, error) 
 
 	if useApplication(cfg, logger) {
 		privateKey, err := config.Value(cfg.Target.PrivateKey)
-
 		if err != nil {
 			logger.Error("Failed to read GitHub key",
 				"err", err,
@@ -373,7 +380,6 @@ func getClient(cfg *config.Config, logger *slog.Logger) (*github.Client, error) 
 			cfg.Target.InstallID,
 			[]byte(privateKey),
 		)
-
 		if err != nil {
 			logger.Error("Failed to create GitHub transport",
 				"err", err,
@@ -390,7 +396,6 @@ func getClient(cfg *config.Config, logger *slog.Logger) (*github.Client, error) 
 	}
 
 	accessToken, err := config.Value(cfg.Target.Token)
-
 	if err != nil {
 		logger.Error("Failed to read token",
 			"err", err,
@@ -414,7 +419,6 @@ func getClient(cfg *config.Config, logger *slog.Logger) (*github.Client, error) 
 func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, error) {
 	if useApplication(cfg, logger) {
 		privateKey, err := config.Value(cfg.Target.PrivateKey)
-
 		if err != nil {
 			logger.Error("Failed to read GitHub key",
 				"err", err,
@@ -429,7 +433,6 @@ func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, err
 			cfg.Target.InstallID,
 			[]byte(privateKey),
 		)
-
 		if err != nil {
 			logger.Error("Failed to create GitHub transport",
 				"err", err,
@@ -453,7 +456,6 @@ func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, err
 			cfg.Target.BaseURL,
 			cfg.Target.BaseURL,
 		)
-
 		if err != nil {
 			logger.Error("Failed to parse base URL",
 				"err", err,
@@ -466,7 +468,6 @@ func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, err
 	}
 
 	accessToken, err := config.Value(cfg.Target.Token)
-
 	if err != nil {
 		logger.Error("Failed to read token",
 			"err", err,
@@ -498,7 +499,6 @@ func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, err
 		cfg.Target.BaseURL,
 		cfg.Target.BaseURL,
 	)
-
 	if err != nil {
 		logger.Error("Failed to parse base URL",
 			"err", err,

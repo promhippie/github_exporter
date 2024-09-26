@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/go-github/v63/github"
+	"github.com/google/go-github/v66/github"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -16,25 +16,25 @@ func storeWorkflowJobEvent(handle *sqlx.DB, event *github.WorkflowJobEvent) erro
 	job := event.WorkflowJob
 
 	record := &WorkflowJob{
-		Owner:           *event.Repo.Owner.Login,
-		Repo:            *event.Repo.Name,
-		Name:            *job.Name,
-		Status:          *job.Status,
+		Owner:           event.GetRepo().GetOwner().GetLogin(),
+		Repo:            event.GetRepo().GetName(),
+		Name:            job.GetName(),
+		Status:          job.GetStatus(),
 		Conclusion:      job.GetConclusion(),
-		Branch:          *job.HeadBranch,
-		SHA:             *job.HeadSHA,
-		Identifier:      *event.WorkflowJob.ID,
-		RunID:           *job.RunID,
-		RunAttempt:      int(*job.RunAttempt),
-		CreatedAt:       job.CreatedAt.Time.Unix(),
-		StartedAt:       job.StartedAt.Time.Unix(),
+		Branch:          job.GetHeadBranch(),
+		SHA:             job.GetHeadSHA(),
+		Identifier:      event.GetWorkflowJob().GetID(),
+		RunID:           job.GetRunID(),
+		RunAttempt:      int(job.GetRunAttempt()),
+		CreatedAt:       job.GetCreatedAt().Time.Unix(),
+		StartedAt:       job.GetStartedAt().Time.Unix(),
 		CompletedAt:     job.GetCompletedAt().Time.Unix(),
 		Labels:          strings.Join(job.Labels, ","),
-		RunnerID:        *job.RunID,
+		RunnerID:        job.GetRunID(),
 		RunnerName:      job.GetRunnerName(),
 		RunnerGroupID:   job.GetRunnerGroupID(),
 		RunnerGroupName: job.GetRunnerGroupName(),
-		WorkflowName:    *job.WorkflowName,
+		WorkflowName:    job.GetWorkflowName(),
 	}
 
 	return createOrUpdateWorkflowJob(handle, record)
@@ -61,7 +61,6 @@ func createOrUpdateWorkflowJob(handle *sqlx.DB, record *WorkflowJob) error {
 			return fmt.Errorf("failed to create record: %w", err)
 		}
 	} else {
-		// FIXME: UpdatedAt does not exist, does it make sense to use CreatedAt?
 		if existing.CreatedAt > record.CreatedAt {
 			return nil
 		} else if existing.CreatedAt == record.CreatedAt && existing.Status == "completed" {
@@ -89,7 +88,6 @@ func getWorkflowJobs(handle *sqlx.DB) ([]*WorkflowJob, error) {
 	rows, err := handle.Queryx(
 		selectWorkflowJobsQuery,
 	)
-
 	if err != nil {
 		return records, err
 	}
@@ -228,4 +226,4 @@ var purgeWorkflowJobsQuery = `
 DELETE FROM
 	workflow_jobs
 WHERE
-	created_at < :timeframe;` // FIXME: updated_at is gone
+	created_at < :timeframe;`

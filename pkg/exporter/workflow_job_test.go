@@ -1,12 +1,14 @@
 package exporter
 
 import (
+	"fmt"
+	"log/slog"
+	"os"
 	"reflect"
 	"testing"
 	"time"
 
-	"github.com/go-kit/log"
-	"github.com/google/go-github/v63/github"
+	"github.com/google/go-github/v66/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
@@ -15,6 +17,7 @@ import (
 type StaticStore struct{}
 
 func (s StaticStore) GetWorkflowJobRuns(owner, repo, workflow string) ([]*store.WorkflowRun, error) {
+	fmt.Fprintf(os.Stdout, "GetWorkflowJobRuns for %s/%s %s \n", owner, repo, workflow)
 	return nil, nil
 }
 
@@ -36,7 +39,11 @@ func (s StaticStore) Migrate() error { return nil }
 func TestWorkflowJobCollector(t *testing.T) {
 	// Mock dependencies
 	mockClient := &github.Client{}
-	mockLogger := log.NewNopLogger()
+	mockLogger := slog.New(
+		slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		}),
+	)
 	mockStore := StaticStore{}
 	mockFailures := prometheus.NewCounterVec(prometheus.CounterOpts{
 		Name: "test_failures_total",
