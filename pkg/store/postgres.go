@@ -132,6 +132,21 @@ func (s *postgresStore) PruneWorkflowRuns(timeframe time.Duration) error {
 	return pruneWorkflowRuns(s.handle, timeframe)
 }
 
+// StoreWorkflowJobEvent implements the Store interface.
+func (s *postgresStore) StoreWorkflowJobEvent(event *github.WorkflowJobEvent) error {
+	return storeWorkflowJobEvent(s.handle, event)
+}
+
+// GetWorkflowJobs implements the Store interface.
+func (s *postgresStore) GetWorkflowJobs() ([]*WorkflowJob, error) {
+	return getWorkflowJobs(s.handle)
+}
+
+// PruneWorkflowJobs implements the Store interface.
+func (s *postgresStore) PruneWorkflowJobs(timeframe time.Duration) error {
+	return pruneWorkflowJobs(s.handle, timeframe)
+}
+
 func (s *postgresStore) dsn() string {
 	dsn := fmt.Sprintf(
 		"host=%s port=%s dbname=%s user=%s",

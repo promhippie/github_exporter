@@ -282,6 +282,40 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 
 						io.WriteString(w, http.StatusText(http.StatusInternalServerError))
 					}
+				case *github.WorkflowJobEvent:
+					wf_job := event.WorkflowJob
+					level.Debug(logger).Log(
+						"msg", "received webhook request",
+						"type", "workflow_job",
+						"owner", event.Repo.Owner.Login,
+						"repo", event.Repo.Name,
+						"id", wf_job.ID,
+						"name", wf_job.Name,
+						"attempt", wf_job.RunAttempt,
+						"status", wf_job.Status,
+						"conclusion", wf_job.Conclusion,
+						"created_at", wf_job.CreatedAt.Time.Unix(),
+						"started_at", wf_job.StartedAt.Time.Unix(),
+						"completed_at", wf_job.GetCompletedAt().Time.Unix(),
+						"labels", strings.Join(event.WorkflowJob.Labels, ", "),
+					)
+
+					if err := db.StoreWorkflowJobEvent(event); err != nil {
+						level.Error(logger).Log(
+							"msg", "failed to store github event",
+							"type", "workflow_job",
+							"owner", event.Repo.Owner.Login,
+							"repo", event.Repo.Name,
+							"name", wf_job.Name,
+							"id", wf_job.ID,
+							"error", err,
+						)
+
+						w.Header().Set("Content-Type", "text/plain")
+						w.WriteHeader(http.StatusInternalServerError)
+
+						io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+					}
 				}
 
 				w.Header().Set("Content-Type", "text/plain")
