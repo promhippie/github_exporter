@@ -129,6 +129,21 @@ func (s *sqliteStore) PruneWorkflowRuns(timeframe time.Duration) error {
 	return pruneWorkflowRuns(s.handle, timeframe)
 }
 
+// StoreWorkflowJobEvent implements the Store interface.
+func (s *sqliteStore) StoreWorkflowJobEvent(event *github.WorkflowJobEvent) error {
+	return storeWorkflowJobEvent(s.handle, event)
+}
+
+// GetWorkflowJobs implements the Store interface.
+func (s *sqliteStore) GetWorkflowJobs() ([]*WorkflowJob, error) {
+	return getWorkflowJobs(s.handle)
+}
+
+// PruneWorkflowJobs implements the Store interface.
+func (s *sqliteStore) PruneWorkflowJobs(timeframe time.Duration) error {
+	return pruneWorkflowJobs(s.handle, timeframe)
+}
+
 func (s *sqliteStore) dsn() string {
 	if len(s.meta) > 0 {
 		return fmt.Sprintf(

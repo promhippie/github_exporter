@@ -18,12 +18,11 @@ import (
 	_ "github.com/chaisql/chai/driver"
 )
 
-var (
-	chaiMigrations = []darwin.Migration{
-		{
-			Version:     1,
-			Description: "Creating table workflow_runs",
-			Script: `CREATE TABLE workflow_runs (
+var chaiMigrations = []darwin.Migration{
+	{
+		Version:     1,
+		Description: "Creating table workflow_runs",
+		Script: `CREATE TABLE workflow_runs (
 				owner TEXT NOT NULL,
 				repo TEXT NOT NULL,
 				workflow_id INTEGER NOT NULL,
@@ -41,14 +40,41 @@ var (
 				started_at INTEGER,
 				PRIMARY KEY(owner, repo, workflow_id, number)
 			);`,
-		},
-		{
-			Version:     2,
-			Description: "Adding actor column to workflow_runs table",
-			Script:      `ALTER TABLE workflow_runs ADD COLUMN actor TEXT;`,
-		},
-	}
-)
+	},
+	{
+		Version:     2,
+		Description: "Adding actor column to workflow_runs table",
+		Script:      `ALTER TABLE workflow_runs ADD COLUMN actor TEXT;`,
+	},
+	{
+		Version:     3,
+		Description: "Creating table workflow_jobs",
+		Script: `CREATE TABLE workflow_jobs (
+				owner TEXT NOT NULL,
+				repo TEXT NOT NULL,
+				name TEXT,
+				status TEXT,
+				branch TEXT,
+				sha TEXT,
+				conclusion TEXT,
+				labels TEXT,
+				identifier INTEGER,
+
+				run_id INTEGER NOT NULL,
+				run_attempt INTEGER NOT NULL,
+
+				created_at INTEGER,
+				started_at INTEGER,
+				completed_at INTEGER,
+	            runner_id INTEGER,
+	            runner_name TEXT,
+	            runner_group_id INTEGER,
+	            runner_group_name TEXT,
+	            workflow_name TEXT,
+				PRIMARY KEY(owner, repo, identifier)
+			);`,
+	},
+}
 
 func init() {
 	register("chai", NewChaiStore)
@@ -70,7 +96,6 @@ func (s *chaiStore) Open() (err error) {
 		s.driver,
 		s.dsn(),
 	)
-
 	if err != nil {
 		return err
 	}
@@ -121,6 +146,21 @@ func (s *chaiStore) PruneWorkflowRuns(timeframe time.Duration) error {
 	return pruneWorkflowRuns(s.handle, timeframe)
 }
 
+// StoreWorkflowJobEvent implements the Store interface.
+func (s *chaiStore) StoreWorkflowJobEvent(event *github.WorkflowJobEvent) error {
+	return storeWorkflowJobEvent(s.handle, event)
+}
+
+// GetWorkflowJobs implements the Store interface.
+func (s *chaiStore) GetWorkflowJobs() ([]*WorkflowJob, error) {
+	return getWorkflowJobs(s.handle)
+}
+
+// PruneWorkflowJobs implements the Store interface.
+func (s *chaiStore) PruneWorkflowJobs(timeframe time.Duration) error {
+	return pruneWorkflowJobs(s.handle, timeframe)
+}
+
 func (s *chaiStore) dsn() string {
 	if len(s.meta) > 0 {
 		return fmt.Sprintf(
@@ -136,7 +176,6 @@ func (s *chaiStore) dsn() string {
 // NewChaiStore initializes a new MySQL store.
 func NewChaiStore(dsn string, logger *slog.Logger) (Store, error) {
 	parsed, err := url.Parse(dsn)
-
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse dsn: %w", err)
 	}
