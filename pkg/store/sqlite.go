@@ -48,6 +48,34 @@ var (
 			Description: "Adding actor column to workflow_runs table",
 			Script:      `ALTER TABLE workflow_runs ADD COLUMN actor TEXT;`,
 		},
+		{
+			Version:     3,
+			Description: "Creating table workflow_jobs",
+			Script: `CREATE TABLE workflow_jobs (
+				owner TEXT NOT NULL,
+				repo TEXT NOT NULL,
+				name TEXT,
+				status TEXT,
+				branch TEXT,
+				sha TEXT,
+				conclusion TEXT,
+				labels TEXT,
+				identifier INTEGER,
+
+				run_id INTEGER NOT NULL,
+				run_attempt INTEGER NOT NULL,
+
+				created_at BIGINT,
+				started_at BIGINT,
+				completed_at BIGINT,
+	            runner_id INTEGER,
+	            runner_name TEXT,
+	            runner_group_id INTEGER,
+	            runner_group_name TEXT,
+	            workflow_name TEXT,
+				PRIMARY KEY(owner, repo, identifier)
+			);`,
+		},
 	}
 )
 
