@@ -9,7 +9,7 @@ require (
 	github.com/chaisql/chai v0.16.0
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-sql-driver/mysql v1.8.1
-	github.com/google/go-github/v65 v65.0.0
+	github.com/google/go-github/v66 v66.0.0
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
