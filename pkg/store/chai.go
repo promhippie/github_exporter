@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/GuiaBolso/darwin"
-	"github.com/google/go-github/v65/github"
+	"github.com/google/go-github/v66/github"
 	"github.com/jmoiron/sqlx"
 	"github.com/promhippie/github_exporter/pkg/migration/dialect"
 
