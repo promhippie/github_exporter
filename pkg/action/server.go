@@ -188,6 +188,19 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 		))
 	}
 
+	if cfg.Collector.WorkflowJobs {
+		logger.Debug("WorkflowJob collector registered")
+
+		registry.MustRegister(exporter.NewWorkflowJobCollector(
+			logger,
+			client,
+			db,
+			requestFailures,
+			requestDuration,
+			cfg.Target,
+		))
+	}
+
 	reg := promhttp.HandlerFor(
 		registry,
 		promhttp.HandlerOpts{
@@ -202,7 +215,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 	mux.Route("/", func(root chi.Router) {
 		root.Handle(cfg.Server.Path, reg)
 
-		if cfg.Collector.Workflows {
+		if cfg.Collector.Workflows || cfg.Collector.WorkflowJobs {
 			root.HandleFunc(cfg.Webhook.Path, func(w http.ResponseWriter, r *http.Request) {
 				secret, err := config.Value(cfg.Webhook.Secret)
 
@@ -274,6 +287,39 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 							"repo", event.GetRepo().GetName(),
 							"workflow", event.GetWorkflowRun().GetWorkflowID(),
 							"number", event.GetWorkflowRun().GetRunNumber(),
+							"error", err,
+						)
+
+						w.Header().Set("Content-Type", "text/plain")
+						w.WriteHeader(http.StatusInternalServerError)
+
+						io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+					}
+				case *github.WorkflowJobEvent:
+					wf_job := event.GetWorkflowJob()
+					logger.Debug("received webhook request",
+						"type", "workflow_job",
+						"owner", event.GetRepo().GetOwner().GetLogin(),
+						"repo", event.GetRepo().GetName(),
+						"id", wf_job.GetID(),
+						"name", wf_job.GetName(),
+						"attempt", wf_job.GetRunAttempt(),
+						"status", wf_job.GetStatus(),
+						"conclusion", wf_job.GetConclusion(),
+						"created_at", wf_job.GetCreatedAt().Time.Unix(),
+						"started_at", wf_job.GetStartedAt().Time.Unix(),
+						"completed_at", wf_job.GetCompletedAt().Time.Unix(),
+						"labels", strings.Join(wf_job.Labels, ", "),
+					)
+
+					if err := db.StoreWorkflowJobEvent(event); err != nil {
+						logger.Error(
+							"failed to store github event",
+							"type", "workflow_job",
+							"owner", event.GetRepo().GetOwner().GetLogin(),
+							"repo", event.GetRepo().GetName(),
+							"name", wf_job.GetName(),
+							"id", wf_job.GetID(),
 							"error", err,
 						)
 
