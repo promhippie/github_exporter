@@ -6,8 +6,9 @@ import (
 
 // WorkflowRun defines the type returned by GitHub.
 type WorkflowRun struct {
-	Owner      string `db:"owner"`
-	Repo       string `db:"repo"`
+	Owner string `db:"owner"`
+	Repo  string `db:"repo"`
+
 	WorkflowID int64  `db:"workflow_id"`
 	Event      string `db:"event"`
 	Name       string `db:"name"`
@@ -53,6 +54,64 @@ func (r *WorkflowRun) ByLabel(label string) string {
 		return strconv.FormatInt(r.Identifier, 10)
 	case "actor":
 		return r.Actor
+	}
+
+	return ""
+}
+
+// WorkflowJob defines the type returned by GitHub.
+type WorkflowJob struct {
+	Owner string `db:"owner"`
+	Repo  string `db:"repo"`
+
+	Name string `db:"name"`
+
+	Status     string `db:"status"`
+	Conclusion string `db:"conclusion"`
+	Branch     string `db:"branch"`
+	SHA        string `db:"sha"`
+	Identifier int64  `db:"identifier"`
+
+	RunID      int64 `db:"run_id"`
+	RunAttempt int   `db:"run_attempt"`
+
+	CreatedAt   int64 `db:"created_at"`
+	StartedAt   int64 `db:"started_at"`
+	CompletedAt int64 `db:"completed_at"`
+	// Steps       []*TaskStep `db:"steps"` // FIXME: Not implemented
+	Labels          string `db:"labels"` // FIXME: comma separated ok?
+	RunnerID        int64  `db:"runner_id"`
+	RunnerName      string `db:"runner_name"`
+	RunnerGroupID   int64  `db:"runner_group_id"`
+	RunnerGroupName string `db:"runner_group_name"`
+	WorkflowName    string `db:"workflow_name"`
+}
+
+// ByLabel returns values by the defined list of labels.
+func (r *WorkflowJob) ByLabel(label string) string {
+	switch label {
+	case "owner":
+		return r.Owner
+	case "repo":
+		return r.Repo
+	case "name":
+		return r.Name
+	case "title":
+		return r.Name
+	case "status":
+		return r.Status
+	case "branch":
+		return r.Branch
+	case "sha":
+		return r.SHA
+	case "run_id":
+		return strconv.FormatInt(r.RunID, 10)
+	case "run_attempt":
+		return strconv.Itoa(r.RunAttempt)
+	case "job":
+		return strconv.FormatInt(r.Identifier, 10)
+	case "labels":
+		return r.Labels
 	}
 
 	return ""
