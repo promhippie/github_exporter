@@ -313,6 +313,27 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			Destination: &cfg.Target.Workflows.Labels,
 		},
 		&cli.BoolFlag{
+			Name:        "collector.workflow_jobs",
+			Value:       false,
+			Usage:       "Enable collector for workflow jobs",
+			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_WORKFLOW_JOBS"},
+			Destination: &cfg.Collector.WorkflowJobs,
+		},
+		&cli.DurationFlag{
+			Name:        "collector.workflow_jobs.window",
+			Value:       24 * time.Hour,
+			Usage:       "History window for querying workflow jobs",
+			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOW_JOBS_WINDOW"},
+			Destination: &cfg.Target.WorkflowJobs.Window,
+		},
+		&cli.StringSliceFlag{
+			Name:        "collector.workflow_jobs.labels",
+			Value:       config.JobLabels(),
+			Usage:       "List of labels used for workflow jobs",
+			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOWS_LABELS"},
+			Destination: &cfg.Target.WorkflowJobs.Labels,
+		},
+		&cli.BoolFlag{
 			Name:        "collector.runners",
 			Value:       false,
 			Usage:       "Enable collector for runners",
