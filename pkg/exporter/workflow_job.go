@@ -32,7 +32,7 @@ func NewWorkflowJobCollector(logger *slog.Logger, client *github.Client, db stor
 		failures.WithLabelValues("action").Add(0)
 	}
 
-	labels := cfg.Workflows.Labels.Value()
+	labels := cfg.WorkflowJobs.Labels.Value()
 	return &WorkflowJobCollector{
 		client:   client,
 		logger:   logger.With("collector", "workflow_job"),
