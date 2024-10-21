@@ -111,7 +111,7 @@ func (c *WorkflowJobCollector) Collect(ch chan<- prometheus.Metric) {
 
 	if err != nil {
 		c.logger.Error(
-			"Failed to fetch workflows",
+			"Failed to fetch workflow jobs",
 			"err", err,
 		)
 
