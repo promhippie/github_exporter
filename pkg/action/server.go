@@ -226,6 +226,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 					w.WriteHeader(http.StatusInternalServerError)
 
 					io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+					return
 				}
 
 				payload, err := github.ValidatePayload(
@@ -241,6 +242,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 					w.WriteHeader(http.StatusInternalServerError)
 
 					io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+					return
 				}
 
 				event, err := github.ParseWebHook(
@@ -256,6 +258,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 					w.WriteHeader(http.StatusInternalServerError)
 
 					io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+					return
 				}
 
 				switch event := event.(type) {
