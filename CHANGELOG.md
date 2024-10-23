@@ -5,6 +5,8 @@ The following sections list the changes for unreleased.
 ## Summary
 
  * Chg #393: Switch to official logging library
+ * Chg #405: New metrics and configs for workflow job collector
+ * Chg #412: Change config and metric names for workflows
  * Enh #368: Add `actor.login` label to workflow collector
 
 ## Details
@@ -16,6 +18,28 @@ The following sections list the changes for unreleased.
    should change a little bit.
 
    https://github.com/promhippie/github_exporter/issues/393
+
+ * Change #405: New metrics and configs for workflow job collector
+
+   We have added a new metric for the duration of the time since the workflow job
+   was created, defined in minutes. Beside that we have added two additional
+   configurations to query the workflows for a specific status and you are able to
+   define a different timeframe than 12 hours now.
+
+   https://github.com/promhippie/github_exporter/pull/405
+
+ * Change #412: Change config and metric names for workflows
+
+   We introduced a BREAKING CHANGE by renaming the config variables and metrics
+   related to the workflows. Previously you had to set `--collector.workflows` or
+   `GITHUB_EXPORTER_COLLECTOR_WORKFLOWS` to enable the collector, for being
+   consistent with the new workflow job collector we have renamed them to
+   `--collector.workflow_runs` and `GITHUB_EXPORTER_COLLECTOR_WORKFLOW_JOBS`, so be
+   aware about that. Additionally we have also renamed the metrics a tiny bit
+   matching the same suffix. We renamed them as an example from
+   `github_workflow_status` to `github_workflow_run_status`.
+
+   https://github.com/promhippie/github_exporter/pull/412
 
  * Enhancement #368: Add `actor.login` label to workflow collector
 
