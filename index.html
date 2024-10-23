@@ -869,6 +869,48 @@ take a look at the <a href="https://github.com/prometheus/client_golang/blob/mas
 <dt>github_workflow_updated_timestamp{owner, repo, workflow, event, name, status, branch, number, run}</dt>
 <dd>Timestamp when the workflow run have been updated</dd>
 </dl>
+<h2 id="labels">Labels</h2>
+<p>For some collectors we have defined a dynamic option for the labeling of the
+metrics. That way it&rsquo;s up to you to write high-cardinality labels to
+<a href="https://prometheus.io">Prometheus</a> or not. You can see some lists below for collectors
+that can be customized.</p>
+<h3 id="workflow-run-labels">Workflow Run Labels</h3>
+<ul>
+<li>owner</li>
+<li>repo</li>
+<li>workflow</li>
+<li>event</li>
+<li>name</li>
+<li>status</li>
+<li>branch</li>
+<li>number</li>
+<li>run</li>
+</ul>
+<h3 id="workflow-job-labels">Workflow Job Labels</h3>
+<ul>
+<li>owner</li>
+<li>repo</li>
+<li>name</li>
+<li>title</li>
+<li>branch</li>
+<li>sha</li>
+<li>run_id</li>
+<li>run_attempt</li>
+<li>labels</li>
+<li>runner_id</li>
+<li>runner_name</li>
+<li>runner_group_id</li>
+<li>runner_group_name</li>
+<li>workflow_name</li>
+</ul>
+<h3 id="hosted-runner-labels">Hosted Runner Labels</h3>
+<ul>
+<li>owner</li>
+<li>id</li>
+<li>name</li>
+<li>os</li>
+<li>status</li>
+</ul>
 
 			</section>
 		
