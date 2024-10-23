@@ -12,8 +12,10 @@ import (
 	"github.com/google/go-github/v66/github"
 )
 
-// Drivers defines the list of registered database drivers.
-var Drivers = make(map[string]driver, 0)
+var (
+	// Drivers defines the list of registered database drivers.
+	Drivers = make(map[string]driver, 0)
+)
 
 type driver func(dsn string, logger *slog.Logger) (Store, error)
 
@@ -23,6 +25,7 @@ type Store interface {
 	StoreWorkflowRunEvent(*github.WorkflowRunEvent) error
 	GetWorkflowRuns() ([]*WorkflowRun, error)
 	PruneWorkflowRuns(time.Duration) error
+
 	// WorkflowJobEvent
 	StoreWorkflowJobEvent(*github.WorkflowJobEvent) error
 	GetWorkflowJobs() ([]*WorkflowJob, error)
@@ -37,6 +40,7 @@ type Store interface {
 // New initializes a new database driver supported by current os.
 func New(dsn string, logger *slog.Logger) (Store, error) {
 	parsed, err := url.Parse(dsn)
+
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse dsn: %w", err)
 	}
@@ -45,7 +49,18 @@ func New(dsn string, logger *slog.Logger) (Store, error) {
 		return val(dsn, logger)
 	}
 
-	return nil, fmt.Errorf("unknown database driver %s. available drivers are %v", parsed.Scheme, strings.Join(slices.Collect(maps.Keys(Drivers)), ", "))
+	return nil, fmt.Errorf(
+		"unknown database driver %s. available drivers are %v",
+		parsed.Scheme,
+		strings.Join(
+			slices.Collect(
+				maps.Keys(
+					Drivers,
+				),
+			),
+			", ",
+		),
+	)
 }
 
 func register(name string, f driver) {

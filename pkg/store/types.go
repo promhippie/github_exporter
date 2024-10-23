@@ -64,22 +64,18 @@ type WorkflowJob struct {
 	Owner string `db:"owner"`
 	Repo  string `db:"repo"`
 
-	Name string `db:"name"`
-
-	Status     string `db:"status"`
-	Conclusion string `db:"conclusion"`
-	Branch     string `db:"branch"`
-	SHA        string `db:"sha"`
-	Identifier int64  `db:"identifier"`
-
-	RunID      int64 `db:"run_id"`
-	RunAttempt int   `db:"run_attempt"`
-
-	CreatedAt   int64 `db:"created_at"`
-	StartedAt   int64 `db:"started_at"`
-	CompletedAt int64 `db:"completed_at"`
-	// Steps       []*TaskStep `db:"steps"` // FIXME: Not implemented
-	Labels          string `db:"labels"` // FIXME: comma separated ok?
+	Name            string `db:"name"`
+	Status          string `db:"status"`
+	Conclusion      string `db:"conclusion"`
+	Branch          string `db:"branch"`
+	SHA             string `db:"sha"`
+	Identifier      int64  `db:"identifier"`
+	RunID           int64  `db:"run_id"`
+	RunAttempt      int    `db:"run_attempt"`
+	CreatedAt       int64  `db:"created_at"`
+	StartedAt       int64  `db:"started_at"`
+	CompletedAt     int64  `db:"completed_at"`
+	Labels          string `db:"labels"`
 	RunnerID        int64  `db:"runner_id"`
 	RunnerName      string `db:"runner_name"`
 	RunnerGroupID   int64  `db:"runner_group_id"`
@@ -112,6 +108,16 @@ func (r *WorkflowJob) ByLabel(label string) string {
 		return strconv.FormatInt(r.Identifier, 10)
 	case "labels":
 		return r.Labels
+	case "runner_id":
+		return strconv.FormatInt(r.RunnerID, 10)
+	case "runner_name":
+		return r.RunnerName
+	case "runner_group_id":
+		return strconv.FormatInt(r.RunnerGroupID, 10)
+	case "runner_group_name":
+		return r.RunnerGroupName
+	case "workflow_name":
+		return r.WorkflowName
 	}
 
 	return ""

@@ -61,18 +61,16 @@ var (
 				conclusion TEXT,
 				labels TEXT,
 				identifier INTEGER,
-
 				run_id INTEGER NOT NULL,
 				run_attempt INTEGER NOT NULL,
-
 				created_at BIGINT,
 				started_at BIGINT,
 				completed_at BIGINT,
-	            runner_id INTEGER,
-	            runner_name TEXT,
-	            runner_group_id INTEGER,
-	            runner_group_name TEXT,
-	            workflow_name TEXT,
+				runner_id INTEGER,
+				runner_name TEXT,
+				runner_group_id INTEGER,
+				runner_group_name TEXT,
+				workflow_name TEXT,
 				PRIMARY KEY(owner, repo, identifier)
 			);`,
 		},

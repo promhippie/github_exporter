@@ -17,45 +17,80 @@ import (
 type StaticStore struct{}
 
 func (s StaticStore) GetWorkflowJobRuns(owner, repo, workflow string) ([]*store.WorkflowRun, error) {
-	fmt.Fprintf(os.Stdout, "GetWorkflowJobRuns for %s/%s %s \n", owner, repo, workflow)
+	fmt.Fprintf(
+		os.Stdout,
+		"GetWorkflowJobRuns for %s/%s %s \n",
+		owner,
+		repo,
+		workflow,
+	)
+
 	return nil, nil
 }
 
-func (s StaticStore) StoreWorkflowRunEvent(*github.WorkflowRunEvent) error { return nil }
+func (s StaticStore) StoreWorkflowRunEvent(*github.WorkflowRunEvent) error {
+	return nil
+}
 
-func (s StaticStore) GetWorkflowRuns() ([]*store.WorkflowRun, error) { return nil, nil }
-func (s StaticStore) PruneWorkflowRuns(time.Duration) error          { return nil }
+func (s StaticStore) GetWorkflowRuns() ([]*store.WorkflowRun, error) {
+	return nil, nil
+}
 
-// WorkflowJobEvent
-func (s StaticStore) StoreWorkflowJobEvent(*github.WorkflowJobEvent) error { return nil }
-func (s StaticStore) GetWorkflowJobs() ([]*store.WorkflowJob, error)       { return nil, nil }
-func (s StaticStore) PruneWorkflowJobs(time.Duration) error                { return nil }
+func (s StaticStore) PruneWorkflowRuns(time.Duration) error {
+	return nil
+}
 
-func (s StaticStore) Open() error    { return nil }
-func (s StaticStore) Close() error   { return nil }
-func (s StaticStore) Ping() error    { return nil }
-func (s StaticStore) Migrate() error { return nil }
+func (s StaticStore) StoreWorkflowJobEvent(*github.WorkflowJobEvent) error {
+	return nil
+}
+
+func (s StaticStore) GetWorkflowJobs() ([]*store.WorkflowJob, error) {
+	return nil, nil
+}
+
+func (s StaticStore) PruneWorkflowJobs(time.Duration) error {
+	return nil
+}
+
+func (s StaticStore) Open() error {
+	return nil
+}
+
+func (s StaticStore) Close() error {
+	return nil
+}
+
+func (s StaticStore) Ping() error {
+	return nil
+}
+
+func (s StaticStore) Migrate() error {
+	return nil
+}
 
 func TestWorkflowJobCollector(t *testing.T) {
-	// Mock dependencies
 	mockClient := &github.Client{}
+
 	mockLogger := slog.New(
 		slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
 			Level: slog.LevelDebug,
 		}),
 	)
+
 	mockStore := StaticStore{}
+
 	mockFailures := prometheus.NewCounterVec(prometheus.CounterOpts{
 		Name: "test_failures_total",
 		Help: "Total number of test failures",
 	}, []string{"type"})
+
 	mockDuration := prometheus.NewHistogramVec(prometheus.HistogramOpts{
 		Name: "test_duration_seconds",
 		Help: "Duration of test",
 	}, []string{"type"})
+
 	mockConfig := config.Target{}
 
-	// Initialize WorkflowJobCollector
 	collector := &WorkflowJobCollector{
 		client:   mockClient,
 		logger:   mockLogger,
@@ -85,7 +120,6 @@ func TestWorkflowJobCollector(t *testing.T) {
 		),
 	}
 
-	// Verify initialization
 	if collector.client != mockClient {
 		t.Errorf("Expected client to be %v, got %v", mockClient, collector.client)
 	}

@@ -35,6 +35,7 @@ func Server(cfg *config.Config, db store.Store, logger *slog.Logger) error {
 	)
 
 	client, err := getClient(cfg, logger)
+
 	if err != nil {
 		return err
 	}
@@ -174,10 +175,10 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 		))
 	}
 
-	if cfg.Collector.Workflows {
-		logger.Debug("Workflow collector registered")
+	if cfg.Collector.WorkflowRuns {
+		logger.Debug("WorkflowRun collector registered")
 
-		registry.MustRegister(exporter.NewWorkflowCollector(
+		registry.MustRegister(exporter.NewWorkflowRunCollector(
 			logger,
 			client,
 			db,
@@ -214,9 +215,10 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 	mux.Route("/", func(root chi.Router) {
 		root.Handle(cfg.Server.Path, reg)
 
-		if cfg.Collector.Workflows || cfg.Collector.WorkflowJobs {
+		if cfg.Collector.WorkflowRuns || cfg.Collector.WorkflowJobs {
 			root.HandleFunc(cfg.Webhook.Path, func(w http.ResponseWriter, r *http.Request) {
 				secret, err := config.Value(cfg.Webhook.Secret)
+
 				if err != nil {
 					logger.Error("Failed to read webhook secret",
 						"error", err,
@@ -233,6 +235,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 					r,
 					[]byte(secret),
 				)
+
 				if err != nil {
 					logger.Error("Failed to parse github webhook",
 						"error", err,
@@ -249,6 +252,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 					github.WebHookType(r),
 					payload,
 				)
+
 				if err != nil {
 					logger.Error("Failed to parse github event",
 						"error", err,
@@ -263,20 +267,21 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 
 				switch event := event.(type) {
 				case *github.WorkflowRunEvent:
+					wfRun := event.GetWorkflowRun()
 					logger.Debug("Received webhook request",
 						"type", "workflow_run",
 						"owner", event.GetRepo().GetOwner().GetLogin(),
 						"repo", event.GetRepo().GetName(),
-						"workflow", event.GetWorkflowRun().GetWorkflowID(),
-						"number", event.GetWorkflowRun().GetRunNumber(),
-						"id", event.GetWorkflowRun().GetID(),
-						"event", event.GetWorkflowRun().GetEvent(),
-						"status", event.GetWorkflowRun().GetStatus(),
-						"conclusion", event.GetWorkflowRun().GetConclusion(),
-						"actor", event.GetWorkflowRun().GetActor().GetLogin(),
-						"created_at", event.GetWorkflowRun().GetCreatedAt().Time.Unix(),
-						"updated_at", event.GetWorkflowRun().GetUpdatedAt().Time.Unix(),
-						"started_at", event.GetWorkflowRun().GetRunStartedAt().Time.Unix(),
+						"workflow", wfRun.GetWorkflowID(),
+						"number", wfRun.GetRunNumber(),
+						"id", wfRun.GetID(),
+						"event", wfRun.GetEvent(),
+						"status", wfRun.GetStatus(),
+						"conclusion", wfRun.GetConclusion(),
+						"actor", wfRun.GetActor().GetLogin(),
+						"created_at", wfRun.GetCreatedAt().Time.Unix(),
+						"updated_at", wfRun.GetUpdatedAt().Time.Unix(),
+						"started_at", wfRun.GetRunStartedAt().Time.Unix(),
 					)
 
 					if err := db.StoreWorkflowRunEvent(event); err != nil {
@@ -284,8 +289,8 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 							"type", "workflow_run",
 							"owner", event.GetRepo().GetOwner().GetLogin(),
 							"repo", event.GetRepo().GetName(),
-							"workflow", event.GetWorkflowRun().GetWorkflowID(),
-							"number", event.GetWorkflowRun().GetRunNumber(),
+							"workflow", wfRun.GetWorkflowID(),
+							"number", wfRun.GetRunNumber(),
 							"error", err,
 						)
 
@@ -293,6 +298,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 						w.WriteHeader(http.StatusInternalServerError)
 
 						io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+						return
 					}
 				case *github.WorkflowJobEvent:
 					wfJob := event.GetWorkflowJob()
@@ -326,6 +332,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 						w.WriteHeader(http.StatusInternalServerError)
 
 						io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+						return
 					}
 				}
 
@@ -369,6 +376,7 @@ func getClient(cfg *config.Config, logger *slog.Logger) (*github.Client, error) 
 
 	if useApplication(cfg, logger) {
 		privateKey, err := config.Value(cfg.Target.PrivateKey)
+
 		if err != nil {
 			logger.Error("Failed to read GitHub key",
 				"err", err,
@@ -383,6 +391,7 @@ func getClient(cfg *config.Config, logger *slog.Logger) (*github.Client, error) 
 			cfg.Target.InstallID,
 			[]byte(privateKey),
 		)
+
 		if err != nil {
 			logger.Error("Failed to create GitHub transport",
 				"err", err,
@@ -399,6 +408,7 @@ func getClient(cfg *config.Config, logger *slog.Logger) (*github.Client, error) 
 	}
 
 	accessToken, err := config.Value(cfg.Target.Token)
+
 	if err != nil {
 		logger.Error("Failed to read token",
 			"err", err,
@@ -422,6 +432,7 @@ func getClient(cfg *config.Config, logger *slog.Logger) (*github.Client, error) 
 func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, error) {
 	if useApplication(cfg, logger) {
 		privateKey, err := config.Value(cfg.Target.PrivateKey)
+
 		if err != nil {
 			logger.Error("Failed to read GitHub key",
 				"err", err,
@@ -436,6 +447,7 @@ func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, err
 			cfg.Target.InstallID,
 			[]byte(privateKey),
 		)
+
 		if err != nil {
 			logger.Error("Failed to create GitHub transport",
 				"err", err,
@@ -459,6 +471,7 @@ func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, err
 			cfg.Target.BaseURL,
 			cfg.Target.BaseURL,
 		)
+
 		if err != nil {
 			logger.Error("Failed to parse base URL",
 				"err", err,
@@ -471,6 +484,7 @@ func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, err
 	}
 
 	accessToken, err := config.Value(cfg.Target.Token)
+
 	if err != nil {
 		logger.Error("Failed to read token",
 			"err", err,
@@ -502,6 +516,7 @@ func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, err
 		cfg.Target.BaseURL,
 		cfg.Target.BaseURL,
 	)
+
 	if err != nil {
 		logger.Error("Failed to parse base URL",
 			"err", err,

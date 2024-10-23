@@ -60,18 +60,16 @@ var (
 				conclusion VARCHAR(255),
 				labels VARCHAR(255),
 				identifier INTEGER,
-
 				run_id INTEGER NOT NULL,
 				run_attempt INTEGER NOT NULL,
-
 				created_at BIGINT,
 				started_at BIGINT,
 				completed_at BIGINT,
-	            runner_id INTEGER,
-	            runner_name VARCHAR(255),
-	            runner_group_id INTEGER,
-	            runner_group_name VARCHAR(255),
-	            workflow_name VARCHAR(255),
+				runner_id INTEGER,
+				runner_name VARCHAR(255),
+				runner_group_id INTEGER,
+				runner_group_name VARCHAR(255),
+				workflow_name VARCHAR(255),
 				PRIMARY KEY(owner, repo, identifier)
 			);`,
 		},

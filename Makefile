@@ -195,6 +195,10 @@ envvars:
 metrics:
 	go run hack/generate-metrics-docs.go
 
+.PHONY: labels
+labels:
+	go run hack/generate-labels-docs.go
+
 .PHONY: watch
 watch: $(REFLEX)
 	$(REFLEX) -c reflex.conf

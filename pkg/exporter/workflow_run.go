@@ -10,8 +10,8 @@ import (
 	"github.com/promhippie/github_exporter/pkg/store"
 )
 
-// WorkflowCollector collects metrics about the servers.
-type WorkflowCollector struct {
+// WorkflowRunCollector collects metrics about the servers.
+type WorkflowRunCollector struct {
 	client   *github.Client
 	logger   *slog.Logger
 	db       store.Store
@@ -27,53 +27,53 @@ type WorkflowCollector struct {
 	Started  *prometheus.Desc
 }
 
-// NewWorkflowCollector returns a new WorkflowCollector.
-func NewWorkflowCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *WorkflowCollector {
+// NewWorkflowRunCollector returns a new WorkflowRunCollector.
+func NewWorkflowRunCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *WorkflowRunCollector {
 	if failures != nil {
 		failures.WithLabelValues("action").Add(0)
 	}
 
-	labels := cfg.Workflows.Labels.Value()
-	return &WorkflowCollector{
+	labels := cfg.WorkflowRuns.Labels.Value()
+	return &WorkflowRunCollector{
 		client:   client,
-		logger:   logger.With("collector", "workflow"),
+		logger:   logger.With("collector", "workflow_run"),
 		db:       db,
 		failures: failures,
 		duration: duration,
 		config:   cfg,
 
 		Status: prometheus.NewDesc(
-			"github_workflow_status",
+			"github_workflow_run_status",
 			"Status of workflow runs",
 			labels,
 			nil,
 		),
 		Duration: prometheus.NewDesc(
-			"github_workflow_duration_ms",
+			"github_workflow_run_duration_ms",
 			"Duration of workflow runs",
 			labels,
 			nil,
 		),
 		Creation: prometheus.NewDesc(
-			"github_workflow_duration_run_created_minutes",
+			"github_workflow_run_duration_run_created_minutes",
 			"Duration since the workflow run creation time in minutes",
 			labels,
 			nil,
 		),
 		Created: prometheus.NewDesc(
-			"github_workflow_created_timestamp",
+			"github_workflow_run_created_timestamp",
 			"Timestamp when the workflow run have been created",
 			labels,
 			nil,
 		),
 		Updated: prometheus.NewDesc(
-			"github_workflow_updated_timestamp",
+			"github_workflow_run_updated_timestamp",
 			"Timestamp when the workflow run have been updated",
 			labels,
 			nil,
 		),
 		Started: prometheus.NewDesc(
-			"github_workflow_started_timestamp",
+			"github_workflow_run_started_timestamp",
 			"Timestamp when the workflow run have been started",
 			labels,
 			nil,
@@ -82,7 +82,7 @@ func NewWorkflowCollector(logger *slog.Logger, client *github.Client, db store.S
 }
 
 // Metrics simply returns the list metric descriptors for generating a documentation.
-func (c *WorkflowCollector) Metrics() []*prometheus.Desc {
+func (c *WorkflowRunCollector) Metrics() []*prometheus.Desc {
 	return []*prometheus.Desc{
 		c.Status,
 		c.Duration,
@@ -94,7 +94,7 @@ func (c *WorkflowCollector) Metrics() []*prometheus.Desc {
 }
 
 // Describe sends the super-set of all possible descriptors of metrics collected by this Collector.
-func (c *WorkflowCollector) Describe(ch chan<- *prometheus.Desc) {
+func (c *WorkflowRunCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.Status
 	ch <- c.Duration
 	ch <- c.Creation
@@ -104,9 +104,9 @@ func (c *WorkflowCollector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 // Collect is called by the Prometheus registry when collecting metrics.
-func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
+func (c *WorkflowRunCollector) Collect(ch chan<- prometheus.Metric) {
 	if err := c.db.PruneWorkflowRuns(
-		c.config.Workflows.Window,
+		c.config.WorkflowRuns.Window,
 	); err != nil {
 		c.logger.Error("Failed to prune workflows",
 			"err", err,
@@ -115,24 +115,24 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 
 	now := time.Now()
 	records, err := c.db.GetWorkflowRuns()
-	c.duration.WithLabelValues("workflow").Observe(time.Since(now).Seconds())
+	c.duration.WithLabelValues("workflow_run").Observe(time.Since(now).Seconds())
 
 	if err != nil {
-		c.logger.Error("Failed to fetch workflows",
+		c.logger.Error("Failed to fetch workflow runs",
 			"err", err,
 		)
 
-		c.failures.WithLabelValues("workflow").Inc()
+		c.failures.WithLabelValues("workflow_run").Inc()
 		return
 	}
 
-	c.logger.Debug("Fetched workflows",
+	c.logger.Debug("Fetched workflow runs",
 		"count", len(records),
 		"duration", time.Since(now),
 	)
 
 	for _, record := range records {
-		c.logger.Debug("Collecting workflow",
+		c.logger.Debug("Collecting workflow run",
 			"owner", record.Owner,
 			"repo", record.Repo,
 			"workflow", record.WorkflowID,
@@ -141,7 +141,7 @@ func (c *WorkflowCollector) Collect(ch chan<- prometheus.Metric) {
 
 		labels := []string{}
 
-		for _, label := range c.config.Workflows.Labels.Value() {
+		for _, label := range c.config.WorkflowRuns.Labels.Value() {
 			labels = append(
 				labels,
 				record.ByLabel(label),
