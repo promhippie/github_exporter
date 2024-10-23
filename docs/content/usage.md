@@ -255,6 +255,15 @@ take a look at the [process collector][proccollector] and the
 
 {{< partial "metrics.md" >}}
 
+## Labels
+
+For some collectors we have defined a dynamic option for the labeling of the
+metrics. That way it's up to you to write high-cardinality labels to
+[Prometheus][prometheus] or not. You can see some lists below for collectors
+that can be customized.
+
+{{< partial "labels.md" >}}
+
 [prometheus]: https://prometheus.io
 [compose]: https://docs.docker.com/compose/
 [dockerhub]: https://hub.docker.com/r/promhippie/github-exporter/tags/

@@ -108,6 +108,16 @@ func (r *WorkflowJob) ByLabel(label string) string {
 		return strconv.FormatInt(r.Identifier, 10)
 	case "labels":
 		return r.Labels
+	case "runner_id":
+		return strconv.FormatInt(r.RunnerID, 10)
+	case "runner_name":
+		return r.RunnerName
+	case "runner_group_id":
+		return strconv.FormatInt(r.RunnerGroupID, 10)
+	case "runner_group_name":
+		return r.RunnerGroupName
+	case "workflow_name":
+		return r.WorkflowName
 	}
 
 	return ""

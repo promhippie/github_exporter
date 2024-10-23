@@ -175,10 +175,10 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 		))
 	}
 
-	if cfg.Collector.Workflows {
-		logger.Debug("Workflow collector registered")
+	if cfg.Collector.WorkflowRuns {
+		logger.Debug("WorkflowRun collector registered")
 
-		registry.MustRegister(exporter.NewWorkflowCollector(
+		registry.MustRegister(exporter.NewWorkflowRunCollector(
 			logger,
 			client,
 			db,
@@ -215,7 +215,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 	mux.Route("/", func(root chi.Router) {
 		root.Handle(cfg.Server.Path, reg)
 
-		if cfg.Collector.Workflows || cfg.Collector.WorkflowJobs {
+		if cfg.Collector.WorkflowRuns || cfg.Collector.WorkflowJobs {
 			root.HandleFunc(cfg.Webhook.Path, func(w http.ResponseWriter, r *http.Request) {
 				secret, err := config.Value(cfg.Webhook.Secret)
 

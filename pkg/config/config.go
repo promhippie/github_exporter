@@ -31,8 +31,8 @@ type Logs struct {
 	Pretty bool
 }
 
-// Workflows defines the workflow specific configuration.
-type Workflows struct {
+// WorkflowRuns defines the workflow run specific configuration.
+type WorkflowRuns struct {
 	Window time.Duration
 	Labels cli.StringSlice
 }
@@ -61,7 +61,7 @@ type Target struct {
 	Repos        cli.StringSlice
 	Timeout      time.Duration
 	PerPage      int
-	Workflows    Workflows
+	WorkflowRuns WorkflowRuns
 	WorkflowJobs WorkflowJobs
 	Runners      Runners
 }
@@ -72,7 +72,7 @@ type Collector struct {
 	Orgs         bool
 	Repos        bool
 	Billing      bool
-	Workflows    bool
+	WorkflowRuns bool
 	WorkflowJobs bool
 	Runners      bool
 }
@@ -97,8 +97,8 @@ func Load() *Config {
 	return &Config{}
 }
 
-// Labels defines the default labels used by workflow collector.
-func Labels() *cli.StringSlice {
+// RunLabels defines the default labels used by workflow run collector.
+func RunLabels() *cli.StringSlice {
 	return cli.NewStringSlice(
 		"owner",
 		"repo",
@@ -112,7 +112,7 @@ func Labels() *cli.StringSlice {
 	)
 }
 
-// JobLabels defines the default labels used by workflow_job collector.
+// JobLabels defines the default labels used by workflow job collector.
 func JobLabels() *cli.StringSlice {
 	return cli.NewStringSlice(
 		"owner",
@@ -124,13 +124,22 @@ func JobLabels() *cli.StringSlice {
 		"run_id",
 		"run_attempt",
 		"labels",
+		"runner_id",
+		"runner_name",
+		"runner_group_id",
+		"runner_group_name",
+		"workflow_name",
 	)
 }
 
 // RunnerLabels defines the default labels used by runner collector.
 func RunnerLabels() *cli.StringSlice {
 	return cli.NewStringSlice(
-		"owner", "id", "name", "os", "status",
+		"owner",
+		"id",
+		"name",
+		"os",
+		"status",
 	)
 }
 

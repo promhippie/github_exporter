@@ -99,8 +99,7 @@ func (c *WorkflowJobCollector) Collect(ch chan<- prometheus.Metric) {
 	if err := c.db.PruneWorkflowJobs(
 		c.config.WorkflowJobs.Window,
 	); err != nil {
-		c.logger.Error(
-			"Failed to prune workflow jobs",
+		c.logger.Error("Failed to prune workflow jobs",
 			"err", err,
 		)
 	}
@@ -110,8 +109,7 @@ func (c *WorkflowJobCollector) Collect(ch chan<- prometheus.Metric) {
 	c.duration.WithLabelValues("workflow_job").Observe(time.Since(now).Seconds())
 
 	if err != nil {
-		c.logger.Error(
-			"Failed to fetch workflow jobs",
+		c.logger.Error("Failed to fetch workflow jobs",
 			"err", err,
 		)
 
@@ -119,15 +117,13 @@ func (c *WorkflowJobCollector) Collect(ch chan<- prometheus.Metric) {
 		return
 	}
 
-	c.logger.Debug(
-		"Fetched workflow jobs",
+	c.logger.Debug("Fetched workflow jobs",
 		"count", len(records),
 		"duration", time.Since(now),
 	)
 
 	for _, record := range records {
-		c.logger.Debug(
-			"Collecting workflow job",
+		c.logger.Debug("Collecting workflow job",
 			"owner", record.Owner,
 			"repo", record.Repo,
 			"id", record.Identifier,
