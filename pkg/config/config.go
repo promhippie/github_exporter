@@ -140,6 +140,7 @@ func Value(val string) (string, error) {
 		content, err := os.ReadFile(
 			strings.TrimPrefix(val, "file://"),
 		)
+
 		if err != nil {
 			return "", fmt.Errorf("failed to parse secret file: %w", err)
 		}
@@ -151,6 +152,7 @@ func Value(val string) (string, error) {
 		content, err := base64.StdEncoding.DecodeString(
 			strings.TrimPrefix(val, "base64://"),
 		)
+
 		if err != nil {
 			return "", fmt.Errorf("failed to parse base64 value: %w", err)
 		}

@@ -88,6 +88,7 @@ func getWorkflowJobs(handle *sqlx.DB) ([]*WorkflowJob, error) {
 	rows, err := handle.Queryx(
 		selectWorkflowJobsQuery,
 	)
+
 	if err != nil {
 		return records, err
 	}
