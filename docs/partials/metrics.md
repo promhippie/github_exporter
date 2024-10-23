@@ -256,20 +256,35 @@ github_storage_billing_estimated_paid_storage_for_month{type, name}
 github_storage_billing_estimated_storage_for_month{type, name}
 : Estimated total storage for this month for this type
 
-github_workflow_created_timestamp{owner, repo, workflow, event, name, status, branch, number, run}
-: Timestamp when the workflow run have been created
+github_workflow_job_created_timestamp{owner, repo, name, title, branch, sha, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name}
+: Timestamp when the workflow job have been created
 
-github_workflow_duration_ms{owner, repo, workflow, event, name, status, branch, number, run}
+github_workflow_job_duration_ms{owner, repo, name, title, branch, sha, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name}
 : Duration of workflow runs
 
-github_workflow_duration_run_created_minutes{owner, repo, workflow, event, name, status, branch, number, run}
+github_workflow_job_duration_run_created_minutes{owner, repo, name, title, branch, sha, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name}
 : Duration since the workflow run creation time in minutes
 
-github_workflow_started_timestamp{owner, repo, workflow, event, name, status, branch, number, run}
+github_workflow_job_started_timestamp{owner, repo, name, title, branch, sha, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name}
+: Timestamp when the workflow job have been started
+
+github_workflow_job_status{owner, repo, name, title, branch, sha, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name}
+: Status of workflow jobs
+
+github_workflow_run_created_timestamp{owner, repo, workflow, event, name, status, branch, number, run}
+: Timestamp when the workflow run have been created
+
+github_workflow_run_duration_ms{owner, repo, workflow, event, name, status, branch, number, run}
+: Duration of workflow runs
+
+github_workflow_run_duration_run_created_minutes{owner, repo, workflow, event, name, status, branch, number, run}
+: Duration since the workflow run creation time in minutes
+
+github_workflow_run_started_timestamp{owner, repo, workflow, event, name, status, branch, number, run}
 : Timestamp when the workflow run have been started
 
-github_workflow_status{owner, repo, workflow, event, name, status, branch, number, run}
+github_workflow_run_status{owner, repo, workflow, event, name, status, branch, number, run}
 : Status of workflow runs
 
-github_workflow_updated_timestamp{owner, repo, workflow, event, name, status, branch, number, run}
+github_workflow_run_updated_timestamp{owner, repo, workflow, event, name, status, branch, number, run}
 : Timestamp when the workflow run have been updated
