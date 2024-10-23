@@ -73,13 +73,13 @@ GITHUB_EXPORTER_COLLECTOR_REPOS
 GITHUB_EXPORTER_COLLECTOR_BILLING
 : Enable collector for billing, defaults to `false`
 
-GITHUB_EXPORTER_COLLECTOR_WORKFLOWS
+GITHUB_EXPORTER_COLLECTOR_WORKFLOW_RUNS
 : Enable collector for workflows, defaults to `false`
 
-GITHUB_EXPORTER_WORKFLOWS_WINDOW
+GITHUB_EXPORTER_WORKFLOW_RUNS_WINDOW
 : History window for querying workflows, defaults to `24h0m0s`
 
-GITHUB_EXPORTER_WORKFLOWS_LABELS
+GITHUB_EXPORTER_WORKFLOW_RUNS_LABELS
 : List of labels used for workflows, comma-separated list, defaults to `owner, repo, workflow, event, name, status, branch, number, run`
 
 GITHUB_EXPORTER_COLLECTOR_WORKFLOW_JOBS
@@ -89,7 +89,7 @@ GITHUB_EXPORTER_WORKFLOW_JOBS_WINDOW
 : History window for querying workflow jobs, defaults to `24h0m0s`
 
 GITHUB_EXPORTER_WORKFLOWS_LABELS
-: List of labels used for workflow jobs, comma-separated list, defaults to `owner, repo, name, title, branch, sha, run_id, run_attempt, labels`
+: List of labels used for workflow jobs, comma-separated list, defaults to `owner, repo, name, title, branch, sha, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name`
 
 GITHUB_EXPORTER_COLLECTOR_RUNNERS
 : Enable collector for runners, defaults to `false`
