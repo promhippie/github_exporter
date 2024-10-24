@@ -12,9 +12,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-var (
-	defaultDatabaseDSN = ""
-)
+var defaultDatabaseDSN = ""
 
 func init() {
 	if _, ok := store.Drivers["chai"]; ok {
@@ -45,7 +43,6 @@ func Run() error {
 		Action: func(_ *cli.Context) error {
 			logger := setupLogger(cfg)
 			db, err := setupStorage(cfg, logger)
-
 			if err != nil {
 				logger.Error("Failed to setup database",
 					"error", err,
@@ -79,7 +76,7 @@ func Run() error {
 				backoff.NewExponentialBackOff(),
 				func(_ error, dur time.Duration) {
 					logger.Warn("Database ping failed",
-						"retry", dur,
+						"retry", dur, "err", err,
 					)
 				},
 			); err != nil {
