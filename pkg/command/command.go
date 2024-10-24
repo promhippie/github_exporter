@@ -77,9 +77,9 @@ func Run() error {
 			if err := backoff.RetryNotify(
 				db.Ping,
 				backoff.NewExponentialBackOff(),
-				func(_ error, dur time.Duration) {
+				func(err error, dur time.Duration) {
 					logger.Warn("Database ping failed",
-						"retry", dur,
+						"retry", dur, "err", err,
 					)
 				},
 			); err != nil {
