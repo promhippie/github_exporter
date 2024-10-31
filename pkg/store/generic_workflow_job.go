@@ -213,13 +213,15 @@ UPDATE
 	workflow_jobs
 SET
 	run_attempt=:run_attempt,
+	conclusion=:conclusion,
 	name=:name,
 	status=:status,
 	branch=:branch,
 	sha=:sha,
 	identifier=:identifier,
 	created_at=:created_at,
-	started_at=:started_at
+	started_at=:started_at,
+	completed_at=:completed_at
 WHERE
 	owner=:owner AND repo=:repo AND identifier=:identifier;`
 
