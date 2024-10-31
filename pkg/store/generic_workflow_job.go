@@ -30,7 +30,7 @@ func storeWorkflowJobEvent(handle *sqlx.DB, event *github.WorkflowJobEvent) erro
 		StartedAt:       job.GetStartedAt().Time.Unix(),
 		CompletedAt:     job.GetCompletedAt().Time.Unix(),
 		Labels:          strings.Join(job.Labels, ","),
-		RunnerID:        job.GetRunID(),
+		RunnerID:        job.GetRunnerID(),
 		RunnerName:      job.GetRunnerName(),
 		RunnerGroupID:   job.GetRunnerGroupID(),
 		RunnerGroupName: job.GetRunnerGroupName(),
