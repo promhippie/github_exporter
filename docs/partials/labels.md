@@ -18,6 +18,7 @@
 * title
 * branch
 * sha
+* identifier
 * run_id
 * run_attempt
 * labels
