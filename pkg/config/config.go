@@ -121,6 +121,7 @@ func JobLabels() *cli.StringSlice {
 		"title",
 		"branch",
 		"sha",
+		"identifier",
 		"run_id",
 		"run_attempt",
 		"labels",

@@ -100,6 +100,8 @@ func (r *WorkflowJob) ByLabel(label string) string {
 		return r.Branch
 	case "sha":
 		return r.SHA
+	case "identifier":
+		return strconv.FormatInt(r.Identifier, 10)
 	case "run_id":
 		return strconv.FormatInt(r.RunID, 10)
 	case "run_attempt":
