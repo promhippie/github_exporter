@@ -1,3 +1,42 @@
+# Changelog for 4.0.1
+
+The following sections list the changes for 4.0.1.
+
+## Summary
+
+ * Fix #413: Show DB ping error
+ * Fix #414: Fix PostgreSQL workflow_job identifiers to be bigint
+ * Fix #417: Runner id was being set to run id for workflow_job
+ * Fix #418: Include identifier in labels for workflow_job
+ * Fix #418: Update conclusion and completed_at timestamp on new hooks
+
+## Details
+
+ * Bugfix #413: Show DB ping error
+
+   Show the error message when the database ping fails.
+
+   https://github.com/promhippie/github_exporter/pull/413
+
+ * Bugfix #414: Fix PostgreSQL workflow_job identifiers to be bigint
+
+   Github ids are 64 bit integers, so pg can't fit them in an int
+
+   https://github.com/promhippie/github_exporter/pull/414
+
+ * Bugfix #417: Runner id was being set to run id for workflow_job
+
+   https://github.com/promhippie/github_exporter/pull/417
+
+ * Bugfix #418: Include identifier in labels for workflow_job
+
+   https://github.com/promhippie/github_exporter/pull/418
+
+ * Bugfix #418: Update conclusion and completed_at timestamp on new hooks
+
+   https://github.com/promhippie/github_exporter/pull/418
+
+
 # Changelog for 4.0.0
 
 The following sections list the changes for 4.0.0.
