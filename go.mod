@@ -41,7 +41,7 @@ require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/getsentry/sentry-go v0.25.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
 	github.com/golang-module/carbon/v2 v2.2.14 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-github/v62 v62.0.0 // indirect
