@@ -4,35 +4,48 @@ The following sections list the changes for 4.0.1.
 
 ## Summary
 
- * Fix #413: Show DB ping error
- * Fix #414: Fix PostgreSQL workflow_job identifiers to be bigint
- * Fix #417: Runner id was being set to run id for workflow_job
- * Fix #418: Include identifier in labels for workflow_job
- * Fix #418: Update conclusion and completed_at timestamp on new hooks
+ * Fix #413: Show errors for database ping
+ * Fix #414: Fix PostgreSQL identifiers to be bigint
+ * Fix #417: Runner ID was being set to run ID for workflow_job
+ * Fix #418: Include identifier in labels for workflow jobs
+ * Fix #418: Update conclusion and completed_at columns
 
 ## Details
 
- * Bugfix #413: Show DB ping error
+ * Bugfix #413: Show errors for database ping
 
-   Show the error message when the database ping fails.
+   To get more details why a ping to the database fails while starting the exporter
+   we have added an error output to the logging.
 
    https://github.com/promhippie/github_exporter/pull/413
 
- * Bugfix #414: Fix PostgreSQL workflow_job identifiers to be bigint
+ * Bugfix #414: Fix PostgreSQL identifiers to be bigint
 
-   Github ids are 64 bit integers, so pg can't fit them in an int
+   Since Github submit 64bit integers for the identifier of workflow jobs we had to
+   fix the type to `BIGINT` for the database schema to avoid errors related to
+   store events.
 
    https://github.com/promhippie/github_exporter/pull/414
 
- * Bugfix #417: Runner id was being set to run id for workflow_job
+ * Bugfix #417: Runner ID was being set to run ID for workflow_job
+
+   While implementing the workflow job collector we simply attached the wrong
+   identifier to the runner id which was base on the run ID. Future webhooks will
+   store the right ID now.
 
    https://github.com/promhippie/github_exporter/pull/417
 
- * Bugfix #418: Include identifier in labels for workflow_job
+ * Bugfix #418: Include identifier in labels for workflow jobs
+
+   To avoid errors related to already scraped metrics we have added the identifier
+   to the default labels for the workflow job collector.
 
    https://github.com/promhippie/github_exporter/pull/418
 
- * Bugfix #418: Update conclusion and completed_at timestamp on new hooks
+ * Bugfix #418: Update conclusion and completed_at columns
+
+   For the new workflow job collector we had been missing the `conclusion` and
+   `completed_at` values, they will be stored by future webhook events.
 
    https://github.com/promhippie/github_exporter/pull/418
 
