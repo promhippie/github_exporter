@@ -1,4 +1,4 @@
-FROM arm32v6/alpine:3.20@sha256:50f635c8b04d86dde8a02bcd8d667ba287eb8b318c1c0cf547e5a48ddadea1be AS build
+FROM arm32v6/alpine:3.20@sha256:a2b9c479c72b128baaee28fb9db735a98dc3d8bc9e2dbbedeaebb55a37d48566 AS build
 RUN apk add --no-cache ca-certificates mailcap
 
 FROM scratch
