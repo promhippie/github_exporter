@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/GuiaBolso/darwin"
-	"github.com/google/go-github/v66/github"
+	"github.com/google/go-github/v67/github"
 	"github.com/jmoiron/sqlx"
 	"github.com/promhippie/github_exporter/pkg/migration/dialect"
 
@@ -76,12 +76,12 @@ var (
 		{
 			Version:     4,
 			Description: "Fix identifier be BIGINT",
-			Script: `ALTER TABLE workflow_jobs ALTER COLUMN identifier TYPE BIGINT USING identifier::BIGINT;`,
+			Script:      `ALTER TABLE workflow_jobs ALTER COLUMN identifier TYPE BIGINT USING identifier::BIGINT;`,
 		},
 		{
 			Version:     5,
 			Description: "Fix run_id be BIGINT",
-			Script: `ALTER TABLE workflow_jobs ALTER COLUMN run_id TYPE BIGINT USING run_id::BIGINT;`,
+			Script:      `ALTER TABLE workflow_jobs ALTER COLUMN run_id TYPE BIGINT USING run_id::BIGINT;`,
 		},
 	}
 )
