@@ -31,8 +31,8 @@ should be correctly parsed by the exporter.
 configured the exporter, mentioned above.
 
 **Which events would you like to trigger this webhook** got to be set to
-`Let me select individual events` where you just got to check the last item
-`Workflow runs`.
+`Let me select individual events` where you just got to check the last two items
+`Workflow runs` and `Workflow jobs` (If you want to enable the workflow job collector).
 
 After hitting the **Add webhook** button you are ready to receive first webhooks
 by GitHub. It should also show that the initial test webhook have been executed
