@@ -4,7 +4,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/cenkalti/backoff/v4"
+	"github.com/cenkalti/backoff/v5"
 	"github.com/promhippie/github_exporter/pkg/action"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
