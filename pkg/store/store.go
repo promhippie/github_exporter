@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/go-github/v67/github"
+	"github.com/google/go-github/v68/github"
 )
 
 var (
@@ -31,9 +31,9 @@ type Store interface {
 	GetWorkflowJobs() ([]*WorkflowJob, error)
 	PruneWorkflowJobs(time.Duration) error
 
-	Open() error
+	Open() (bool, error)
 	Close() error
-	Ping() error
+	Ping() (bool, error)
 	Migrate() error
 }
 

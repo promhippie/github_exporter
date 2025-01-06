@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/GuiaBolso/darwin"
-	"github.com/google/go-github/v67/github"
+	"github.com/google/go-github/v68/github"
 	"github.com/jmoiron/sqlx"
 	"github.com/promhippie/github_exporter/pkg/migration/dialect"
 
@@ -108,21 +108,21 @@ type postgresStore struct {
 }
 
 // Open simply opens the database connection.
-func (s *postgresStore) Open() (err error) {
+func (s *postgresStore) Open() (res bool, err error) {
 	s.handle, err = sqlx.Open(
 		s.driver,
 		s.dsn(),
 	)
 
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	s.handle.SetMaxOpenConns(s.maxOpenConns)
 	s.handle.SetMaxIdleConns(s.maxIdleConns)
 	s.handle.SetConnMaxLifetime(s.connMaxLifetime)
 
-	return nil
+	return true, nil
 }
 
 // Close simply closes the database connection.
@@ -131,8 +131,12 @@ func (s *postgresStore) Close() error {
 }
 
 // Ping just tests the database connection.
-func (s *postgresStore) Ping() error {
-	return s.handle.Ping()
+func (s *postgresStore) Ping() (bool, error) {
+	if err := s.handle.Ping(); err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 // Migrate executes required db migrations.

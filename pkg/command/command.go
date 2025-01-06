@@ -4,7 +4,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/cenkalti/backoff/v4"
+	"github.com/cenkalti/backoff/v5"
 	"github.com/promhippie/github_exporter/pkg/action"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
@@ -42,7 +42,7 @@ func Run() error {
 		Commands: []*cli.Command{
 			Health(cfg),
 		},
-		Action: func(_ *cli.Context) error {
+		Action: func(c *cli.Context) error {
 			logger := setupLogger(cfg)
 			db, err := setupStorage(cfg, logger)
 
@@ -58,15 +58,16 @@ func Run() error {
 				defer db.Close()
 			}
 
-			if err := backoff.RetryNotify(
+			if _, err := backoff.Retry(
+				c.Context,
 				db.Open,
-				backoff.NewExponentialBackOff(),
-				func(err error, dur time.Duration) {
+				backoff.WithBackOff(backoff.NewExponentialBackOff()),
+				backoff.WithNotify(func(err error, dur time.Duration) {
 					logger.Warn("Database open failed",
 						"retry", dur,
 						"error", err,
 					)
-				},
+				}),
 			); err != nil {
 				logger.Error("Giving up to connect to database",
 					"error", err,
@@ -75,15 +76,16 @@ func Run() error {
 				return err
 			}
 
-			if err := backoff.RetryNotify(
+			if _, err := backoff.Retry(
+				c.Context,
 				db.Ping,
-				backoff.NewExponentialBackOff(),
-				func(err error, dur time.Duration) {
+				backoff.WithBackOff(backoff.NewExponentialBackOff()),
+				backoff.WithNotify(func(err error, dur time.Duration) {
 					logger.Warn("Database ping failed",
 						"retry", dur,
 						"err", err,
 					)
-				},
+				}),
 			); err != nil {
 				logger.Error("Giving up to ping the database",
 					"error", err,

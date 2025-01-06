@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/google/go-github/v67/github"
+	"github.com/google/go-github/v68/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
@@ -52,16 +52,16 @@ func (s StaticStore) PruneWorkflowJobs(time.Duration) error {
 	return nil
 }
 
-func (s StaticStore) Open() error {
-	return nil
+func (s StaticStore) Open() (bool, error) {
+	return true, nil
 }
 
 func (s StaticStore) Close() error {
 	return nil
 }
 
-func (s StaticStore) Ping() error {
-	return nil
+func (s StaticStore) Ping() (bool, error) {
+	return true, nil
 }
 
 func (s StaticStore) Migrate() error {
