@@ -52,16 +52,16 @@ func (s StaticStore) PruneWorkflowJobs(time.Duration) error {
 	return nil
 }
 
-func (s StaticStore) Open() error {
-	return nil
+func (s StaticStore) Open() (bool, error) {
+	return true, nil
 }
 
 func (s StaticStore) Close() error {
 	return nil
 }
 
-func (s StaticStore) Ping() error {
-	return nil
+func (s StaticStore) Ping() (bool, error) {
+	return true, nil
 }
 
 func (s StaticStore) Migrate() error {

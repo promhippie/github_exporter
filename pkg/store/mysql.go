@@ -98,21 +98,21 @@ type mysqlStore struct {
 }
 
 // Open simply opens the database connection.
-func (s *mysqlStore) Open() (err error) {
+func (s *mysqlStore) Open() (res bool, err error) {
 	s.handle, err = sqlx.Open(
 		s.driver,
 		s.dsn(),
 	)
 
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	s.handle.SetMaxOpenConns(s.maxOpenConns)
 	s.handle.SetMaxIdleConns(s.maxIdleConns)
 	s.handle.SetConnMaxLifetime(s.connMaxLifetime)
 
-	return nil
+	return true, nil
 }
 
 // Close simply closes the database connection.
@@ -121,8 +121,12 @@ func (s *mysqlStore) Close() error {
 }
 
 // Ping just tests the database connection.
-func (s *mysqlStore) Ping() error {
-	return s.handle.Ping()
+func (s *mysqlStore) Ping() (bool, error) {
+	if err := s.handle.Ping(); err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 // Migrate executes required db migrations.

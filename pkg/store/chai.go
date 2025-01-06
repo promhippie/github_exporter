@@ -91,17 +91,17 @@ type chaiStore struct {
 }
 
 // Open simply opens the database connection.
-func (s *chaiStore) Open() (err error) {
+func (s *chaiStore) Open() (res bool, err error) {
 	s.handle, err = sqlx.Open(
 		s.driver,
 		s.dsn(),
 	)
 
 	if err != nil {
-		return err
+		return false, err
 	}
 
-	return nil
+	return true, nil
 }
 
 // Close simply closes the database connection.
@@ -110,8 +110,12 @@ func (s *chaiStore) Close() error {
 }
 
 // Ping just tests the database connection.
-func (s *chaiStore) Ping() error {
-	return s.handle.Ping()
+func (s *chaiStore) Ping() (bool, error) {
+	if err := s.handle.Ping(); err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 // Migrate executes required db migrations.

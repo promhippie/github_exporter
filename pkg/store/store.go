@@ -31,9 +31,9 @@ type Store interface {
 	GetWorkflowJobs() ([]*WorkflowJob, error)
 	PruneWorkflowJobs(time.Duration) error
 
-	Open() error
+	Open() (bool, error)
 	Close() error
-	Ping() error
+	Ping() (bool, error)
 	Migrate() error
 }
 

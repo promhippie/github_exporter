@@ -92,10 +92,10 @@ func init() {
 }
 
 // Open simply opens the database connection.
-func (s *sqliteStore) Open() (err error) {
+func (s *sqliteStore) Open() (res bool, err error) {
 	if dir := path.Dir(s.database); dir != "." {
 		if err := os.MkdirAll(dir, 0770); err != nil {
-			return fmt.Errorf("failed to create database dir: %w", err)
+			return false, fmt.Errorf("failed to create database dir: %w", err)
 		}
 	}
 
@@ -105,10 +105,10 @@ func (s *sqliteStore) Open() (err error) {
 	)
 
 	if err != nil {
-		return err
+		return false, err
 	}
 
-	return nil
+	return true, nil
 }
 
 // Close simply closes the database connection.
@@ -117,8 +117,12 @@ func (s *sqliteStore) Close() error {
 }
 
 // Ping just tests the database connection.
-func (s *sqliteStore) Ping() error {
-	return s.handle.Ping()
+func (s *sqliteStore) Ping() (bool, error) {
+	if err := s.handle.Ping(); err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 // Migrate executes required db migrations.
