@@ -150,8 +150,8 @@ func (s *sqliteStore) StoreWorkflowRunEvent(event *github.WorkflowRunEvent) erro
 }
 
 // GetWorkflowRuns implements the Store interface.
-func (s *sqliteStore) GetWorkflowRuns() ([]*WorkflowRun, error) {
-	return getWorkflowRuns(s.handle)
+func (s *sqliteStore) GetWorkflowRuns(window time.Duration) ([]*WorkflowRun, error) {
+	return getWorkflowRuns(s.handle, window)
 }
 
 // PruneWorkflowRuns implements the Store interface.
@@ -165,8 +165,8 @@ func (s *sqliteStore) StoreWorkflowJobEvent(event *github.WorkflowJobEvent) erro
 }
 
 // GetWorkflowJobs implements the Store interface.
-func (s *sqliteStore) GetWorkflowJobs() ([]*WorkflowJob, error) {
-	return getWorkflowJobs(s.handle)
+func (s *sqliteStore) GetWorkflowJobs(window time.Duration) ([]*WorkflowJob, error) {
+	return getWorkflowJobs(s.handle, window)
 }
 
 // PruneWorkflowJobs implements the Store interface.

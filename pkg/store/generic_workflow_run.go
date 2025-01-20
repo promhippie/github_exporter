@@ -84,11 +84,14 @@ func createOrUpdateWorkflowRun(handle *sqlx.DB, record *WorkflowRun) error {
 }
 
 // getWorkflowRuns retrieves the workflow runs from the database.
-func getWorkflowRuns(handle *sqlx.DB) ([]*WorkflowRun, error) {
+func getWorkflowRuns(handle *sqlx.DB, window time.Duration) ([]*WorkflowRun, error) {
 	records := make([]*WorkflowRun, 0)
 
-	rows, err := handle.Queryx(
+	rows, err := handle.NamedQuery(
 		selectWorkflowRunsQuery,
+		map[string]interface{}{
+			"window": time.Now().Add(-window).Unix(),
+		},
 	)
 
 	if err != nil {
@@ -153,6 +156,8 @@ SELECT
 	started_at
 FROM
 	workflow_runs
+WHERE
+	updated_at > :window
 ORDER BY
 	updated_at ASC;`
 

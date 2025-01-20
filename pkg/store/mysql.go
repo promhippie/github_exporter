@@ -153,8 +153,8 @@ func (s *mysqlStore) StoreWorkflowRunEvent(event *github.WorkflowRunEvent) error
 }
 
 // GetWorkflowRuns implements the Store interface.
-func (s *mysqlStore) GetWorkflowRuns() ([]*WorkflowRun, error) {
-	return getWorkflowRuns(s.handle)
+func (s *mysqlStore) GetWorkflowRuns(window time.Duration) ([]*WorkflowRun, error) {
+	return getWorkflowRuns(s.handle, window)
 }
 
 // PruneWorkflowRuns implements the Store interface.
@@ -168,8 +168,8 @@ func (s *mysqlStore) StoreWorkflowJobEvent(event *github.WorkflowJobEvent) error
 }
 
 // GetWorkflowJobs implements the Store interface.
-func (s *mysqlStore) GetWorkflowJobs() ([]*WorkflowJob, error) {
-	return getWorkflowJobs(s.handle)
+func (s *mysqlStore) GetWorkflowJobs(window time.Duration) ([]*WorkflowJob, error) {
+	return getWorkflowJobs(s.handle, window)
 }
 
 // PruneWorkflowJobs implements the Store interface.

@@ -33,14 +33,16 @@ type Logs struct {
 
 // WorkflowRuns defines the workflow run specific configuration.
 type WorkflowRuns struct {
-	Window time.Duration
-	Labels cli.StringSlice
+	Window      time.Duration
+	PurgeWindow time.Duration
+	Labels      cli.StringSlice
 }
 
 // WorkflowJobs defines the workflow job specific configuration.
 type WorkflowJobs struct {
-	Window time.Duration
-	Labels cli.StringSlice
+	Window      time.Duration
+	PurgeWindow time.Duration
+	Labels      cli.StringSlice
 }
 
 // Runners defines the runner specific configuration.

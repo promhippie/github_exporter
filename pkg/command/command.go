@@ -100,6 +100,13 @@ func Run() error {
 				)
 			}
 
+			if cfg.Target.WorkflowRuns.PurgeWindow < cfg.Target.WorkflowRuns.Window {
+				logger.Warn("Workflow Run purge window cannot be smaller than query window or data loss will occur", "config", cfg.Target.WorkflowRuns)
+			}
+			if cfg.Target.WorkflowJobs.PurgeWindow < cfg.Target.WorkflowJobs.Window {
+				logger.Warn("Workflow Run purge window cannot be smaller than query window or data loss will occur", "config", cfg.Target.WorkflowJobs)
+			}
+
 			return action.Server(cfg, db, logger)
 		},
 	}
@@ -309,6 +316,13 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOW_RUNS_WINDOW"},
 			Destination: &cfg.Target.WorkflowRuns.Window,
 		},
+		&cli.DurationFlag{
+			Name:        "collector.workflow_runs.purge_window",
+			Value:       24 * time.Hour,
+			Usage:       "History window for keeping data in database. Defaults to the query window",
+			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOW_RUNS_PURGE_WINDOW"},
+			Destination: &cfg.Target.WorkflowRuns.PurgeWindow,
+		},
 		&cli.StringSliceFlag{
 			Name:        "collector.workflow_runs.labels",
 			Value:       config.RunLabels(),
@@ -329,6 +343,13 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			Usage:       "History window for querying workflow jobs",
 			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOW_JOBS_WINDOW"},
 			Destination: &cfg.Target.WorkflowJobs.Window,
+		},
+		&cli.DurationFlag{
+			Name:        "collector.workflow_jobs.purge_window",
+			Value:       24 * time.Hour,
+			Usage:       "History window for keeping data in database. Defaults to the query window",
+			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOW_JOBS_PURGE_WINDOW"},
+			Destination: &cfg.Target.WorkflowJobs.PurgeWindow,
 		},
 		&cli.StringSliceFlag{
 			Name:        "collector.workflow_jobs.labels",

@@ -82,11 +82,14 @@ func createOrUpdateWorkflowJob(handle *sqlx.DB, record *WorkflowJob) error {
 }
 
 // getWorkflowJobs retrieves the workflow jobs from the database.
-func getWorkflowJobs(handle *sqlx.DB) ([]*WorkflowJob, error) {
+func getWorkflowJobs(handle *sqlx.DB, window time.Duration) ([]*WorkflowJob, error) {
 	records := make([]*WorkflowJob, 0)
 
-	rows, err := handle.Queryx(
+	rows, err := handle.NamedQuery(
 		selectWorkflowJobsQuery,
+		map[string]interface{}{
+			"window": time.Now().Add(-window).Unix(),
+		},
 	)
 
 	if err != nil {
@@ -154,6 +157,8 @@ SELECT
 	workflow_name
 FROM
 	workflow_jobs
+WHERE
+	created_at > :window
 ORDER BY
 	created_at ASC;`
 
