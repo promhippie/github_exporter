@@ -142,8 +142,8 @@ func (s *chaiStore) StoreWorkflowRunEvent(event *github.WorkflowRunEvent) error 
 }
 
 // GetWorkflowRuns implements the Store interface.
-func (s *chaiStore) GetWorkflowRuns() ([]*WorkflowRun, error) {
-	return getWorkflowRuns(s.handle)
+func (s *chaiStore) GetWorkflowRuns(window time.Duration) ([]*WorkflowRun, error) {
+	return getWorkflowRuns(s.handle, window)
 }
 
 // PruneWorkflowRuns implements the Store interface.
@@ -157,8 +157,8 @@ func (s *chaiStore) StoreWorkflowJobEvent(event *github.WorkflowJobEvent) error 
 }
 
 // GetWorkflowJobs implements the Store interface.
-func (s *chaiStore) GetWorkflowJobs() ([]*WorkflowJob, error) {
-	return getWorkflowJobs(s.handle)
+func (s *chaiStore) GetWorkflowJobs(window time.Duration) ([]*WorkflowJob, error) {
+	return getWorkflowJobs(s.handle, window)
 }
 
 // PruneWorkflowJobs implements the Store interface.

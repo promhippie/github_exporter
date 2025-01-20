@@ -23,12 +23,12 @@ type driver func(dsn string, logger *slog.Logger) (Store, error)
 type Store interface {
 	// WorkflowRunEvent
 	StoreWorkflowRunEvent(*github.WorkflowRunEvent) error
-	GetWorkflowRuns() ([]*WorkflowRun, error)
+	GetWorkflowRuns(time.Duration) ([]*WorkflowRun, error)
 	PruneWorkflowRuns(time.Duration) error
 
 	// WorkflowJobEvent
 	StoreWorkflowJobEvent(*github.WorkflowJobEvent) error
-	GetWorkflowJobs() ([]*WorkflowJob, error)
+	GetWorkflowJobs(time.Duration) ([]*WorkflowJob, error)
 	PruneWorkflowJobs(time.Duration) error
 
 	Open() (bool, error)

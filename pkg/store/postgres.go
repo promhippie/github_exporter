@@ -163,8 +163,8 @@ func (s *postgresStore) StoreWorkflowRunEvent(event *github.WorkflowRunEvent) er
 }
 
 // GetWorkflowRuns implements the Store interface.
-func (s *postgresStore) GetWorkflowRuns() ([]*WorkflowRun, error) {
-	return getWorkflowRuns(s.handle)
+func (s *postgresStore) GetWorkflowRuns(window time.Duration) ([]*WorkflowRun, error) {
+	return getWorkflowRuns(s.handle, window)
 }
 
 // PruneWorkflowRuns implements the Store interface.
@@ -178,8 +178,8 @@ func (s *postgresStore) StoreWorkflowJobEvent(event *github.WorkflowJobEvent) er
 }
 
 // GetWorkflowJobs implements the Store interface.
-func (s *postgresStore) GetWorkflowJobs() ([]*WorkflowJob, error) {
-	return getWorkflowJobs(s.handle)
+func (s *postgresStore) GetWorkflowJobs(window time.Duration) ([]*WorkflowJob, error) {
+	return getWorkflowJobs(s.handle, window)
 }
 
 // PruneWorkflowJobs implements the Store interface.

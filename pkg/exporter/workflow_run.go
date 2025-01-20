@@ -106,7 +106,7 @@ func (c *WorkflowRunCollector) Describe(ch chan<- *prometheus.Desc) {
 // Collect is called by the Prometheus registry when collecting metrics.
 func (c *WorkflowRunCollector) Collect(ch chan<- prometheus.Metric) {
 	if err := c.db.PruneWorkflowRuns(
-		c.config.WorkflowRuns.Window,
+		c.config.WorkflowRuns.PurgeWindow,
 	); err != nil {
 		c.logger.Error("Failed to prune workflows",
 			"err", err,
@@ -114,7 +114,7 @@ func (c *WorkflowRunCollector) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	now := time.Now()
-	records, err := c.db.GetWorkflowRuns()
+	records, err := c.db.GetWorkflowRuns(c.config.WorkflowRuns.Window)
 	c.duration.WithLabelValues("workflow_run").Observe(time.Since(now).Seconds())
 
 	if err != nil {

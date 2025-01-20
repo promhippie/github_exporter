@@ -97,7 +97,7 @@ func (c *WorkflowJobCollector) Describe(ch chan<- *prometheus.Desc) {
 // Collect is called by the Prometheus registry when collecting metrics.
 func (c *WorkflowJobCollector) Collect(ch chan<- prometheus.Metric) {
 	if err := c.db.PruneWorkflowJobs(
-		c.config.WorkflowJobs.Window,
+		c.config.WorkflowJobs.PurgeWindow,
 	); err != nil {
 		c.logger.Error("Failed to prune workflow jobs",
 			"err", err,
@@ -105,7 +105,7 @@ func (c *WorkflowJobCollector) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	now := time.Now()
-	records, err := c.db.GetWorkflowJobs()
+	records, err := c.db.GetWorkflowJobs(c.config.WorkflowJobs.Window)
 	c.duration.WithLabelValues("workflow_job").Observe(time.Since(now).Seconds())
 
 	if err != nil {

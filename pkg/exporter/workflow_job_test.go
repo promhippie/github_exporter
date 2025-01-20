@@ -32,7 +32,7 @@ func (s StaticStore) StoreWorkflowRunEvent(*github.WorkflowRunEvent) error {
 	return nil
 }
 
-func (s StaticStore) GetWorkflowRuns() ([]*store.WorkflowRun, error) {
+func (s StaticStore) GetWorkflowRuns(time.Duration) ([]*store.WorkflowRun, error) {
 	return nil, nil
 }
 
@@ -44,7 +44,7 @@ func (s StaticStore) StoreWorkflowJobEvent(*github.WorkflowJobEvent) error {
 	return nil
 }
 
-func (s StaticStore) GetWorkflowJobs() ([]*store.WorkflowJob, error) {
+func (s StaticStore) GetWorkflowJobs(time.Duration) ([]*store.WorkflowJob, error) {
 	return nil, nil
 }
 
