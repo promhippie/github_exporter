@@ -554,7 +554,8 @@ configure HTTPS access via <a href="#web-configuration">web configuration</a>.</
 </span></span><span class="line"><span class="cl">    image: promhippie/github-exporter:latest
 </span></span><span class="line"><span class="cl">    restart: always
 </span></span><span class="line"><span class="cl">    environment:
-</span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_COLLECTOR_WORKFLOWS=true
+</span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_COLLECTOR_WORKFLOW_RUNS=true
+</span></span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_COLLECTOR_WORKFLOW_JOBS=true
 </span></span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_WEBHOOK_SECRET=your-prepared-random-secret
 </span></span></span><span class="line"><span class="cl"><span class="gi"></span>      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_LOG_PRETTY=true
