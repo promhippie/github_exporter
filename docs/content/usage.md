@@ -175,7 +175,8 @@ configure HTTPS access via [web configuration](#web-configuration).
     image: promhippie/github-exporter:latest
     restart: always
     environment:
-+     - GITHUB_EXPORTER_COLLECTOR_WORKFLOWS=true
++     - GITHUB_EXPORTER_COLLECTOR_WORKFLOW_RUNS=true
++     - GITHUB_EXPORTER_COLLECTOR_WORKFLOW_JOBS=true
 +     - GITHUB_EXPORTER_WEBHOOK_SECRET=your-prepared-random-secret
       - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
       - GITHUB_EXPORTER_LOG_PRETTY=true
