@@ -132,6 +132,7 @@ func JobLabels() *cli.StringSlice {
 		"runner_group_id",
 		"runner_group_name",
 		"workflow_name",
+		"conclusion",
 	)
 }
 
