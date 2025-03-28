@@ -120,6 +120,8 @@ func (r *WorkflowJob) ByLabel(label string) string {
 		return r.RunnerGroupName
 	case "workflow_name":
 		return r.WorkflowName
+	case "conclusion":
+		return r.Conclusion
 	}
 
 	return ""

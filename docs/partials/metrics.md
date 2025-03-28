@@ -256,19 +256,19 @@ github_storage_billing_estimated_paid_storage_for_month{type, name}
 github_storage_billing_estimated_storage_for_month{type, name}
 : Estimated total storage for this month for this type
 
-github_workflow_job_created_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name}
+github_workflow_job_created_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
 : Timestamp when the workflow job have been created
 
-github_workflow_job_duration_ms{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name}
+github_workflow_job_duration_ms{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
 : Duration of workflow runs
 
-github_workflow_job_duration_run_created_minutes{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name}
+github_workflow_job_duration_run_created_minutes{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
 : Duration since the workflow run creation time in minutes
 
-github_workflow_job_started_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name}
+github_workflow_job_started_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
 : Timestamp when the workflow job have been started
 
-github_workflow_job_status{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name}
+github_workflow_job_status{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
 : Status of workflow jobs
 
 github_workflow_run_created_timestamp{owner, repo, workflow, event, name, status, branch, number, run}
