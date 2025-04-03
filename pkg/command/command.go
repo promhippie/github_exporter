@@ -9,7 +9,7 @@ import (
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
 	"github.com/promhippie/github_exporter/pkg/version"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 var (
