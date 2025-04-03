@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/google/go-github/v68/github"
+	"github.com/google/go-github/v70/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
@@ -32,7 +32,7 @@ func NewWorkflowJobCollector(logger *slog.Logger, client *github.Client, db stor
 		failures.WithLabelValues("action").Add(0)
 	}
 
-	labels := cfg.WorkflowJobs.Labels.Value()
+	labels := cfg.WorkflowJobs.Labels
 	return &WorkflowJobCollector{
 		client:   client,
 		logger:   logger.With("collector", "workflow_job"),
@@ -132,7 +132,7 @@ func (c *WorkflowJobCollector) Collect(ch chan<- prometheus.Metric) {
 
 		labels := []string{}
 
-		for _, label := range c.config.WorkflowJobs.Labels.Value() {
+		for _, label := range c.config.WorkflowJobs.Labels {
 			labels = append(
 				labels,
 				record.ByLabel(label),

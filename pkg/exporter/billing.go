@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/google/go-github/v68/github"
+	"github.com/google/go-github/v70/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
@@ -338,7 +338,7 @@ func (c *BillingCollector) getActionBilling() []*actionBilling {
 
 	result := make([]*actionBilling, 0)
 
-	for _, name := range c.config.Enterprises.Value() {
+	for _, name := range c.config.Enterprises {
 		req, err := c.client.NewRequest(
 			"GET",
 			fmt.Sprintf("/enterprises/%s/settings/billing/actions", name),
@@ -379,7 +379,7 @@ func (c *BillingCollector) getActionBilling() []*actionBilling {
 		})
 	}
 
-	for _, name := range c.config.Orgs.Value() {
+	for _, name := range c.config.Orgs {
 		record, resp, err := c.client.Billing.GetActionsBillingOrg(ctx, name)
 		defer closeBody(resp)
 
@@ -413,7 +413,7 @@ type packageBilling struct {
 func (c *BillingCollector) getPackageBilling() []*packageBilling {
 	result := make([]*packageBilling, 0)
 
-	for _, name := range c.config.Enterprises.Value() {
+	for _, name := range c.config.Enterprises {
 		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
 		defer cancel()
 
@@ -457,7 +457,7 @@ func (c *BillingCollector) getPackageBilling() []*packageBilling {
 		})
 	}
 
-	for _, name := range c.config.Orgs.Value() {
+	for _, name := range c.config.Orgs {
 		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
 		defer cancel()
 
@@ -494,7 +494,7 @@ type storageBilling struct {
 func (c *BillingCollector) getStorageBilling() []*storageBilling {
 	result := make([]*storageBilling, 0)
 
-	for _, name := range c.config.Enterprises.Value() {
+	for _, name := range c.config.Enterprises {
 		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
 		defer cancel()
 
@@ -538,7 +538,7 @@ func (c *BillingCollector) getStorageBilling() []*storageBilling {
 		})
 	}
 
-	for _, name := range c.config.Orgs.Value() {
+	for _, name := range c.config.Orgs {
 		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
 		defer cancel()
 

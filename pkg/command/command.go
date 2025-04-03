@@ -1,6 +1,7 @@
 package command
 
 import (
+	"context"
 	"os"
 	"time"
 
@@ -9,7 +10,7 @@ import (
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
 	"github.com/promhippie/github_exporter/pkg/version"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 var (
@@ -28,21 +29,18 @@ func init() {
 func Run() error {
 	cfg := config.Load()
 
-	app := &cli.App{
+	app := &cli.Command{
 		Name:    "github_exporter",
 		Version: version.String,
 		Usage:   "GitHub Exporter",
-		Authors: []*cli.Author{
-			{
-				Name:  "Thomas Boerger",
-				Email: "thomas@webhippie.de",
-			},
+		Authors: []any{
+			"Thomas Boerger <thomas@webhippie.de>",
 		},
 		Flags: RootFlags(cfg),
 		Commands: []*cli.Command{
 			Health(cfg),
 		},
-		Action: func(c *cli.Context) error {
+		Action: func(ctx context.Context, _ *cli.Command) error {
 			logger := setupLogger(cfg)
 			db, err := setupStorage(cfg, logger)
 
@@ -59,7 +57,7 @@ func Run() error {
 			}
 
 			if _, err := backoff.Retry(
-				c.Context,
+				ctx,
 				db.Open,
 				backoff.WithBackOff(backoff.NewExponentialBackOff()),
 				backoff.WithNotify(func(err error, dur time.Duration) {
@@ -77,7 +75,7 @@ func Run() error {
 			}
 
 			if _, err := backoff.Retry(
-				c.Context,
+				ctx,
 				db.Ping,
 				backoff.WithBackOff(backoff.NewExponentialBackOff()),
 				backoff.WithNotify(func(err error, dur time.Duration) {
@@ -123,7 +121,7 @@ func Run() error {
 		Usage:   "Print the current version of that tool",
 	}
 
-	return app.Run(os.Args)
+	return app.Run(context.Background(), os.Args)
 }
 
 // RootFlags defines the available root flags.
@@ -133,243 +131,243 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			Name:        "log.level",
 			Value:       "info",
 			Usage:       "Only log messages with given severity",
-			EnvVars:     []string{"GITHUB_EXPORTER_LOG_LEVEL"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_LOG_LEVEL"),
 			Destination: &cfg.Logs.Level,
 		},
 		&cli.BoolFlag{
 			Name:        "log.pretty",
 			Value:       false,
 			Usage:       "Enable pretty messages for logging",
-			EnvVars:     []string{"GITHUB_EXPORTER_LOG_PRETTY"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_LOG_PRETTY"),
 			Destination: &cfg.Logs.Pretty,
 		},
 		&cli.StringFlag{
 			Name:        "web.address",
 			Value:       "0.0.0.0:9504",
 			Usage:       "Address to bind the metrics server",
-			EnvVars:     []string{"GITHUB_EXPORTER_WEB_ADDRESS"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_WEB_ADDRESS"),
 			Destination: &cfg.Server.Addr,
 		},
 		&cli.StringFlag{
 			Name:        "web.path",
 			Value:       "/metrics",
 			Usage:       "Path to bind the metrics server",
-			EnvVars:     []string{"GITHUB_EXPORTER_WEB_PATH"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_WEB_PATH"),
 			Destination: &cfg.Server.Path,
 		},
 		&cli.BoolFlag{
 			Name:        "web.debug",
 			Value:       false,
 			Usage:       "Enable pprof debugging for server",
-			EnvVars:     []string{"GITHUB_EXPORTER_WEB_PPROF"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_WEB_PPROF"),
 			Destination: &cfg.Server.Pprof,
 		},
 		&cli.DurationFlag{
 			Name:        "web.timeout",
 			Value:       10 * time.Second,
 			Usage:       "Server metrics endpoint timeout",
-			EnvVars:     []string{"GITHUB_EXPORTER_WEB_TIMEOUT"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_WEB_TIMEOUT"),
 			Destination: &cfg.Server.Timeout,
 		},
 		&cli.StringFlag{
 			Name:        "web.config",
 			Value:       "",
 			Usage:       "Path to web-config file",
-			EnvVars:     []string{"GITHUB_EXPORTER_WEB_CONFIG"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_WEB_CONFIG"),
 			Destination: &cfg.Server.Web,
 		},
 		&cli.StringFlag{
 			Name:        "webhook.path",
 			Value:       "/github",
 			Usage:       "Path to webhook target for GitHub",
-			EnvVars:     []string{"GITHUB_EXPORTER_WEBHOOK_PATH"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_WEBHOOK_PATH"),
 			Destination: &cfg.Webhook.Path,
 		},
 		&cli.StringFlag{
 			Name:        "webhook.secret",
 			Value:       "",
 			Usage:       "Secret used by GitHub to access webhook",
-			EnvVars:     []string{"GITHUB_EXPORTER_WEBHOOK_SECRET"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_WEBHOOK_SECRET"),
 			Destination: &cfg.Webhook.Secret,
 		},
 		&cli.StringFlag{
 			Name:        "database.dsn",
 			Value:       defaultDatabaseDSN,
 			Usage:       "DSN for the database connection",
-			EnvVars:     []string{"GITHUB_EXPORTER_DATABASE_DSN"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_DATABASE_DSN"),
 			Destination: &cfg.Database.DSN,
 		},
 		&cli.DurationFlag{
 			Name:        "request.timeout",
 			Value:       5 * time.Second,
 			Usage:       "Timeout requesting GitHub API",
-			EnvVars:     []string{"GITHUB_EXPORTER_REQUEST_TIMEOUT"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_REQUEST_TIMEOUT"),
 			Destination: &cfg.Target.Timeout,
 		},
 		&cli.StringFlag{
 			Name:        "github.token",
 			Value:       "",
 			Usage:       "Access token for the GitHub API, also supports file:// and base64://",
-			EnvVars:     []string{"GITHUB_EXPORTER_TOKEN"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_TOKEN"),
 			Destination: &cfg.Target.Token,
 		},
-		&cli.Int64Flag{
+		&cli.IntFlag{
 			Name:        "github.app_id",
 			Usage:       "App ID for the GitHub app",
-			EnvVars:     []string{"GITHUB_EXPORTER_APP_ID"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_APP_ID"),
 			Destination: &cfg.Target.AppID,
 		},
-		&cli.Int64Flag{
+		&cli.IntFlag{
 			Name:        "github.installation_id",
 			Usage:       "Installation ID for the GitHub app",
-			EnvVars:     []string{"GITHUB_EXPORTER_INSTALLATION_ID"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_INSTALLATION_ID"),
 			Destination: &cfg.Target.InstallID,
 		},
 		&cli.StringFlag{
 			Name:        "github.private_key",
 			Value:       "",
 			Usage:       "Private key for the GitHub app, also supports file:// and base64://",
-			EnvVars:     []string{"GITHUB_EXPORTER_PRIVATE_KEY"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_PRIVATE_KEY"),
 			Destination: &cfg.Target.PrivateKey,
 		},
 		&cli.StringFlag{
 			Name:        "github.baseurl",
 			Value:       "",
 			Usage:       "URL to access the GitHub Enterprise API",
-			EnvVars:     []string{"GITHUB_EXPORTER_BASE_URL"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_BASE_URL"),
 			Destination: &cfg.Target.BaseURL,
 		},
 		&cli.BoolFlag{
 			Name:        "github.insecure",
 			Value:       false,
 			Usage:       "Skip TLS verification for GitHub Enterprise",
-			EnvVars:     []string{"GITHUB_EXPORTER_INSECURE"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_INSECURE"),
 			Destination: &cfg.Target.Insecure,
 		},
 		&cli.StringSliceFlag{
 			Name:        "github.enterprise",
-			Value:       cli.NewStringSlice(),
+			Value:       []string{},
 			Usage:       "Enterprises to scrape metrics from",
-			EnvVars:     []string{"GITHUB_EXPORTER_ENTERPRISE", "GITHUB_EXPORTER_ENTERPRISES"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_ENTERPRISE", "GITHUB_EXPORTER_ENTERPRISES"),
 			Destination: &cfg.Target.Enterprises,
 		},
 		&cli.StringSliceFlag{
 			Name:        "github.org",
-			Value:       cli.NewStringSlice(),
+			Value:       []string{},
 			Usage:       "Organizations to scrape metrics from",
-			EnvVars:     []string{"GITHUB_EXPORTER_ORG", "GITHUB_EXPORTER_ORGS"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_ORG", "GITHUB_EXPORTER_ORGS"),
 			Destination: &cfg.Target.Orgs,
 		},
 		&cli.StringSliceFlag{
 			Name:        "github.repo",
-			Value:       cli.NewStringSlice(),
+			Value:       []string{},
 			Usage:       "Repositories to scrape metrics from",
-			EnvVars:     []string{"GITHUB_EXPORTER_REPO", "GITHUB_EXPORTER_REPOS"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_REPO", "GITHUB_EXPORTER_REPOS"),
 			Destination: &cfg.Target.Repos,
 		},
 		&cli.IntFlag{
 			Name:        "github.per-page",
 			Value:       500,
 			Usage:       "Number of records per page for API requests",
-			EnvVars:     []string{"GITHUB_EXPORTER_PER_PAGE"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_PER_PAGE"),
 			Destination: &cfg.Target.PerPage,
 		},
 		&cli.BoolFlag{
 			Name:        "collector.admin",
 			Value:       false,
 			Usage:       "Enable collector for admin stats",
-			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_ADMIN"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_COLLECTOR_ADMIN"),
 			Destination: &cfg.Collector.Admin,
 		},
 		&cli.BoolFlag{
 			Name:        "collector.orgs",
 			Value:       true,
 			Usage:       "Enable collector for orgs",
-			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_ORGS"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_COLLECTOR_ORGS"),
 			Destination: &cfg.Collector.Orgs,
 		},
 		&cli.BoolFlag{
 			Name:        "collector.repos",
 			Value:       true,
 			Usage:       "Enable collector for repos",
-			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_REPOS"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_COLLECTOR_REPOS"),
 			Destination: &cfg.Collector.Repos,
 		},
 		&cli.BoolFlag{
 			Name:        "collector.billing",
 			Value:       false,
 			Usage:       "Enable collector for billing",
-			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_BILLING"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_COLLECTOR_BILLING"),
 			Destination: &cfg.Collector.Billing,
 		},
 		&cli.BoolFlag{
 			Name:        "collector.workflow_runs",
 			Value:       false,
 			Usage:       "Enable collector for workflows",
-			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_WORKFLOW_RUNS"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_COLLECTOR_WORKFLOW_RUNS"),
 			Destination: &cfg.Collector.WorkflowRuns,
 		},
 		&cli.DurationFlag{
 			Name:        "collector.workflow_runs.window",
 			Value:       24 * time.Hour,
 			Usage:       "History window for querying workflows",
-			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOW_RUNS_WINDOW"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_WORKFLOW_RUNS_WINDOW"),
 			Destination: &cfg.Target.WorkflowRuns.Window,
 		},
 		&cli.DurationFlag{
 			Name:        "collector.workflow_runs.purge_window",
 			Value:       24 * time.Hour,
 			Usage:       "History window for keeping data in database. Defaults to the query window",
-			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOW_RUNS_PURGE_WINDOW"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_WORKFLOW_RUNS_PURGE_WINDOW"),
 			Destination: &cfg.Target.WorkflowRuns.PurgeWindow,
 		},
 		&cli.StringSliceFlag{
 			Name:        "collector.workflow_runs.labels",
 			Value:       config.RunLabels(),
 			Usage:       "List of labels used for workflows",
-			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOW_RUNS_LABELS"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_WORKFLOW_RUNS_LABELS"),
 			Destination: &cfg.Target.WorkflowRuns.Labels,
 		},
 		&cli.BoolFlag{
 			Name:        "collector.workflow_jobs",
 			Value:       false,
 			Usage:       "Enable collector for workflow jobs",
-			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_WORKFLOW_JOBS"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_COLLECTOR_WORKFLOW_JOBS"),
 			Destination: &cfg.Collector.WorkflowJobs,
 		},
 		&cli.DurationFlag{
 			Name:        "collector.workflow_jobs.window",
 			Value:       24 * time.Hour,
 			Usage:       "History window for querying workflow jobs",
-			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOW_JOBS_WINDOW"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_WORKFLOW_JOBS_WINDOW"),
 			Destination: &cfg.Target.WorkflowJobs.Window,
 		},
 		&cli.DurationFlag{
 			Name:        "collector.workflow_jobs.purge_window",
 			Value:       24 * time.Hour,
 			Usage:       "History window for keeping data in database. Defaults to the query window",
-			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOW_JOBS_PURGE_WINDOW"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_WORKFLOW_JOBS_PURGE_WINDOW"),
 			Destination: &cfg.Target.WorkflowJobs.PurgeWindow,
 		},
 		&cli.StringSliceFlag{
 			Name:        "collector.workflow_jobs.labels",
 			Value:       config.JobLabels(),
 			Usage:       "List of labels used for workflow jobs",
-			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOW_JOBS_LABELS"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_WORKFLOW_JOBS_LABELS"),
 			Destination: &cfg.Target.WorkflowJobs.Labels,
 		},
 		&cli.BoolFlag{
 			Name:        "collector.runners",
 			Value:       false,
 			Usage:       "Enable collector for runners",
-			EnvVars:     []string{"GITHUB_EXPORTER_COLLECTOR_RUNNERS"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_COLLECTOR_RUNNERS"),
 			Destination: &cfg.Collector.Runners,
 		},
 		&cli.StringSliceFlag{
 			Name:        "collector.runners.labels",
 			Value:       config.RunnerLabels(),
 			Usage:       "List of labels used for runners",
-			EnvVars:     []string{"GITHUB_EXPORTER_RUNNERS_LABELS"},
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_RUNNERS_LABELS"),
 			Destination: &cfg.Target.Runners.Labels,
 		},
 	}

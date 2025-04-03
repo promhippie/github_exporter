@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/go-github/v68/github"
+	"github.com/google/go-github/v70/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
@@ -38,7 +38,7 @@ func NewRunnerCollector(logger *slog.Logger, client *github.Client, db store.Sto
 		failures.WithLabelValues("runner").Add(0)
 	}
 
-	labels := cfg.Runners.Labels.Value()
+	labels := cfg.Runners.Labels
 	return &RunnerCollector{
 		client:   client,
 		logger:   logger.With("collector", "runner"),
@@ -143,7 +143,7 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 
 			labels := []string{}
 
-			for _, label := range c.config.Runners.Labels.Value() {
+			for _, label := range c.config.Runners.Labels {
 				labels = append(
 					labels,
 					record.ByLabel(label),
@@ -203,7 +203,7 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 
 			labels := []string{}
 
-			for _, label := range c.config.Runners.Labels.Value() {
+			for _, label := range c.config.Runners.Labels {
 				labels = append(
 					labels,
 					record.ByLabel(label),
@@ -263,7 +263,7 @@ func (c *RunnerCollector) Collect(ch chan<- prometheus.Metric) {
 
 			labels := []string{}
 
-			for _, label := range c.config.Runners.Labels.Value() {
+			for _, label := range c.config.Runners.Labels {
 				labels = append(
 					labels,
 					record.ByLabel(label),
@@ -295,7 +295,7 @@ func (c *RunnerCollector) repoRunners() []runner {
 	collected := make([]string, 0)
 	result := make([]runner, 0)
 
-	for _, name := range c.config.Repos.Value() {
+	for _, name := range c.config.Repos {
 		n := strings.Split(name, "/")
 
 		if len(n) != 2 {
@@ -370,7 +370,7 @@ func (c *RunnerCollector) repoRunners() []runner {
 func (c *RunnerCollector) pagedRepoRunners(ctx context.Context, owner, name string) ([]*github.Runner, error) {
 	opts := &github.ListRunnersOptions{
 		ListOptions: github.ListOptions{
-			PerPage: c.config.PerPage,
+			PerPage: int(c.config.PerPage),
 		},
 	}
 
@@ -411,7 +411,7 @@ func (c *RunnerCollector) pagedRepoRunners(ctx context.Context, owner, name stri
 func (c *RunnerCollector) enterpriseRunners() []runner {
 	result := make([]runner, 0)
 
-	for _, name := range c.config.Enterprises.Value() {
+	for _, name := range c.config.Enterprises {
 		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
 		defer cancel()
 
@@ -441,7 +441,7 @@ func (c *RunnerCollector) enterpriseRunners() []runner {
 func (c *RunnerCollector) pagedEnterpriseRunners(ctx context.Context, name string) ([]*github.Runner, error) {
 	opts := &github.ListRunnersOptions{
 		ListOptions: github.ListOptions{
-			PerPage: c.config.PerPage,
+			PerPage: int(c.config.PerPage),
 		},
 	}
 
@@ -481,7 +481,7 @@ func (c *RunnerCollector) pagedEnterpriseRunners(ctx context.Context, name strin
 func (c *RunnerCollector) orgRunners() []runner {
 	result := make([]runner, 0)
 
-	for _, name := range c.config.Orgs.Value() {
+	for _, name := range c.config.Orgs {
 		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
 		defer cancel()
 
@@ -511,7 +511,7 @@ func (c *RunnerCollector) orgRunners() []runner {
 func (c *RunnerCollector) pagedOrgRunners(ctx context.Context, name string) ([]*github.Runner, error) {
 	opts := &github.ListRunnersOptions{
 		ListOptions: github.ListOptions{
-			PerPage: c.config.PerPage,
+			PerPage: int(c.config.PerPage),
 		},
 	}
 

@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/google/go-github/v68/github"
+	"github.com/google/go-github/v70/github"
 	"github.com/prometheus/client_golang/prometheus"
 
 	"github.com/promhippie/github_exporter/pkg/config"
@@ -172,7 +172,7 @@ func (c *OrgCollector) Describe(ch chan<- *prometheus.Desc) {
 func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
 	collected := make([]string, 0)
 
-	for _, name := range c.config.Orgs.Value() {
+	for _, name := range c.config.Orgs {
 		if alreadyCollected(collected, name) {
 			c.logger.Debug("Already collected org",
 				"name", name,
