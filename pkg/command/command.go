@@ -355,7 +355,7 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			Name:        "collector.workflow_jobs.labels",
 			Value:       config.JobLabels(),
 			Usage:       "List of labels used for workflow jobs",
-			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOWS_LABELS"},
+			EnvVars:     []string{"GITHUB_EXPORTER_WORKFLOW_JOBS_LABELS"},
 			Destination: &cfg.Target.WorkflowJobs.Labels,
 		},
 		&cli.BoolFlag{
