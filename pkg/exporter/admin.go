@@ -535,14 +535,14 @@ func (c *AdminCollector) Collect(ch chan<- prometheus.Metric) {
 	ch <- prometheus.MustNewConstMetric(
 		c.PullsMergeable,
 		prometheus.GaugeValue,
-		float64(record.GetPulls().GetMergablePulls()),
+		float64(record.GetPulls().GetMergeablePulls()),
 		labels...,
 	)
 
 	ch <- prometheus.MustNewConstMetric(
 		c.PullsUnmergeable,
 		prometheus.GaugeValue,
-		float64(record.GetPulls().GetUnmergablePulls()),
+		float64(record.GetPulls().GetUnmergeablePulls()),
 		labels...,
 	)
 

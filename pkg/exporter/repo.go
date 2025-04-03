@@ -245,7 +245,7 @@ func (c *RepoCollector) Describe(ch chan<- *prometheus.Desc) {
 func (c *RepoCollector) Collect(ch chan<- prometheus.Metric) {
 	collected := make([]string, 0)
 
-	for _, name := range c.config.Repos.Value() {
+	for _, name := range c.config.Repos {
 		n := strings.Split(name, "/")
 
 		if len(n) != 2 {

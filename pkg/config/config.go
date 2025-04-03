@@ -6,8 +6,6 @@ import (
 	"os"
 	"strings"
 	"time"
-
-	"github.com/urfave/cli/v3"
 )
 
 // Server defines the general server configuration.
@@ -35,19 +33,19 @@ type Logs struct {
 type WorkflowRuns struct {
 	Window      time.Duration
 	PurgeWindow time.Duration
-	Labels      cli.StringSlice
+	Labels      []string
 }
 
 // WorkflowJobs defines the workflow job specific configuration.
 type WorkflowJobs struct {
 	Window      time.Duration
 	PurgeWindow time.Duration
-	Labels      cli.StringSlice
+	Labels      []string
 }
 
 // Runners defines the runner specific configuration.
 type Runners struct {
-	Labels cli.StringSlice
+	Labels []string
 }
 
 // Target defines the target specific configuration.
@@ -58,11 +56,11 @@ type Target struct {
 	InstallID    int64
 	BaseURL      string
 	Insecure     bool
-	Enterprises  cli.StringSlice
-	Orgs         cli.StringSlice
-	Repos        cli.StringSlice
+	Enterprises  []string
+	Orgs         []string
+	Repos        []string
 	Timeout      time.Duration
-	PerPage      int
+	PerPage      int64
 	WorkflowRuns WorkflowRuns
 	WorkflowJobs WorkflowJobs
 	Runners      Runners
@@ -100,8 +98,8 @@ func Load() *Config {
 }
 
 // RunLabels defines the default labels used by workflow run collector.
-func RunLabels() *cli.StringSlice {
-	return cli.NewStringSlice(
+func RunLabels() []string {
+	return []string{
 		"owner",
 		"repo",
 		"workflow",
@@ -111,12 +109,12 @@ func RunLabels() *cli.StringSlice {
 		"branch",
 		"number",
 		"run",
-	)
+	}
 }
 
 // JobLabels defines the default labels used by workflow job collector.
-func JobLabels() *cli.StringSlice {
-	return cli.NewStringSlice(
+func JobLabels() []string {
+	return []string{
 		"owner",
 		"repo",
 		"name",
@@ -133,18 +131,18 @@ func JobLabels() *cli.StringSlice {
 		"runner_group_name",
 		"workflow_name",
 		"conclusion",
-	)
+	}
 }
 
 // RunnerLabels defines the default labels used by runner collector.
-func RunnerLabels() *cli.StringSlice {
-	return cli.NewStringSlice(
+func RunnerLabels() []string {
+	return []string{
 		"owner",
 		"id",
 		"name",
 		"os",
 		"status",
-	)
+	}
 }
 
 // Value returns the config value based on a DSN.

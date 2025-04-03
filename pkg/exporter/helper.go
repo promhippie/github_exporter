@@ -32,11 +32,11 @@ func boolToFloat64(val bool) float64 {
 	return 0.0
 }
 
-func reposByOwnerAndName(ctx context.Context, client *github.Client, owner, repo string, perPage int) ([]*github.Repository, error) {
+func reposByOwnerAndName(ctx context.Context, client *github.Client, owner, repo string, perPage int64) ([]*github.Repository, error) {
 	if strings.Contains(repo, "*") {
 		opts := &github.SearchOptions{
 			ListOptions: github.ListOptions{
-				PerPage: perPage,
+				PerPage: int(perPage),
 			},
 		}
 
