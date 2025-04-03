@@ -21,7 +21,7 @@ func main() {
 	defer f.Close()
 
 	f.WriteString("### Workflow Run Labels\n\n")
-	for _, row := range config.RunLabels().Value() {
+	for _, row := range config.RunLabels() {
 		f.WriteString(fmt.Sprintf(
 			"* %s\n",
 			row,
@@ -29,7 +29,7 @@ func main() {
 	}
 
 	f.WriteString("\n### Workflow Job Labels\n\n")
-	for _, row := range config.JobLabels().Value() {
+	for _, row := range config.JobLabels() {
 		f.WriteString(fmt.Sprintf(
 			"* %s\n",
 			row,
@@ -37,7 +37,7 @@ func main() {
 	}
 
 	f.WriteString("\n### Hosted Runner Labels\n\n")
-	for _, row := range config.RunnerLabels().Value() {
+	for _, row := range config.RunnerLabels() {
 		f.WriteString(fmt.Sprintf(
 			"* %s\n",
 			row,

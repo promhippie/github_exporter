@@ -26,9 +26,9 @@ func main() {
 	collectors := make([]*prometheus.Desc, 0)
 
 	cfg := config.Load().Target
-	cfg.WorkflowRuns.Labels = *config.RunLabels()
-	cfg.WorkflowJobs.Labels = *config.JobLabels()
-	cfg.Runners.Labels = *config.RunnerLabels()
+	cfg.WorkflowRuns.Labels = config.RunLabels()
+	cfg.WorkflowJobs.Labels = config.JobLabels()
+	cfg.Runners.Labels = config.RunnerLabels()
 
 	collectors = append(
 		collectors,
