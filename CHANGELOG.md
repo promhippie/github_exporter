@@ -1,3 +1,32 @@
+# Changelog for 4.1.0
+
+The following sections list the changes for 4.1.0.
+
+## Summary
+
+ * Enh #443: Extra config option to change the database purge window
+ * Enh #469: Optional conclusion label for workflow jobs
+
+## Details
+
+ * Enhancement #443: Extra config option to change the database purge window
+
+   We added a new option to optionally specify a different purge window for the
+   database content if you are directly using a database source to read the metrics
+   details.
+
+   https://github.com/promhippie/github_exporter/pull/443
+
+ * Enhancement #469: Optional conclusion label for workflow jobs
+
+   We added another optional label which includes the `conclusion` value as an
+   extra label as this could be different than the `status` value. This label got
+   to be enabled by the `--collector.workflow_jobs.labels` flag or the
+   `GITHUB_EXPORTER_WORKFLOW_JOBS_LABELS` environment variable.
+
+   https://github.com/promhippie/github_exporter/pull/469
+
+
 # Changelog for 4.0.1
 
 The following sections list the changes for 4.0.1.
