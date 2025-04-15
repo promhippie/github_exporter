@@ -4,7 +4,7 @@ go 1.23.0
 
 require (
 	github.com/GuiaBolso/darwin v0.0.0-20191218124601-fd6d2aa3d244
-	github.com/bradleyfalzon/ghinstallation/v2 v2.14.0
+	github.com/bradleyfalzon/ghinstallation/v2 v2.15.0
 	github.com/cenkalti/backoff/v5 v5.0.2
 	github.com/chaisql/chai v0.16.0
 	github.com/go-chi/chi/v5 v5.2.1
@@ -43,7 +43,6 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.2 // indirect
 	github.com/golang-module/carbon/v2 v2.2.14 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
-	github.com/google/go-github/v69 v69.0.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
