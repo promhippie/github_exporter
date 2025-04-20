@@ -211,13 +211,13 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			Sources:     cli.EnvVars("GITHUB_EXPORTER_TOKEN"),
 			Destination: &cfg.Target.Token,
 		},
-		&cli.IntFlag{
+		&cli.Int64Flag{
 			Name:        "github.app_id",
 			Usage:       "App ID for the GitHub app",
 			Sources:     cli.EnvVars("GITHUB_EXPORTER_APP_ID"),
 			Destination: &cfg.Target.AppID,
 		},
-		&cli.IntFlag{
+		&cli.Int64Flag{
 			Name:        "github.installation_id",
 			Usage:       "Installation ID for the GitHub app",
 			Sources:     cli.EnvVars("GITHUB_EXPORTER_INSTALLATION_ID"),

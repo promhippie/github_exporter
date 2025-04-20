@@ -60,7 +60,7 @@ type Target struct {
 	Orgs         []string
 	Repos        []string
 	Timeout      time.Duration
-	PerPage      int64
+	PerPage      int
 	WorkflowRuns WorkflowRuns
 	WorkflowJobs WorkflowJobs
 	Runners      Runners
