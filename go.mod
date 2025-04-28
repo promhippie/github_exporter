@@ -18,7 +18,7 @@ require (
 	github.com/prometheus/exporter-toolkit v0.14.0
 	github.com/ryanuber/go-glob v1.0.0
 	github.com/stretchr/testify v1.10.0
-	github.com/urfave/cli/v3 v3.3.1
+	github.com/urfave/cli/v3 v3.3.2
 	golang.org/x/oauth2 v0.29.0
 	modernc.org/sqlite v1.37.0
 )
