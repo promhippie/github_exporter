@@ -226,7 +226,11 @@ SET
 	identifier=:identifier,
 	created_at=:created_at,
 	started_at=:started_at,
-	completed_at=:completed_at
+	completed_at=:completed_at,
+	runner_id=:runner_id,
+	runner_name=:runner_name,
+	runner_group_id=:runner_group_id,
+	runner_group_name=:runner_group_name
 WHERE
 	owner=:owner AND repo=:repo AND identifier=:identifier;`
 
