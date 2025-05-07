@@ -38,6 +38,14 @@ func main() {
 		case *cli.IntFlag:
 			flags = append(flags, flag{
 				Flag:    v.Name,
+				Default: strconv.Itoa(v.Value),
+				Envs:    v.Sources.EnvKeys(),
+				Help:    v.Usage,
+				List:    false,
+			})
+		case *cli.Int64Flag:
+			flags = append(flags, flag{
+				Flag:    v.Name,
 				Default: strconv.FormatInt(v.Value, 10),
 				Envs:    v.Sources.EnvKeys(),
 				Help:    v.Usage,
