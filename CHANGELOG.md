@@ -1,3 +1,22 @@
+# Changelog for unreleased
+
+The following sections list the changes for unreleased.
+
+## Summary
+
+ * Fix #485: Missing field updates for workflow jobs
+
+## Details
+
+ * Bugfix #485: Missing field updates for workflow jobs
+
+   With the previous behavior the runner specific labels for worklow job metrics
+   have always been empty. They we always set after the job started but have never
+   been part of the database table update process.
+
+   https://github.com/promhippie/github_exporter/issues/485
+
+
 # Changelog for 4.1.0
 
 The following sections list the changes for 4.1.0.
@@ -681,6 +700,23 @@ The following sections list the changes for 1.0.0.
    https://github.com/promhippie/github_exporter/pull/20
 
 
+# Changelog for 0.1.0
+
+The following sections list the changes for 0.1.0.
+
+## Summary
+
+ * Chg #11: Initial release of basic version
+
+## Details
+
+ * Change #11: Initial release of basic version
+
+   Just prepared an initial basic version which could be released to the public.
+
+   https://github.com/promhippie/github_exporter/issues/11
+
+
 # Changelog for 0.2.0
 
 The following sections list the changes for 0.2.0.
@@ -706,22 +742,5 @@ The following sections list the changes for 0.2.0.
    integrated a check that something have been set when launching the exporter.
 
    https://github.com/promhippie/github_exporter/issues/4
-
-
-# Changelog for 0.1.0
-
-The following sections list the changes for 0.1.0.
-
-## Summary
-
- * Chg #11: Initial release of basic version
-
-## Details
-
- * Change #11: Initial release of basic version
-
-   Just prepared an initial basic version which could be released to the public.
-
-   https://github.com/promhippie/github_exporter/issues/11
 
 
