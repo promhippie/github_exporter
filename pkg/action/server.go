@@ -417,16 +417,20 @@ func getClient(cfg *config.Config, logger *slog.Logger) (*github.Client, error) 
 		return nil, err
 	}
 
-	return github.NewClient(
-		oauth2.NewClient(
+	oauthHTTPClient := oauth2.NewClient(
 			context.Background(),
 			oauth2.StaticTokenSource(
 				&oauth2.Token{
 					AccessToken: accessToken,
 				},
 			),
-		),
-	), nil
+		)
+	
+	oauthHTTPClient.Transport = &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+	}
+
+	return github.NewClient(oauthHTTPClient), nil
 }
 
 func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, error) {
