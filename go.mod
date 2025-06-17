@@ -8,7 +8,7 @@ require (
 	github.com/cenkalti/backoff/v5 v5.0.2
 	github.com/chaisql/chai v0.16.0
 	github.com/go-chi/chi/v5 v5.2.1
-	github.com/go-sql-driver/mysql v1.9.2
+	github.com/go-sql-driver/mysql v1.9.3
 	github.com/google/go-github/v72 v72.0.0
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/joho/godotenv v1.5.1
@@ -18,7 +18,7 @@ require (
 	github.com/prometheus/exporter-toolkit v0.14.0
 	github.com/ryanuber/go-glob v1.0.0
 	github.com/stretchr/testify v1.10.0
-	github.com/urfave/cli/v3 v3.3.3
+	github.com/urfave/cli/v3 v3.3.8
 	golang.org/x/oauth2 v0.30.0
 	modernc.org/sqlite v1.38.0
 )
