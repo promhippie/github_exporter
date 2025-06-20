@@ -21,18 +21,11 @@ type BillingCollector struct {
 	duration *prometheus.HistogramVec
 	config   config.Target
 
-	MinutesUsed          *prometheus.Desc
-	MinutesUsedBreakdown *prometheus.Desc
-	PaidMinutesUsed      *prometheus.Desc
-	IncludedMinutes      *prometheus.Desc
-
-	BandwidthUsed     *prometheus.Desc
-	BandwidthPaid     *prometheus.Desc
-	BandwidthIncluded *prometheus.Desc
-
-	DaysLeft              *prometheus.Desc
-	EastimatedPaidStorage *prometheus.Desc
-	EastimatedStorage     *prometheus.Desc
+	Usage          *prometheus.Desc
+	GrossAmount    *prometheus.Desc
+	DiscountAmount *prometheus.Desc
+	NetAmount      *prometheus.Desc
+	PricePerUnit   *prometheus.Desc
 }
 
 // NewBillingCollector returns a new BillingCollector.
@@ -41,7 +34,7 @@ func NewBillingCollector(logger *slog.Logger, client *github.Client, db store.St
 		failures.WithLabelValues("billing").Add(0)
 	}
 
-	labels := []string{"type", "name"}
+	labels := []string{"type", "name", "product", "sku", "unit", "date", "org", "repo"}
 	return &BillingCollector{
 		client:   client,
 		logger:   logger.With("collector", "billing"),
@@ -50,63 +43,33 @@ func NewBillingCollector(logger *slog.Logger, client *github.Client, db store.St
 		duration: duration,
 		config:   cfg,
 
-		MinutesUsed: prometheus.NewDesc(
-			"github_action_billing_minutes_used",
-			"Total action minutes used for this type",
+		Usage: prometheus.NewDesc(
+			"github_billing_usage",
+			"Usage quantity from GitHub Enhanced Billing Platform",
 			labels,
 			nil,
 		),
-		MinutesUsedBreakdown: prometheus.NewDesc(
-			"github_action_billing_minutes_used_breakdown",
-			"Total action minutes used for this type broken down by operating system",
-			append(labels, "os"),
-			nil,
-		),
-		PaidMinutesUsed: prometheus.NewDesc(
-			"github_action_billing_paid_minutes",
-			"Total paid minutes used for this type",
+		GrossAmount: prometheus.NewDesc(
+			"github_billing_usage_gross_amount",
+			"Gross amount charged for this usage item",
 			labels,
 			nil,
 		),
-		IncludedMinutes: prometheus.NewDesc(
-			"github_action_billing_included_minutes",
-			"Included minutes for this type",
+		DiscountAmount: prometheus.NewDesc(
+			"github_billing_usage_discount_amount",
+			"Discount amount applied to this usage item",
 			labels,
 			nil,
 		),
-		BandwidthUsed: prometheus.NewDesc(
-			"github_package_billing_gigabytes_bandwidth_used",
-			"Total bandwidth used by this type in Gigabytes",
+		NetAmount: prometheus.NewDesc(
+			"github_billing_usage_net_amount",
+			"Net amount charged for this usage item after discounts",
 			labels,
 			nil,
 		),
-		BandwidthPaid: prometheus.NewDesc(
-			"github_package_billing_paid_gigabytes_bandwidth_used",
-			"Total paid bandwidth used by this type in Gigabytes",
-			labels,
-			nil,
-		),
-		BandwidthIncluded: prometheus.NewDesc(
-			"github_package_billing_included_gigabytes_bandwidth",
-			"Included bandwidth for this type in Gigabytes",
-			labels,
-			nil,
-		),
-		DaysLeft: prometheus.NewDesc(
-			"github_storage_billing_days_left_in_cycle",
-			"Days left within this billing cycle for this type",
-			labels,
-			nil,
-		),
-		EastimatedPaidStorage: prometheus.NewDesc(
-			"github_storage_billing_estimated_paid_storage_for_month",
-			"Estimated paid storage for this month for this type",
-			labels,
-			nil,
-		),
-		EastimatedStorage: prometheus.NewDesc(
-			"github_storage_billing_estimated_storage_for_month",
-			"Estimated total storage for this month for this type",
+		PricePerUnit: prometheus.NewDesc(
+			"github_billing_usage_price_per_unit",
+			"Price per unit for this usage item",
 			labels,
 			nil,
 		),
@@ -116,451 +79,205 @@ func NewBillingCollector(logger *slog.Logger, client *github.Client, db store.St
 // Metrics simply returns the list metric descriptors for generating a documentation.
 func (c *BillingCollector) Metrics() []*prometheus.Desc {
 	return []*prometheus.Desc{
-		c.MinutesUsed,
-		c.MinutesUsedBreakdown,
-		c.PaidMinutesUsed,
-		c.IncludedMinutes,
-		c.BandwidthUsed,
-		c.BandwidthPaid,
-		c.BandwidthIncluded,
-		c.DaysLeft,
-		c.EastimatedPaidStorage,
-		c.EastimatedStorage,
+		c.Usage,
+		c.GrossAmount,
+		c.DiscountAmount,
+		c.NetAmount,
+		c.PricePerUnit,
 	}
 }
 
 // Describe sends the super-set of all possible descriptors of metrics collected by this Collector.
 func (c *BillingCollector) Describe(ch chan<- *prometheus.Desc) {
-	ch <- c.MinutesUsed
-	ch <- c.MinutesUsedBreakdown
-	ch <- c.PaidMinutesUsed
-	ch <- c.IncludedMinutes
-	ch <- c.BandwidthUsed
-	ch <- c.BandwidthPaid
-	ch <- c.BandwidthIncluded
-	ch <- c.DaysLeft
-	ch <- c.EastimatedPaidStorage
-	ch <- c.EastimatedStorage
+	ch <- c.Usage
+	ch <- c.GrossAmount
+	ch <- c.DiscountAmount
+	ch <- c.NetAmount
+	ch <- c.PricePerUnit
 }
 
 // Collect is called by the Prometheus registry when collecting metrics.
 func (c *BillingCollector) Collect(ch chan<- prometheus.Metric) {
-	{
-		collected := make([]string, 0)
+	collected := make(map[string]bool)
+	now := time.Now()
+	usage := c.getUsage()
+	c.duration.WithLabelValues("billing").Observe(time.Since(now).Seconds())
 
-		now := time.Now()
-		billing := c.getActionBilling()
-		c.duration.WithLabelValues("action").Observe(time.Since(now).Seconds())
+	c.logger.Debug("Fetched billing usage",
+		"count", len(usage),
+		"duration", time.Since(now),
+	)
 
-		c.logger.Debug("Fetched action billing",
-			"count", len(billing),
-			"duration", time.Since(now),
+	for _, item := range usage {
+		key := fmt.Sprintf(
+			"%s-%s-%s-%s-%s",
+			item.Type,
+			item.Name,
+			item.Product,
+			item.SKU,
+			item.Date,
 		)
 
-		for _, record := range billing {
-			if alreadyCollected(collected, record.Name) {
-				c.logger.Debug("Already collected action billing",
-					"type", record.Type,
-					"name", record.Name,
-				)
-
-				continue
-			}
-
-			collected = append(collected, record.Name)
-
-			c.logger.Debug("Collecting action billing",
-				"type", record.Type,
-				"name", record.Name,
+		if collected[key] {
+			c.logger.Debug("Already collected billing usage",
+				"type", item.Type,
+				"name", item.Name,
+				"product", item.Product,
+				"sku", item.SKU,
+				"date", item.Date,
 			)
 
-			labels := []string{
-				record.Type,
-				record.Name,
-			}
-
-			ch <- prometheus.MustNewConstMetric(
-				c.MinutesUsed,
-				prometheus.GaugeValue,
-				record.TotalMinutesUsed,
-				labels...,
-			)
-
-			ch <- prometheus.MustNewConstMetric(
-				c.PaidMinutesUsed,
-				prometheus.GaugeValue,
-				record.TotalPaidMinutesUsed,
-				labels...,
-			)
-
-			ch <- prometheus.MustNewConstMetric(
-				c.IncludedMinutes,
-				prometheus.GaugeValue,
-				record.IncludedMinutes,
-				labels...,
-			)
-
-			for os, value := range record.MinutesUsedBreakdown {
-				ch <- prometheus.MustNewConstMetric(
-					c.MinutesUsedBreakdown,
-					prometheus.GaugeValue,
-					float64(value),
-					append(labels, os)...,
-				)
-			}
+			continue
 		}
-	}
 
-	{
-		collected := make([]string, 0)
+		collected[key] = true
 
-		now := time.Now()
-		billing := c.getPackageBilling()
-		c.duration.WithLabelValues("action").Observe(time.Since(now).Seconds())
-
-		c.logger.Debug("Fetched package billing",
-			"count", len(billing),
-			"duration", time.Since(now),
+		c.logger.Debug("Collecting billing usage",
+			"type", item.Type,
+			"name", item.Name,
+			"product", item.Product,
+			"sku", item.SKU,
+			"unit", item.UnitType,
+			"quantity", item.Quantity,
 		)
 
-		for _, record := range billing {
-			if alreadyCollected(collected, record.Name) {
-				c.logger.Debug("Already collected package billing",
-					"type", record.Type,
-					"name", record.Name,
-				)
-
-				continue
-			}
-
-			collected = append(collected, record.Name)
-
-			c.logger.Debug("Collecting package billing",
-				"type", record.Type,
-				"name", record.Name,
-			)
-
-			labels := []string{
-				record.Type,
-				record.Name,
-			}
-
-			ch <- prometheus.MustNewConstMetric(
-				c.BandwidthUsed,
-				prometheus.GaugeValue,
-				float64(record.TotalGigabytesBandwidthUsed),
-				labels...,
-			)
-
-			ch <- prometheus.MustNewConstMetric(
-				c.BandwidthPaid,
-				prometheus.GaugeValue,
-				float64(record.TotalPaidGigabytesBandwidthUsed),
-				labels...,
-			)
-
-			ch <- prometheus.MustNewConstMetric(
-				c.BandwidthIncluded,
-				prometheus.GaugeValue,
-				record.IncludedGigabytesBandwidth,
-				labels...,
-			)
+		labels := []string{
+			item.Type,
+			item.Name,
+			item.Product,
+			item.SKU,
+			item.UnitType,
+			item.Date,
+			item.OrganizationName,
+			item.RepositoryName,
 		}
-	}
 
-	{
-		collected := make([]string, 0)
-
-		now := time.Now()
-		billing := c.getStorageBilling()
-		c.duration.WithLabelValues("action").Observe(time.Since(now).Seconds())
-
-		c.logger.Debug("Fetched storage billing",
-			"count", len(billing),
-			"duration", time.Since(now),
+		ch <- prometheus.MustNewConstMetric(
+			c.Usage,
+			prometheus.GaugeValue,
+			item.Quantity,
+			labels...,
 		)
 
-		for _, record := range billing {
-			if alreadyCollected(collected, record.Name) {
-				c.logger.Debug("Already collected storage billing",
-					"type", record.Type,
-					"name", record.Name,
-				)
+		ch <- prometheus.MustNewConstMetric(
+			c.GrossAmount,
+			prometheus.GaugeValue,
+			item.GrossAmount,
+			labels...,
+		)
 
-				continue
-			}
+		ch <- prometheus.MustNewConstMetric(
+			c.DiscountAmount,
+			prometheus.GaugeValue,
+			item.DiscountAmount,
+			labels...,
+		)
 
-			collected = append(collected, record.Name)
+		ch <- prometheus.MustNewConstMetric(
+			c.NetAmount,
+			prometheus.GaugeValue,
+			item.NetAmount,
+			labels...,
+		)
 
-			c.logger.Debug("Collecting storage billing",
-				"type", record.Type,
-				"name", record.Name,
-			)
-
-			labels := []string{
-				record.Type,
-				record.Name,
-			}
-
-			ch <- prometheus.MustNewConstMetric(
-				c.DaysLeft,
-				prometheus.GaugeValue,
-				float64(record.DaysLeftInBillingCycle),
-				labels...,
-			)
-
-			ch <- prometheus.MustNewConstMetric(
-				c.EastimatedPaidStorage,
-				prometheus.GaugeValue,
-				record.EstimatedPaidStorageForMonth,
-				labels...,
-			)
-
-			ch <- prometheus.MustNewConstMetric(
-				c.EastimatedStorage,
-				prometheus.GaugeValue,
-				record.EstimatedStorageForMonth,
-				labels...,
-			)
-		}
+		ch <- prometheus.MustNewConstMetric(
+			c.PricePerUnit,
+			prometheus.GaugeValue,
+			item.PricePerUnit,
+			labels...,
+		)
 	}
 }
 
-type actionBilling struct {
-	Type string
-	Name string
-	*github.ActionBilling
+// UsageItem represents a billing usage item from GitHub Enhanced Billing Platform API.
+type UsageItem struct {
+	Type             string
+	Name             string
+	Date             string  `json:"date"`
+	Product          string  `json:"product"`
+	SKU              string  `json:"sku"`
+	Quantity         float64 `json:"quantity"`
+	UnitType         string  `json:"unitType"`
+	PricePerUnit     float64 `json:"pricePerUnit"`
+	GrossAmount      float64 `json:"grossAmount"`
+	DiscountAmount   float64 `json:"discountAmount"`
+	NetAmount        float64 `json:"netAmount"`
+	OrganizationName string  `json:"organizationName"`
+	RepositoryName   string  `json:"repositoryName"`
 }
 
-func (c *BillingCollector) getActionBilling() []*actionBilling {
+// UsageResponse represents the response from GitHub Enhanced Billing Platform API.
+type UsageResponse struct {
+	UsageItems []UsageItem `json:"usageItems"`
+}
+
+// getUsage fetches billing usage data from GitHub Enhanced Billing Platform API.
+func (c *BillingCollector) getUsage() []UsageItem {
 	ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
 	defer cancel()
 
-	result := make([]*actionBilling, 0)
+	var result []UsageItem
 
 	for _, name := range c.config.Enterprises {
-		req, err := c.client.NewRequest(
-			"GET",
-			fmt.Sprintf("/enterprises/%s/settings/billing/actions", name),
-			nil,
-		)
-
-		if err != nil {
-			c.logger.Error("Failed to prepare action request",
-				"type", "enterprise",
-				"name", name,
-				"err", err,
-			)
-
-			c.failures.WithLabelValues("action").Inc()
-			continue
-		}
-
-		record := &github.ActionBilling{}
-		resp, err := c.client.Do(ctx, req, record)
-
-		if err != nil {
-			c.logger.Error("Failed to fetch action billing",
-				"type", "enterprise",
-				"name", name,
-				"err", err,
-			)
-
-			c.failures.WithLabelValues("action").Inc()
-			continue
-		}
-
-		defer closeBody(resp)
-
-		result = append(result, &actionBilling{
-			Type:          "enterprise",
-			Name:          name,
-			ActionBilling: record,
-		})
+		items := c.fetchUsageForEntity(ctx, "enterprise", name)
+		result = append(result, items...)
 	}
 
 	for _, name := range c.config.Orgs {
-		record, resp, err := c.client.Billing.GetActionsBillingOrg(ctx, name)
-		defer closeBody(resp)
-
-		if err != nil {
-			c.logger.Error("Failed to fetch action billing",
-				"type", "org",
-				"name", name,
-				"err", err,
-			)
-
-			c.failures.WithLabelValues("action").Inc()
-			continue
-		}
-
-		result = append(result, &actionBilling{
-			Type:          "org",
-			Name:          name,
-			ActionBilling: record,
-		})
+		items := c.fetchUsageForEntity(ctx, "org", name)
+		result = append(result, items...)
 	}
 
 	return result
 }
 
-type packageBilling struct {
-	Type string
-	Name string
-	*github.PackageBilling
-}
+// fetchUsageForEntity fetches billing usage for a specific entity (org or enterprise).
+func (c *BillingCollector) fetchUsageForEntity(ctx context.Context, entity, name string) []UsageItem {
+	var (
+		endpoint string
+		result   []UsageItem
+	)
 
-func (c *BillingCollector) getPackageBilling() []*packageBilling {
-	result := make([]*packageBilling, 0)
+	if entity == "enterprise" {
+		endpoint = fmt.Sprintf("/enterprises/%s/settings/billing/usage", name)
+	} else {
+		endpoint = fmt.Sprintf("/organizations/%s/settings/billing/usage", name)
+	}
 
-	for _, name := range c.config.Enterprises {
-		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
-		defer cancel()
+	req, err := c.client.NewRequest("GET", endpoint, nil)
 
-		req, err := c.client.NewRequest(
-			"GET",
-			fmt.Sprintf("/enterprises/%s/settings/billing/packages", name),
-			nil,
+	if err != nil {
+		c.logger.Error("Failed to prepare billing usage",
+			"type", entity,
+			"name", name,
+			"err", err,
 		)
 
-		if err != nil {
-			c.logger.Error("Failed to prepare package request",
-				"type", "enterprise",
-				"name", name,
-				"err", err,
-			)
-
-			c.failures.WithLabelValues("action").Inc()
-			continue
-		}
-
-		record := &github.PackageBilling{}
-		resp, err := c.client.Do(ctx, req, record)
-
-		if err != nil {
-			c.logger.Error("Failed to fetch package billing",
-				"type", "enterprise",
-				"name", name,
-				"err", err,
-			)
-
-			c.failures.WithLabelValues("action").Inc()
-			continue
-		}
-
-		defer closeBody(resp)
-
-		result = append(result, &packageBilling{
-			Type:           "enterprise",
-			Name:           name,
-			PackageBilling: record,
-		})
+		c.failures.WithLabelValues("billing").Inc()
+		return nil
 	}
 
-	for _, name := range c.config.Orgs {
-		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
-		defer cancel()
+	response := &UsageResponse{}
+	resp, err := c.client.Do(ctx, req, response)
 
-		record, resp, err := c.client.Billing.GetPackagesBillingOrg(ctx, name)
-		defer closeBody(resp)
-
-		if err != nil {
-			c.logger.Error("Failed to fetch package billing",
-				"type", "org",
-				"name", name,
-				"err", err,
-			)
-
-			c.failures.WithLabelValues("action").Inc()
-			continue
-		}
-
-		result = append(result, &packageBilling{
-			Type:           "org",
-			Name:           name,
-			PackageBilling: record,
-		})
-	}
-
-	return result
-}
-
-type storageBilling struct {
-	Type string
-	Name string
-	*github.StorageBilling
-}
-
-func (c *BillingCollector) getStorageBilling() []*storageBilling {
-	result := make([]*storageBilling, 0)
-
-	for _, name := range c.config.Enterprises {
-		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
-		defer cancel()
-
-		req, err := c.client.NewRequest(
-			"GET",
-			fmt.Sprintf("/enterprises/%s/settings/billing/shared-storage", name),
-			nil,
+	if err != nil {
+		c.logger.Error("Failed to fetch billing usage",
+			"type", entity,
+			"name", name,
+			"err", err,
 		)
 
-		if err != nil {
-			c.logger.Error("Failed to prepare storage request",
-				"type", "enterprise",
-				"name", name,
-				"err", err,
-			)
-
-			c.failures.WithLabelValues("action").Inc()
-			continue
-		}
-
-		record := &github.StorageBilling{}
-		resp, err := c.client.Do(ctx, req, record)
-
-		if err != nil {
-			c.logger.Error("Failed to fetch storage billing",
-				"type", "enterprise",
-				"name", name,
-				"err", err,
-			)
-
-			c.failures.WithLabelValues("action").Inc()
-			continue
-		}
-
-		defer closeBody(resp)
-
-		result = append(result, &storageBilling{
-			Type:           "enterprise",
-			Name:           name,
-			StorageBilling: record,
-		})
+		c.failures.WithLabelValues("billing").Inc()
+		return nil
 	}
 
-	for _, name := range c.config.Orgs {
-		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
-		defer cancel()
+	defer closeBody(resp)
 
-		record, resp, err := c.client.Billing.GetStorageBillingOrg(ctx, name)
-		defer closeBody(resp)
+	for _, item := range response.UsageItems {
+		item.Type = entity
+		item.Name = name
 
-		if err != nil {
-			c.logger.Error("Failed to fetch storage billing",
-				"type", "org",
-				"name", name,
-				"err", err,
-			)
-
-			c.failures.WithLabelValues("action").Inc()
-			continue
-		}
-
-		result = append(result, &storageBilling{
-			Type:           "org",
-			Name:           name,
-			StorageBilling: record,
-		})
+		result = append(result, item)
 	}
 
 	return result
