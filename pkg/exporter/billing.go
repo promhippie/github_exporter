@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"strings"
 	"time"
 
 	"github.com/google/go-github/v72/github"
@@ -341,7 +342,7 @@ func (c *BillingCollector) getActionBilling() []*actionBilling {
 	for _, name := range c.config.Enterprises {
 		req, err := c.client.NewRequest(
 			"GET",
-			fmt.Sprintf("/enterprises/%s/settings/billing/actions", name),
+			fmt.Sprintf("/enterprises/%s/settings/billing/usage", name),
 			nil,
 		)
 
@@ -356,8 +357,8 @@ func (c *BillingCollector) getActionBilling() []*actionBilling {
 			continue
 		}
 
-		record := &github.ActionBilling{}
-		resp, err := c.client.Do(ctx, req, record)
+		usage := &UnifiedBillingResponse{}
+		resp, err := c.client.Do(ctx, req, usage)
 
 		if err != nil {
 			c.logger.Error("Failed to fetch action billing",
@@ -372,6 +373,7 @@ func (c *BillingCollector) getActionBilling() []*actionBilling {
 
 		defer closeBody(resp)
 
+		record := transformToActionBilling(usage)
 		result = append(result, &actionBilling{
 			Type:          "enterprise",
 			Name:          name,
@@ -380,8 +382,25 @@ func (c *BillingCollector) getActionBilling() []*actionBilling {
 	}
 
 	for _, name := range c.config.Orgs {
-		record, resp, err := c.client.Billing.GetActionsBillingOrg(ctx, name)
-		defer closeBody(resp)
+		req, err := c.client.NewRequest(
+			"GET",
+			fmt.Sprintf("/organizations/%s/settings/billing/usage", name),
+			nil,
+		)
+
+		if err != nil {
+			c.logger.Error("Failed to prepare action request",
+				"type", "org",
+				"name", name,
+				"err", err,
+			)
+
+			c.failures.WithLabelValues("action").Inc()
+			continue
+		}
+
+		usage := &UnifiedBillingResponse{}
+		resp, err := c.client.Do(ctx, req, usage)
 
 		if err != nil {
 			c.logger.Error("Failed to fetch action billing",
@@ -394,6 +413,9 @@ func (c *BillingCollector) getActionBilling() []*actionBilling {
 			continue
 		}
 
+		defer closeBody(resp)
+
+		record := transformToActionBilling(usage)
 		result = append(result, &actionBilling{
 			Type:          "org",
 			Name:          name,
@@ -411,15 +433,15 @@ type packageBilling struct {
 }
 
 func (c *BillingCollector) getPackageBilling() []*packageBilling {
+	ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
+	defer cancel()
+
 	result := make([]*packageBilling, 0)
 
 	for _, name := range c.config.Enterprises {
-		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
-		defer cancel()
-
 		req, err := c.client.NewRequest(
 			"GET",
-			fmt.Sprintf("/enterprises/%s/settings/billing/packages", name),
+			fmt.Sprintf("/enterprises/%s/settings/billing/usage", name),
 			nil,
 		)
 
@@ -434,8 +456,8 @@ func (c *BillingCollector) getPackageBilling() []*packageBilling {
 			continue
 		}
 
-		record := &github.PackageBilling{}
-		resp, err := c.client.Do(ctx, req, record)
+		usage := &UnifiedBillingResponse{}
+		resp, err := c.client.Do(ctx, req, usage)
 
 		if err != nil {
 			c.logger.Error("Failed to fetch package billing",
@@ -450,6 +472,7 @@ func (c *BillingCollector) getPackageBilling() []*packageBilling {
 
 		defer closeBody(resp)
 
+		record := transformToPackageBilling(usage)
 		result = append(result, &packageBilling{
 			Type:           "enterprise",
 			Name:           name,
@@ -458,11 +481,25 @@ func (c *BillingCollector) getPackageBilling() []*packageBilling {
 	}
 
 	for _, name := range c.config.Orgs {
-		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
-		defer cancel()
+		req, err := c.client.NewRequest(
+			"GET",
+			fmt.Sprintf("/organizations/%s/settings/billing/usage", name),
+			nil,
+		)
 
-		record, resp, err := c.client.Billing.GetPackagesBillingOrg(ctx, name)
-		defer closeBody(resp)
+		if err != nil {
+			c.logger.Error("Failed to prepare package request",
+				"type", "org",
+				"name", name,
+				"err", err,
+			)
+
+			c.failures.WithLabelValues("action").Inc()
+			continue
+		}
+
+		usage := &UnifiedBillingResponse{}
+		resp, err := c.client.Do(ctx, req, usage)
 
 		if err != nil {
 			c.logger.Error("Failed to fetch package billing",
@@ -475,6 +512,9 @@ func (c *BillingCollector) getPackageBilling() []*packageBilling {
 			continue
 		}
 
+		defer closeBody(resp)
+
+		record := transformToPackageBilling(usage)
 		result = append(result, &packageBilling{
 			Type:           "org",
 			Name:           name,
@@ -491,16 +531,133 @@ type storageBilling struct {
 	*github.StorageBilling
 }
 
+// UnifiedBillingResponse represents the new unified billing API response
+type UnifiedBillingResponse struct {
+	UsageItems []UsageItem `json:"usageItems"`
+}
+
+// UsageItem represents an individual usage item in the unified billing response
+type UsageItem struct {
+	Date             string  `json:"date"`
+	Product          string  `json:"product"`
+	SKU              string  `json:"sku"`
+	Quantity         int     `json:"quantity"`
+	UnitType         string  `json:"unitType"`
+	PricePerUnit     float64 `json:"pricePerUnit"`
+	GrossAmount      float64 `json:"grossAmount"`
+	DiscountAmount   float64 `json:"discountAmount"`
+	NetAmount        float64 `json:"netAmount"`
+	OrganizationName string  `json:"organizationName"`
+	RepositoryName   string  `json:"repositoryName"`
+}
+
+// transformToActionBilling converts unified billing data to legacy ActionBilling format
+func transformToActionBilling(usage *UnifiedBillingResponse) *github.ActionBilling {
+	var totalMinutesUsed, totalPaidMinutesUsed, includedMinutes float64
+	minutesBreakdown := make(map[string]int)
+
+	for _, item := range usage.UsageItems {
+		if item.Product == "Actions" && item.UnitType == "minutes" {
+			quantity := float64(item.Quantity)
+			totalMinutesUsed += quantity
+
+			// Calculate paid minutes from net amount (dollar value)
+			if item.NetAmount > 0 {
+				totalPaidMinutesUsed += item.NetAmount
+			}
+
+			// Calculate included minutes from discount amount
+			if item.DiscountAmount > 0 && item.PricePerUnit > 0 {
+				includedMinutes += item.DiscountAmount / item.PricePerUnit
+			}
+
+			// Map SKU to OS for breakdown
+			var os string
+			if strings.Contains(strings.ToLower(item.SKU), "linux") {
+				os = "UBUNTU"
+			} else if strings.Contains(strings.ToLower(item.SKU), "windows") {
+				os = "WINDOWS"
+			} else if strings.Contains(strings.ToLower(item.SKU), "macos") {
+				os = "MACOS"
+			}
+
+			if os != "" {
+				minutesBreakdown[os] += item.Quantity
+			}
+		}
+	}
+
+	return &github.ActionBilling{
+		TotalMinutesUsed:     totalMinutesUsed,
+		TotalPaidMinutesUsed: totalPaidMinutesUsed,
+		IncludedMinutes:      includedMinutes,
+		MinutesUsedBreakdown: minutesBreakdown,
+	}
+}
+
+// transformToPackageBilling converts unified billing data to legacy PackageBilling format
+func transformToPackageBilling(usage *UnifiedBillingResponse) *github.PackageBilling {
+	var totalBandwidthUsed, totalPaidBandwidthUsed, includedBandwidth int
+
+	for _, item := range usage.UsageItems {
+		if item.Product == "Packages" && strings.Contains(strings.ToLower(item.SKU), "data transfer") {
+			totalBandwidthUsed += item.Quantity
+
+			// Count as paid if there's a net amount
+			if item.NetAmount > 0 {
+				totalPaidBandwidthUsed += item.Quantity
+			}
+
+			// Calculate included bandwidth from discount amount
+			if item.DiscountAmount > 0 && item.PricePerUnit > 0 {
+				includedBandwidth += int(item.DiscountAmount / item.PricePerUnit)
+			}
+		}
+	}
+
+	return &github.PackageBilling{
+		TotalGigabytesBandwidthUsed:     totalBandwidthUsed,
+		TotalPaidGigabytesBandwidthUsed: totalPaidBandwidthUsed,
+		IncludedGigabytesBandwidth:      float64(includedBandwidth),
+	}
+}
+
+// transformToStorageBilling converts unified billing data to legacy StorageBilling format
+func transformToStorageBilling(usage *UnifiedBillingResponse) *github.StorageBilling {
+	var estimatedPaidStorage, estimatedStorage float64
+
+	for _, item := range usage.UsageItems {
+		if strings.Contains(strings.ToLower(item.SKU), "storage") {
+			estimatedStorage += item.GrossAmount
+			if item.NetAmount > 0 {
+				estimatedPaidStorage += item.NetAmount
+			}
+		}
+	}
+
+	// Calculate days left in billing cycle (approximate)
+	now := time.Now()
+	year, month, _ := now.Date()
+	nextMonth := time.Date(year, month+1, 1, 0, 0, 0, 0, now.Location())
+	daysLeft := int(nextMonth.Sub(now).Hours() / 24)
+
+	return &github.StorageBilling{
+		DaysLeftInBillingCycle:        daysLeft,
+		EstimatedPaidStorageForMonth:  estimatedPaidStorage,
+		EstimatedStorageForMonth:      estimatedStorage,
+	}
+}
+
 func (c *BillingCollector) getStorageBilling() []*storageBilling {
+	ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
+	defer cancel()
+
 	result := make([]*storageBilling, 0)
 
 	for _, name := range c.config.Enterprises {
-		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
-		defer cancel()
-
 		req, err := c.client.NewRequest(
 			"GET",
-			fmt.Sprintf("/enterprises/%s/settings/billing/shared-storage", name),
+			fmt.Sprintf("/enterprises/%s/settings/billing/usage", name),
 			nil,
 		)
 
@@ -515,8 +672,8 @@ func (c *BillingCollector) getStorageBilling() []*storageBilling {
 			continue
 		}
 
-		record := &github.StorageBilling{}
-		resp, err := c.client.Do(ctx, req, record)
+		usage := &UnifiedBillingResponse{}
+		resp, err := c.client.Do(ctx, req, usage)
 
 		if err != nil {
 			c.logger.Error("Failed to fetch storage billing",
@@ -531,6 +688,7 @@ func (c *BillingCollector) getStorageBilling() []*storageBilling {
 
 		defer closeBody(resp)
 
+		record := transformToStorageBilling(usage)
 		result = append(result, &storageBilling{
 			Type:           "enterprise",
 			Name:           name,
@@ -539,11 +697,25 @@ func (c *BillingCollector) getStorageBilling() []*storageBilling {
 	}
 
 	for _, name := range c.config.Orgs {
-		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
-		defer cancel()
+		req, err := c.client.NewRequest(
+			"GET",
+			fmt.Sprintf("/organizations/%s/settings/billing/usage", name),
+			nil,
+		)
 
-		record, resp, err := c.client.Billing.GetStorageBillingOrg(ctx, name)
-		defer closeBody(resp)
+		if err != nil {
+			c.logger.Error("Failed to prepare storage request",
+				"type", "org",
+				"name", name,
+				"err", err,
+			)
+
+			c.failures.WithLabelValues("action").Inc()
+			continue
+		}
+
+		usage := &UnifiedBillingResponse{}
+		resp, err := c.client.Do(ctx, req, usage)
 
 		if err != nil {
 			c.logger.Error("Failed to fetch storage billing",
@@ -556,6 +728,9 @@ func (c *BillingCollector) getStorageBilling() []*storageBilling {
 			continue
 		}
 
+		defer closeBody(resp)
+
+		record := transformToStorageBilling(usage)
 		result = append(result, &storageBilling{
 			Type:           "org",
 			Name:           name,
