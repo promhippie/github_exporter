@@ -7,7 +7,7 @@ require (
 	github.com/bradleyfalzon/ghinstallation/v2 v2.16.0
 	github.com/cenkalti/backoff/v5 v5.0.2
 	github.com/chaisql/chai v0.16.0
-	github.com/go-chi/chi/v5 v5.2.1
+	github.com/go-chi/chi/v5 v5.2.2
 	github.com/go-sql-driver/mysql v1.9.3
 	github.com/google/go-github/v72 v72.0.0
 	github.com/jmoiron/sqlx v1.4.0
