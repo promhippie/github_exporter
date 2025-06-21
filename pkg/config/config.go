@@ -48,6 +48,22 @@ type Runners struct {
 	Labels []string
 }
 
+// Billing defines the billing specific configuration.
+type Billing struct {
+	Year         *int    // Year filter (nil for default: current year)
+	Month        *int    // Month filter 1-12 (nil for no month filter)
+	Day          *int    // Day filter 1-31 (nil for no day filter)
+	Hour         *int    // Hour filter 0-23 (nil for no hour filter)
+	CostCenterID *string // Cost center ID filter (enterprises only, nil for no cost center)
+
+	// Metric granularity control (v5.0.0+)
+	DisableRepositoryLabels   bool     // Disable repository-level attribution (reduces cardinality)
+	DisableDateLabels         bool     // Disable date-specific labels (aggregate across time)
+	DisableOrganizationLabels bool     // Disable organization labels (useful for single-org setups)
+	EnabledMetrics            []string // Specific metrics to collect (empty = all enabled)
+	MaxRepositories           *int     // Override default repository cardinality limit (default: 100)
+}
+
 // Target defines the target specific configuration.
 type Target struct {
 	Token        string
@@ -64,6 +80,7 @@ type Target struct {
 	WorkflowRuns WorkflowRuns
 	WorkflowJobs WorkflowJobs
 	Runners      Runners
+	Billing      Billing
 }
 
 // Collector defines the collector specific configuration.

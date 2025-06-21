@@ -1,3 +1,106 @@
+# Changelog for 5.0.0
+
+The following sections list the changes for 5.0.0.
+
+## Summary
+
+ * BREAKING: Complete restructure of billing metrics for Enhanced Billing Platform support
+ * BREAKING: Authentication requirements changed for enterprise billing endpoints
+ * Enhancement: New dimensional billing metrics with repository attribution and cost breakdown
+ * Enhancement: Configurable query parameters for time range and cost center filtering
+ * Enhancement: Granularity controls for managing Prometheus cardinality and performance
+
+## Details
+
+ * BREAKING CHANGE: Complete restructure of billing metrics for Enhanced Billing Platform support
+
+   GitHub has migrated organizations to the Enhanced Billing Platform, causing legacy billing endpoints to return 410 errors. This release completely restructures billing metrics to use the new unified billing API endpoints.
+
+   **Legacy metrics removed (10+ metrics):**
+   - `github_action_billing_*` (4 metrics)
+   - `github_package_billing_*` (3 metrics) 
+   - `github_storage_billing_*` (3 metrics)
+
+   **New unified metrics (5 metrics with rich dimensional labels):**
+   - `github_billing_usage_quantity` - Usage quantities with full dimensional breakdown
+   - `github_billing_usage_cost_gross` - Gross costs before discounts
+   - `github_billing_usage_cost_net` - Net costs after discounts (actual charges)
+   - `github_billing_usage_cost_discount` - Discount amounts applied
+   - `github_billing_usage_price_per_unit` - Per-unit pricing information
+
+   **New label dimensions:**
+   - `type` - "org" or "enterprise"
+   - `name` - Organization/enterprise name
+   - `product` - "Actions", "Packages", etc.
+   - `sku` - Product-specific SKU (e.g., "Actions Linux")
+   - `unit_type` - "minutes", "gigabytes", "GigabyteHours"
+   - `date` - Usage date (YYYY-MM-DD)
+   - `organization` - Organization name from API
+   - `repository` - Repository name (cardinality limited)
+
+   **Migration required:** All existing dashboards, alerts, and queries using billing metrics must be updated. See migration guide for conversion examples.
+
+ * BREAKING CHANGE: Authentication requirements changed for enterprise billing endpoints
+
+   Enterprise billing endpoints now require Personal Access Tokens (Classic) only. Fine-grained tokens are not supported for enterprise billing.
+
+   **Organizations** (`/organizations/{org}/settings/billing/usage`):
+   - Fine-grained PATs: Supported with "Administration" org permissions (read)
+   - Classic PATs: Supported
+
+   **Enterprises** (`/enterprises/{enterprise}/settings/billing/usage`):
+   - Fine-grained PATs: NOT supported
+   - Classic PATs: Required with "manage_billing:enterprise" scope
+
+   **Migration required:** Enterprise users with fine-grained tokens must switch to Classic PATs.
+
+ * Enhancement: New dimensional billing metrics with repository attribution and cost breakdown
+
+   The new metrics provide unprecedented granularity for GitHub billing analysis:
+   - Daily usage granularity for time-series analysis
+   - Repository-level attribution to identify high-usage repos
+   - Cost breakdown with gross, net, and discount amounts
+   - Product/SKU specificity for detailed analysis
+   - Better Prometheus querying capabilities
+
+   Repository cardinality is limited to 100 repositories per entity (with excess aggregated as "other") to prevent Prometheus performance issues.
+
+ * Enhancement: Configurable query parameters for time range and cost center filtering
+
+   New configuration options allow precise control over data collection scope:
+
+   ```yaml
+   target:
+     billing:
+       year: 2024                    # Filter by specific year
+       month: 12                     # Filter by specific month
+       day: 15                       # Filter by specific day
+       hour: 14                      # Filter by specific hour
+       cost_center_id: "engineering" # Enterprise cost center filtering
+   ```
+
+   Query parameters include comprehensive validation and default to current month to prevent overwhelming data downloads.
+
+ * Enhancement: Granularity controls for managing Prometheus cardinality and performance
+
+   New configuration options provide fine-grained control over metric dimensions to balance detail with performance:
+
+   ```yaml
+   target:
+     billing:
+       disable_repository_labels: false   # Control repository attribution
+       disable_date_labels: false        # Control temporal granularity
+       disable_organization_labels: false # Control organization labels
+       enabled_metrics:                   # Select specific metrics
+         - "quantity"
+         - "cost_net"
+       max_repositories: 50              # Override repository limit
+   ```
+
+   These controls allow users to optimize for their specific monitoring needs and Prometheus resource constraints.
+
+**Breaking Change Notice:** This is a major version release with significant breaking changes. All users collecting billing metrics must update their configuration, dashboards, and alerting rules. See the migration guide for detailed conversion examples and best practices.
+
 # Changelog for 4.1.1
 
 The following sections list the changes for 4.1.1.
