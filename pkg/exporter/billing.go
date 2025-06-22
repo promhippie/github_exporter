@@ -1,6 +1,5 @@
 package exporter
 
-
 import (
 	"context"
 	"fmt"
@@ -213,7 +212,7 @@ func (c *BillingCollector) fetchBillingUsage(ctx context.Context, entityType, en
 			"name", entityName,
 			"err", err,
 		)
-			c.failures.WithLabelValues("billing").Inc()
+		c.failures.WithLabelValues("billing").Inc()
 		return nil
 	}
 
@@ -237,7 +236,7 @@ func (c *BillingCollector) fetchBillingUsage(ctx context.Context, entityType, en
 	return c.transformUsageItems(usage.UsageItems, entityType, entityName)
 }
 
-func (c *BillingCollector) addBillingQueryParams(req *http.Request, entityType, entityName string) {
+func (c *BillingCollector) addBillingQueryParams(req *http.Request, entityType, _ string) {
 	q := req.URL.Query()
 	now := time.Now()
 
@@ -330,7 +329,6 @@ func (c *BillingCollector) transformUsageItems(items []UsageItem, entityType, en
 
 		result = append(result, unifiedItem)
 	}
-
 
 	return result
 }
