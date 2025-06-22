@@ -227,7 +227,7 @@ type UnifiedUsageItem struct {
 	Date             string  // Usage date (YYYY-MM-DD)
 	Product          string  // "Actions", "Packages", etc.
 	SKU              string  // Product-specific SKU
-	Quantity         int     // Usage quantity
+	Quantity         float64 // Usage quantity (can be fractional)
 	UnitType         string  // "minutes", "gigabytes", "GigabyteHours"
 	PricePerUnit     float64 // Price per unit
 	GrossAmount      float64 // Gross cost
@@ -448,6 +448,10 @@ func (c *BillingCollector) transformUsageItems(items []UsageItem, entityType, en
 				"product", item.Product,
 				"sku", item.SKU,
 				"quantity", item.Quantity,
+				"unitType", item.UnitType,
+				"date", item.Date,
+				"grossAmount", item.GrossAmount,
+				"netAmount", item.NetAmount,
 			)
 			continue
 		}
@@ -464,7 +468,7 @@ func (c *BillingCollector) transformUsageItems(items []UsageItem, entityType, en
 		unifiedItem := &UnifiedUsageItem{
 			Type:             entityType,
 			Name:             entityName,
-			Date:             item.Date,
+			Date:             c.normalizeDate(item.Date),
 			Product:          item.Product,
 			SKU:              item.SKU,
 			Quantity:         item.Quantity,
@@ -514,8 +518,14 @@ func (c *BillingCollector) isValidUsageItem(item UsageItem) bool {
 		return false
 	}
 
-	// Basic date format validation (YYYY-MM-DD expected)
-	if len(item.Date) != 10 || item.Date[4] != '-' || item.Date[7] != '-' {
+	// Date format validation - API can return either YYYY-MM-DD or ISO 8601 timestamp
+	if item.Date == "" {
+		return false
+	}
+	// Accept either YYYY-MM-DD (10 chars) or ISO 8601 timestamp (longer)
+	if len(item.Date) >= 10 && item.Date[4] == '-' && item.Date[7] == '-' {
+		// Valid date format (either YYYY-MM-DD or timestamp starting with YYYY-MM-DD)
+	} else {
 		return false
 	}
 
@@ -554,7 +564,7 @@ type UsageItem struct {
 	Date             string  `json:"date"`
 	Product          string  `json:"product"`
 	SKU              string  `json:"sku"`
-	Quantity         int     `json:"quantity"`
+	Quantity         float64 `json:"quantity"`
 	UnitType         string  `json:"unitType"`
 	PricePerUnit     float64 `json:"pricePerUnit"`
 	GrossAmount      float64 `json:"grossAmount"`
@@ -623,4 +633,20 @@ func (c *BillingCollector) isMetricEnabled(metricType string) bool {
 	}
 
 	return false
+}
+
+// normalizeDate extracts the date portion from either YYYY-MM-DD format or ISO 8601 timestamp
+func (c *BillingCollector) normalizeDate(dateStr string) string {
+	// If already in YYYY-MM-DD format (exactly 10 chars), return as-is
+	if len(dateStr) == 10 {
+		return dateStr
+	}
+	
+	// If it's an ISO 8601 timestamp, extract just the date portion (first 10 chars)
+	if len(dateStr) >= 10 && dateStr[4] == '-' && dateStr[7] == '-' {
+		return dateStr[:10]
+	}
+	
+	// Fallback: return the original string
+	return dateStr
 }
