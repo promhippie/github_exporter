@@ -13,7 +13,7 @@ require (
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
-	github.com/oklog/run v1.1.0
+	github.com/oklog/run v1.2.0
 	github.com/prometheus/client_golang v1.22.0
 	github.com/prometheus/exporter-toolkit v0.14.0
 	github.com/ryanuber/go-glob v1.0.0
