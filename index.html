@@ -2,7 +2,7 @@
 
 <html id="html" lang="en-us">
 	<head>
-	<meta name="generator" content="Hugo 0.147.9">
+	<meta name="generator" content="Hugo 0.148.0">
 		<meta http-equiv="content-type" content="text/html;charset=utf-8">
 		<meta name="viewport" content="width=device-width"/>
 
@@ -467,7 +467,7 @@ architectures without any change to the image name. You should apply a change
 like this to the <code>docker-compose.yml</code> file:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">  github_exporter:
 </span></span><span class="line"><span class="cl"><span class="gd">-   image: promhippie/github-exporter:latest
-</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+   image: promhippie/github-exporter:1.0.0
+</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+   image: promhippie/github-exporter:x.x.x
 </span></span></span><span class="line"><span class="cl"><span class="gi"></span>    restart: always
 </span></span><span class="line"><span class="cl">    environment:
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
@@ -1007,18 +1007,16 @@ annotations or the service monitor.</p>
 					</small>
 				</h1>
 
-				<p>As this project is built with Go you need to install Go first. The installation
-of Go is out of the scope of this document, please follow the
-<a href="https://golang.org/doc/install">official documentation</a>. After the installation of Go you need to get
-the sources:</p>
+				<p>As this project is built with Go you need to install Go first. If you are not
+familiar with <a href="https://nixos.org/">Nix</a> it is up to you to have a working environment for Go
+(&gt;= 1.24.0) as the setup won&rsquo;t we covered within this guide. Please follow the
+official install instructions for <a href="http://golang.org/doc/install.html">Go</a>. Beside that we are using
+<a href="https://taskfile.dev/installation/">go-task</a> to define all commands to build this project.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">git clone https://github.com/promhippie/github_exporter.git
-</span></span><span class="line"><span class="cl">cd github_exporter/</span></span></code></pre></div>
-<p>All required tool besides Go itself are bundled, all you need is part of the
-<code>Makefile</code>:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">make generate build</span></span></code></pre></div>
-<p>Finally you should have the binary within the <code>bin/</code> folder now, give it a try
-with <code>./bin/github_exporter -h</code> to see all available options.</p>
-
+</span></span><span class="line"><span class="cl">cd github_exporter/
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">task generate build
+</span></span><span class="line"><span class="cl">./bin/github_exporter -h</span></span></code></pre></div>
 			</section>
 		
 			<section id="webhook">
