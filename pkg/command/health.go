@@ -33,7 +33,7 @@ func Health(cfg *config.Config) *cli.Command {
 				return err
 			}
 
-			defer resp.Body.Close()
+			defer func() { _ = resp.Body.Close() }()
 
 			if resp.StatusCode != 200 {
 				logger.Error("Health check seems to be in bad state",

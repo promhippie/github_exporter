@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
 name: docs
 
 "on":
@@ -19,22 +20,24 @@ jobs:
 
     steps:
       - name: Checkout source
-        id: source
         uses: actions/checkout@v4
 
       - name: Setup hugo
-        id: hugo
         uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: latest
           extended: true
 
+      - name: Setup task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Run docs
-        id: docs
-        run: make docs
+        run: task docs
 
       - name: Deploy pages
-        id: deploy
         if: github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v4
         with:

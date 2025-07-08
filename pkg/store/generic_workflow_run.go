@@ -12,9 +12,9 @@ import (
 
 // storeWorkflowRunEvent handles workflow_run events from GitHub.
 func storeWorkflowRunEvent(handle *sqlx.DB, event *github.WorkflowRunEvent) error {
-	createdAt := event.GetWorkflowRun().GetCreatedAt().Time.Unix()
-	updatedAt := event.GetWorkflowRun().GetUpdatedAt().Time.Unix()
-	startedAt := event.GetWorkflowRun().GetRunStartedAt().Time.Unix()
+	createdAt := event.GetWorkflowRun().GetCreatedAt().Unix()
+	updatedAt := event.GetWorkflowRun().GetUpdatedAt().Unix()
+	startedAt := event.GetWorkflowRun().GetRunStartedAt().Unix()
 
 	record := &WorkflowRun{
 		Owner:      event.GetRepo().GetOwner().GetLogin(),
@@ -98,7 +98,7 @@ func getWorkflowRuns(handle *sqlx.DB, window time.Duration) ([]*WorkflowRun, err
 		return records, err
 	}
 
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	for rows.Next() {
 		record := &WorkflowRun{}

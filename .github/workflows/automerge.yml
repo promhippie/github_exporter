@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
 name: automerge
 
 "on":
@@ -29,19 +30,16 @@ jobs:
             {"contents": "write", "pull_requests": "write", "issues": "write"}
 
       - name: Fetch metadata
-        id: metadata
         uses: dependabot/fetch-metadata@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Approve request
-        id: approve
         run: gh pr review --approve "${{github.event.pull_request.html_url}}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Enable automerge
-        id: automerge
         run: gh pr merge --rebase --auto "${{github.event.pull_request.html_url}}"
         env:
           GH_TOKEN: ${{ steps.token.outputs.token }}

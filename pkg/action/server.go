@@ -227,7 +227,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 					w.Header().Set("Content-Type", "text/plain")
 					w.WriteHeader(http.StatusInternalServerError)
 
-					io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+					_, _ = io.WriteString(w, http.StatusText(http.StatusInternalServerError))
 					return
 				}
 
@@ -244,7 +244,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 					w.Header().Set("Content-Type", "text/plain")
 					w.WriteHeader(http.StatusInternalServerError)
 
-					io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+					_, _ = io.WriteString(w, http.StatusText(http.StatusInternalServerError))
 					return
 				}
 
@@ -261,7 +261,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 					w.Header().Set("Content-Type", "text/plain")
 					w.WriteHeader(http.StatusInternalServerError)
 
-					io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+					_, _ = io.WriteString(w, http.StatusText(http.StatusInternalServerError))
 					return
 				}
 
@@ -279,9 +279,9 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 						"status", wfRun.GetStatus(),
 						"conclusion", wfRun.GetConclusion(),
 						"actor", wfRun.GetActor().GetLogin(),
-						"created_at", wfRun.GetCreatedAt().Time.Unix(),
-						"updated_at", wfRun.GetUpdatedAt().Time.Unix(),
-						"started_at", wfRun.GetRunStartedAt().Time.Unix(),
+						"created_at", wfRun.GetCreatedAt().Unix(),
+						"updated_at", wfRun.GetUpdatedAt().Unix(),
+						"started_at", wfRun.GetRunStartedAt().Unix(),
 					)
 
 					if err := db.StoreWorkflowRunEvent(event); err != nil {
@@ -297,7 +297,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 						w.Header().Set("Content-Type", "text/plain")
 						w.WriteHeader(http.StatusInternalServerError)
 
-						io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+						_, _ = io.WriteString(w, http.StatusText(http.StatusInternalServerError))
 						return
 					}
 				case *github.WorkflowJobEvent:
@@ -311,9 +311,9 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 						"attempt", wfJob.GetRunAttempt(),
 						"status", wfJob.GetStatus(),
 						"conclusion", wfJob.GetConclusion(),
-						"created_at", wfJob.GetCreatedAt().Time.Unix(),
-						"started_at", wfJob.GetStartedAt().Time.Unix(),
-						"completed_at", wfJob.GetCompletedAt().Time.Unix(),
+						"created_at", wfJob.GetCreatedAt().Unix(),
+						"started_at", wfJob.GetStartedAt().Unix(),
+						"completed_at", wfJob.GetCompletedAt().Unix(),
 						"labels", strings.Join(wfJob.Labels, ", "),
 					)
 
@@ -331,7 +331,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 						w.Header().Set("Content-Type", "text/plain")
 						w.WriteHeader(http.StatusInternalServerError)
 
-						io.WriteString(w, http.StatusText(http.StatusInternalServerError))
+						_, _ = io.WriteString(w, http.StatusText(http.StatusInternalServerError))
 						return
 					}
 				}
@@ -339,7 +339,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 				w.Header().Set("Content-Type", "text/plain")
 				w.WriteHeader(http.StatusOK)
 
-				io.WriteString(w, http.StatusText(http.StatusOK))
+				_, _ = io.WriteString(w, http.StatusText(http.StatusOK))
 			})
 		}
 
@@ -347,14 +347,14 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 			w.Header().Set("Content-Type", "text/plain")
 			w.WriteHeader(http.StatusOK)
 
-			io.WriteString(w, http.StatusText(http.StatusOK))
+			_, _ = io.WriteString(w, http.StatusText(http.StatusOK))
 		})
 
 		root.Get("/readyz", func(w http.ResponseWriter, _ *http.Request) {
 			w.Header().Set("Content-Type", "text/plain")
 			w.WriteHeader(http.StatusOK)
 
-			io.WriteString(w, http.StatusText(http.StatusOK))
+			_, _ = io.WriteString(w, http.StatusText(http.StatusOK))
 		})
 	})
 

@@ -26,9 +26,9 @@ func storeWorkflowJobEvent(handle *sqlx.DB, event *github.WorkflowJobEvent) erro
 		Identifier:      event.GetWorkflowJob().GetID(),
 		RunID:           job.GetRunID(),
 		RunAttempt:      int(job.GetRunAttempt()),
-		CreatedAt:       job.GetCreatedAt().Time.Unix(),
-		StartedAt:       job.GetStartedAt().Time.Unix(),
-		CompletedAt:     job.GetCompletedAt().Time.Unix(),
+		CreatedAt:       job.GetCreatedAt().Unix(),
+		StartedAt:       job.GetStartedAt().Unix(),
+		CompletedAt:     job.GetCompletedAt().Unix(),
 		Labels:          strings.Join(job.Labels, ","),
 		RunnerID:        job.GetRunnerID(),
 		RunnerName:      job.GetRunnerName(),
@@ -96,7 +96,7 @@ func getWorkflowJobs(handle *sqlx.DB, window time.Duration) ([]*WorkflowJob, err
 		return records, err
 	}
 
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	for rows.Next() {
 		record := &WorkflowJob{}

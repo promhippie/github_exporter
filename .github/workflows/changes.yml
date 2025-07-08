@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
 name: changes
 
 "on":
@@ -14,72 +15,35 @@ permissions:
   contents: read
 
 jobs:
-  changelog:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout source
-        id: source
-        if: github.event_name != 'pull_request'
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.BOT_ACCESS_TOKEN }}
-
-      - name: PR checkout
-        id: altsource
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v4
-
-      - name: Setup golang
-        id: golang
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-
-      - name: Run changelog
-        id: changelog
-        run: make changelog
-
-      - name: Commit changes
-        id: commit
-        if: github.event_name != 'pull_request'
-        uses: EndBug/add-and-commit@v9
-        with:
-          author_name: GitHub Actions
-          author_email: github@webhippie.de
-          add: CHANGELOG.md
-          message: "docs: automated changelog update"
-          push: true
-          commit: --signoff
-
   envvars:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout source
-        id: source
         if: github.event_name != 'pull_request'
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.BOT_ACCESS_TOKEN }}
 
       - name: PR checkout
-        id: altsource
         if: github.event_name == 'pull_request'
         uses: actions/checkout@v4
 
       - name: Setup golang
-        id: golang
         uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
 
+      - name: Setup task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Generate envvars
-        id: envvars
-        run: make envvars
+        run: task envvars
 
       - name: Commit changes
-        id: commit
         if: github.event_name != 'pull_request'
         uses: EndBug/add-and-commit@v9
         with:
@@ -95,29 +59,30 @@ jobs:
 
     steps:
       - name: Checkout source
-        id: source
         if: github.event_name != 'pull_request'
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.BOT_ACCESS_TOKEN }}
 
       - name: PR checkout
-        id: altsource
         if: github.event_name == 'pull_request'
         uses: actions/checkout@v4
 
       - name: Setup golang
-        id: golang
         uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
 
+      - name: Setup task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Generate metrics
-        id: metrics
-        run: make metrics
+        run: task metrics
 
       - name: Commit changes
-        id: commit
         if: github.event_name != 'pull_request'
         uses: EndBug/add-and-commit@v9
         with:
@@ -133,29 +98,30 @@ jobs:
 
     steps:
       - name: Checkout source
-        id: source
         if: github.event_name != 'pull_request'
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.BOT_ACCESS_TOKEN }}
 
       - name: PR checkout
-        id: altsource
         if: github.event_name == 'pull_request'
         uses: actions/checkout@v4
 
       - name: Setup golang
-        id: golang
         uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
 
+      - name: Setup task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Generate labels
-        id: labels
-        run: make labels
+        run: task labels
 
       - name: Commit changes
-        id: commit
         if: github.event_name != 'pull_request'
         uses: EndBug/add-and-commit@v9
         with:

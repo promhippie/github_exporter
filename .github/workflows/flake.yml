@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
 name: flake
 
 "on":
@@ -14,22 +15,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Generate token
+        id: token
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ secrets.TOKEN_EXCHANGE_APP }}
+          installation_retrieval_mode: id
+          installation_retrieval_payload: ${{ secrets.TOKEN_EXCHANGE_INSTALL }}
+          private_key: ${{ secrets.TOKEN_EXCHANGE_KEY }}
+          permissions: >-
+            {"contents": "write"}
+
       - name: Checkout source
-        id: source
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.BOT_ACCESS_TOKEN }}
+          token: ${{ steps.token.outputs.token }}
 
       - name: Install nix
-        id: nix
         uses: cachix/install-nix-action@v31
 
       - name: Update flake
-        id: flake
         run: nix flake update
 
       - name: Source rebase
-        id: rebase
         run: git pull --autostash --rebase
 
       - name: Commit changes

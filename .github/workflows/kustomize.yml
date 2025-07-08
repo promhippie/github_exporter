@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
 name: kustomize
 
 "on":
@@ -19,14 +20,12 @@ jobs:
 
     steps:
       - name: Checkout source
-        id: source
         uses: actions/checkout@v4
 
       - name: Generate manifest
-        id: kustomize
         uses: actionhippie/kustomize@v2
         with:
-          version: 5.2.1
+          version: 5.7.0
           path: deploy/kubernetes/
           target: deploy/kubernetes/bundle.yml
 

@@ -1,0 +1,59 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+name: tools
+
+"on":
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - labeled
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  tools:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'tools')
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.BOT_ACCESS_TOKEN }}
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Setup golang
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Update golangci
+        if: contains(github.event.pull_request.labels.*.name, 'golangci')
+        run: |
+          go get github.com/golangci/golangci-lint/v2/cmd/golangci-lint
+          go mod tidy
+
+      - name: Update revive
+        if: contains(github.event.pull_request.labels.*.name, 'revive')
+        run: |
+          go get github.com/mgechev/revive
+          go mod tidy
+
+      - name: Update repo
+        run: git pull --rebase --autostash
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: GitHub Actions
+          author_email: github@webhippie.de
+          add: go.*
+          message: "chore: update modules for tools update"
+          push: true
+          commit: --signoff
+
+...

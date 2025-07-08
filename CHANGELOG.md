@@ -1,4 +1,7 @@
-# Changelog for 4.1.1
+# Changelog
+
+
+## 4.1.1
 
 The following sections list the changes for 4.1.1.
 
@@ -17,7 +20,7 @@ The following sections list the changes for 4.1.1.
    https://github.com/promhippie/github_exporter/issues/485
 
 
-# Changelog for 4.1.0
+## 4.1.0
 
 The following sections list the changes for 4.1.0.
 
@@ -46,7 +49,7 @@ The following sections list the changes for 4.1.0.
    https://github.com/promhippie/github_exporter/pull/469
 
 
-# Changelog for 4.0.1
+## 4.0.1
 
 The following sections list the changes for 4.0.1.
 
@@ -98,7 +101,7 @@ The following sections list the changes for 4.0.1.
    https://github.com/promhippie/github_exporter/pull/418
 
 
-# Changelog for 4.0.0
+## 4.0.0
 
 The following sections list the changes for 4.0.0.
 
@@ -150,7 +153,7 @@ The following sections list the changes for 4.0.0.
    https://github.com/promhippie/github_exporter/issues/368
 
 
-# Changelog for 3.1.2
+## 3.1.2
 
 The following sections list the changes for 3.1.2.
 
@@ -170,7 +173,7 @@ The following sections list the changes for 3.1.2.
    https://github.com/promhippie/github_exporter/pull/312
 
 
-# Changelog for 3.1.1
+## 3.1.1
 
 The following sections list the changes for 3.1.1.
 
@@ -198,7 +201,7 @@ The following sections list the changes for 3.1.1.
    https://github.com/promhippie/github_exporter/issues/300
 
 
-# Changelog for 3.1.0
+## 3.1.0
 
 The following sections list the changes for 3.1.0.
 
@@ -237,7 +240,7 @@ The following sections list the changes for 3.1.0.
    https://github.com/promhippie/github_exporter/issues/281
 
 
-# Changelog for 3.0.1
+## 3.0.1
 
 The following sections list the changes for 3.0.1.
 
@@ -267,7 +270,7 @@ The following sections list the changes for 3.0.1.
    https://github.com/promhippie/github_exporter/pull/272
 
 
-# Changelog for 3.0.0
+## 3.0.0
 
 The following sections list the changes for 3.0.0.
 
@@ -311,7 +314,7 @@ The following sections list the changes for 3.0.0.
    https://github.com/promhippie/github_exporter/issues/261
 
 
-# Changelog for 2.4.0
+## 2.4.0
 
 The following sections list the changes for 2.4.0.
 
@@ -330,7 +333,7 @@ The following sections list the changes for 2.4.0.
    https://github.com/promhippie/github_exporter/pull/247
 
 
-# Changelog for 2.3.0
+## 2.3.0
 
 The following sections list the changes for 2.3.0.
 
@@ -358,7 +361,7 @@ The following sections list the changes for 2.3.0.
    https://github.com/promhippie/github_exporter/issues/228
 
 
-# Changelog for 2.2.1
+## 2.2.1
 
 The following sections list the changes for 2.2.1.
 
@@ -377,7 +380,7 @@ The following sections list the changes for 2.2.1.
    https://github.com/promhippie/github_exporter/issues/216
 
 
-# Changelog for 2.2.0
+## 2.2.0
 
 The following sections list the changes for 2.2.0.
 
@@ -419,7 +422,7 @@ The following sections list the changes for 2.2.0.
    https://github.com/promhippie/github_exporter/pull/214
 
 
-# Changelog for 2.1.0
+## 2.1.0
 
 The following sections list the changes for 2.1.0.
 
@@ -438,7 +441,7 @@ The following sections list the changes for 2.1.0.
    https://github.com/promhippie/github_exporter/issues/187
 
 
-# Changelog for 2.0.1
+## 2.0.1
 
 The following sections list the changes for 2.0.1.
 
@@ -458,7 +461,7 @@ The following sections list the changes for 2.0.1.
    https://github.com/promhippie/github_exporter/issues/185
 
 
-# Changelog for 2.0.0
+## 2.0.0
 
 The following sections list the changes for 2.0.0.
 
@@ -531,7 +534,7 @@ The following sections list the changes for 2.0.0.
    https://github.com/promhippie/github_exporter/pull/184
 
 
-# Changelog for 1.2.0
+## 1.2.0
 
 The following sections list the changes for 1.2.0.
 
@@ -550,7 +553,7 @@ The following sections list the changes for 1.2.0.
    https://github.com/promhippie/github_exporter/pull/145
 
 
-# Changelog for 1.1.1
+## 1.1.1
 
 The following sections list the changes for 1.1.1.
 
@@ -569,7 +572,7 @@ The following sections list the changes for 1.1.1.
    https://github.com/promhippie/github_exporter/issues/75
 
 
-# Changelog for 1.1.0
+## 1.1.0
 
 The following sections list the changes for 1.1.0.
 
@@ -634,7 +637,7 @@ The following sections list the changes for 1.1.0.
    https://github.com/promhippie/github_exporter/issues/71
 
 
-# Changelog for 1.0.1
+## 1.0.1
 
 The following sections list the changes for 1.0.1.
 
@@ -653,7 +656,7 @@ The following sections list the changes for 1.0.1.
    https://github.com/promhippie/github_exporter/issues/49
 
 
-# Changelog for 1.0.0
+## 1.0.0
 
 The following sections list the changes for 1.0.0.
 
@@ -700,7 +703,7 @@ The following sections list the changes for 1.0.0.
    https://github.com/promhippie/github_exporter/pull/20
 
 
-# Changelog for 0.1.0
+## 0.1.0
 
 The following sections list the changes for 0.1.0.
 
@@ -717,7 +720,7 @@ The following sections list the changes for 0.1.0.
    https://github.com/promhippie/github_exporter/issues/11
 
 
-# Changelog for 0.2.0
+## 0.2.0
 
 The following sections list the changes for 0.2.0.
 
