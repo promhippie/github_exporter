@@ -17,7 +17,7 @@ import (
 type StaticStore struct{}
 
 func (s StaticStore) GetWorkflowJobRuns(owner, repo, workflow string) ([]*store.WorkflowRun, error) {
-	fmt.Fprintf(
+	_, _ = fmt.Fprintf(
 		os.Stdout,
 		"GetWorkflowJobRuns for %s/%s %s \n",
 		owner,

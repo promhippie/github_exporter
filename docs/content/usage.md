@@ -70,7 +70,7 @@ like this to the `docker-compose.yml` file:
 {{< highlight diff >}}
   github_exporter:
 -   image: promhippie/github-exporter:latest
-+   image: promhippie/github-exporter:1.0.0
++   image: promhippie/github-exporter:x.x.x
     restart: always
     environment:
       - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb

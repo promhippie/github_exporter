@@ -53,7 +53,7 @@ func Run() error {
 			}
 
 			if db != nil {
-				defer db.Close()
+				defer func() { _ = db.Close() }()
 			}
 
 			if _, err := backoff.Retry(

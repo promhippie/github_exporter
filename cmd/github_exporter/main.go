@@ -9,7 +9,7 @@ import (
 
 func main() {
 	if env := os.Getenv("GITHUB_EXPORTER_ENV_FILE"); env != "" {
-		godotenv.Load(env)
+		_ = godotenv.Load(env)
 	}
 
 	if err := command.Run(); err != nil {

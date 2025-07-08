@@ -1,0 +1,112 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
+
+builds:
+  - id: server
+    main: ./cmd/github_exporter
+    binary: github_exporter
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -extldflags "-static" -X "github.com/promhippie/github_exporter/pkg/version.String={{.Version}}" -X "github.com/promhippie/github_exporter/pkg/version.Revision={{.Commit}}" -X "github.com/promhippie/github_exporter/pkg/version.Date={{.Date}}"
+    tags:
+      - netgo
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - "386"
+      - arm64
+      - arm
+    ignore:
+      - goos: darwin
+        goarch: "386"
+      - goos: windows
+        goarch: arm
+
+archives:
+  - id: server
+    ids:
+      - server
+    name_template: "github-exporter-{{ .Version }}-{{ .Os }}-{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}{{ with .Mips }}-{{ . }}{{ end }}"
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+    files:
+      - LICENSE
+      - CHANGELOG.md
+      - src: cmd/github_exporter/README.md
+        dst: README.md
+
+nfpms:
+  - id: server
+    ids:
+      - server
+    package_name: github-exporter
+    file_name_template: "github-exporter-{{ .Version }}-{{ .Os }}-{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}{{ with .Mips }}-{{ . }}{{ end }}"
+    vendor: Webhippie
+    homepage: https://promhippie.github.io/github_exporter/
+    maintainer: Thomas Boerger <thomas@webhippie.de>
+    description: |-
+      Prometheus exporter for GitHub
+    license: Apache 2.0
+    formats:
+      - deb
+      - rpm
+    contents:
+      - src: packaging/systemd/server.service
+        dst: /usr/lib/systemd/system/github-exporter.service
+      - src: packaging/systemd/server.env
+        dst: /etc/sysconfig/github-exporter
+        packager: rpm
+      - src: packaging/systemd/server.env
+        dst: /etc/default/github-exporter
+        packager: deb
+      - dst: /var/lib/github-exporter
+        type: dir
+    scripts:
+      preinstall: packaging/scripts/preinstall.sh
+      postinstall: packaging/scripts/postinstall.sh
+      preremove: packaging/scripts/preremove.sh
+      postremove: packaging/scripts/postremove.sh
+
+signs:
+  - id: archives
+    signature: "${artifact}.asc"
+    cmd: gpg2
+    artifacts: archive
+    args:
+      - --batch
+      - --armor
+      - --local-user
+      - B8BB213D9E131E46D2EBE22E44E93172C6FDE7E6
+      - --output
+      - ${signature}
+      - --detach-sign
+      - ${artifact}
+  - id: packages
+    signature: "${artifact}.asc"
+    cmd: gpg2
+    artifacts: package
+    args:
+      - --batch
+      - --armor
+      - --local-user
+      - B8BB213D9E131E46D2EBE22E44E93172C6FDE7E6
+      - --output
+      - ${signature}
+      - --detach-sign
+      - ${artifact}
+
+snapshot:
+  version_template: testing
+
+changelog:
+  disable: true
+
+checksum:
+  disable: false
+  split: true

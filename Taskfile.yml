@@ -1,0 +1,110 @@
+---
+version: "3.40"
+
+vars:
+  SOURCES:
+    sh: find . -name "*.go" -type f -not -iname mock.go -not -path "./.devenv/*" -not -path "./.direnv/*" | xargs echo
+  PACKAGES:
+    sh: go list ./... | xargs echo
+
+tasks:
+  clean:
+    desc: Remove all temporary build artifacts
+    cmds:
+      - go clean -i ./...
+      - rm -rf bin/ dist/
+
+  generate:
+    desc: Generate code for server
+    cmds:
+      - go generate {{ .PACKAGES }}
+
+  fmt:
+    desc: Run standard formatter for server
+    cmds:
+      - gofmt -s -w {{ .SOURCES }}
+
+  vet:
+    desc: Run vet linting for server
+    cmds:
+      - go vet {{ .PACKAGES }}
+
+  lint:
+    desc: Run revive linting for server
+    cmds:
+      - for PKG in {{ .PACKAGES }}; do go tool github.com/mgechev/revive -config revive.toml -set_exit_status $PKG || exit 1; done;
+
+  golangci:
+    desc: Run golangci linter for server
+    cmds:
+      - go tool github.com/golangci/golangci-lint/v2/cmd/golangci-lint run ./...
+
+  test:
+    desc: Run tests for server
+    cmds:
+      - go test -coverprofile coverage.out {{ .PACKAGES }}
+
+  build:
+    desc: Build all required binary artifacts
+    deps:
+      - build:server
+
+  build:release:
+    desc: Generate a release with goreleaser
+    cmds:
+      - goreleaser release --clean
+
+  build:snapshot:
+    desc: Generate a snapshot with goreleaser
+    cmds:
+      - goreleaser release --clean --snapshot --skip=announce,publish,validate,sign
+
+  build:server:
+    desc: Build server component
+    cmds:
+      - go build -v
+          -tags 'netgo'
+          -ldflags '-s -w -extldflags "-static" -X "{{ .IMPORT }}/pkg/version.String={{ .VERSION }}" -X "{{ .IMPORT }}/pkg/version.Revision={{ .REVISION }}" -X "{{ .IMPORT }}/pkg/version.Date={{ now | date "20060102" }}"'
+          -o bin/github_exporter{{if eq OS "windows"}}.exe{{end}}
+          ./cmd/github_exporter
+    env:
+      CGO_ENABLED: "0"
+    vars:
+      IMPORT: github.com/promhippie/github_exporter
+      VERSION:
+        sh: if [[ -z "${CI_COMMIT_TAG}" ]]; then git rev-parse --short HEAD; else echo "${CI_COMMIT_TAG#v}"; fi
+      REVISION:
+        sh: git rev-parse --short HEAD
+
+  watch:
+    desc: Run reloading development server
+    cmds:
+      - task: build:server
+      - bin/github_exporter --log.level=debug --log.pretty
+    watch: true
+    method: none
+    sources:
+      - 'cmd/**/*.go'
+      - 'pkg/**/*.go'
+
+  docs:
+    desc: Generate documentation with hugo
+    cmds:
+      - hugo -s docs/
+
+  envvars:
+    desc: Generate envvar partial for docs
+    cmds:
+      - go run hack/generate-envvars-docs.go
+
+  metrics:
+    desc: Generate metrics partial for docs
+    cmds:
+      - go run hack/generate-metrics-docs.go
+
+  labels:
+    desc: Generate labels partial for docs
+    cmds:
+      - go run hack/generate-labels-docs.go
+
+...

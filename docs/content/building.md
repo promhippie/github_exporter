@@ -5,24 +5,20 @@ anchor: "building"
 weight: 20
 ---
 
-As this project is built with Go you need to install Go first. The installation
-of Go is out of the scope of this document, please follow the
-[official documentation][golang]. After the installation of Go you need to get
-the sources:
+As this project is built with Go you need to install Go first. If you are not
+familiar with [Nix][nix] it is up to you to have a working environment for Go
+(>= 1.24.0) as the setup won't we covered within this guide. Please follow the
+official install instructions for [Go][golang]. Beside that we are using
+[go-task][gotask] to define all commands to build this project.
 
 {{< highlight txt >}}
 git clone https://github.com/promhippie/github_exporter.git
 cd github_exporter/
+
+task generate build
+./bin/github_exporter -h
 {{< / highlight >}}
 
-All required tool besides Go itself are bundled, all you need is part of the
-`Makefile`:
-
-{{< highlight txt >}}
-make generate build
-{{< / highlight >}}
-
-Finally you should have the binary within the `bin/` folder now, give it a try
-with `./bin/github_exporter -h` to see all available options.
-
-[golang]: https://golang.org/doc/install
+[nix]: https://nixos.org/
+[golang]: http://golang.org/doc/install.html
+[gotask]: https://taskfile.dev/installation/

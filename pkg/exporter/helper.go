@@ -10,7 +10,7 @@ import (
 
 func closeBody(resp *github.Response) {
 	if resp != nil {
-		resp.Body.Close()
+		defer func() { _ = resp.Body.Close() }()
 	}
 }
 

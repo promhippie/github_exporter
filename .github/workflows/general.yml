@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
 name: general
 
 "on":
@@ -19,41 +20,38 @@ jobs:
 
     steps:
       - name: Checkout source
-        id: source
         uses: actions/checkout@v4
 
       - name: Setup golang
-        id: golang
         uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
 
+      - name: Setup task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Run generate
-        id: generate
-        run: make generate
+        run: task generate
 
       - name: Run vet
-        id: vet
-        run: make vet
+        run: task vet
 
-      - name: Run staticcheck
-        id: staticcheck
-        run: make staticcheck
+      - name: Server golangci
+        run: task golangci
 
       - name: Run lint
-        id: lint
-        run: make lint
-
-      - name: Run build
-        id: build
-        run: make build
+        run: task lint
 
       - name: Run test
-        id: test
-        run: make test
+        run: task test
+
+      - name: Run build
+        run: task build
 
       - name: Coverage report
-        id: codacy
         if: github.event_name != 'pull_request'
         uses: codacy/codacy-coverage-reporter-action@v1
         with:

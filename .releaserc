@@ -1,0 +1,130 @@
+{
+    "branches": [
+        "master"
+    ],
+    "plugins": [
+        [
+            "@semantic-release/commit-analyzer",
+            {
+                "preset": "conventionalcommits",
+                "releaseRules": [
+                    {
+                        "type": "major",
+                        "release": "major"
+                    },
+                    {
+                        "type": "deps",
+                        "scope": "major",
+                        "release": "major"
+                    },
+                    {
+                        "type": "minor",
+                        "release": "minor"
+                    },
+                    {
+                        "type": "deps",
+                        "scope": "minor",
+                        "release": "minor"
+                    },
+                    {
+                        "type": "patch",
+                        "release": "patch"
+                    },
+                    {
+                        "type": "deps",
+                        "scope": "patch",
+                        "release": "patch"
+                    },
+                    {
+                        "type": "refactor",
+                        "release": "minor"
+                    },
+                    {
+                        "scope": "docs",
+                        "release": false
+                    }
+                ]
+            }
+        ],
+        [
+            "@semantic-release/release-notes-generator",
+            {
+                "preset": "conventionalcommits",
+                "presetConfig": {
+                    "types": [
+                        {
+                            "type": "major",
+                            "section": "Features"
+                        },
+                        {
+                            "type": "deps",
+                            "scope": "major",
+                            "section": "Features"
+                        },
+                        {
+                            "type": "minor",
+                            "section": "Features"
+                        },
+                        {
+                            "type": "deps",
+                            "scope": "minor",
+                            "section": "Features"
+                        },
+                        {
+                            "type": "patch",
+                            "section": "Bugfixes"
+                        },
+                        {
+                            "type": "deps",
+                            "scope": "patch",
+                            "section": "Bugfixes"
+                        },
+                        {
+                            "type": "feat",
+                            "section": "Features"
+                        },
+                        {
+                            "type": "fix",
+                            "section": "Bugfixes"
+                        },
+                        {
+                            "type": "chore",
+                            "section": "Miscellaneous",
+                            "hidden": false
+                        },
+                        {
+                            "type": "docs",
+                            "hidden": true
+                        },
+                        {
+                            "type": "refactor",
+                            "hidden": true
+                        }
+                    ]
+                }
+            }
+        ],
+        [
+            "@semantic-release/changelog",
+            {
+                "changelogTitle": "# Changelog"
+            }
+        ],
+		[
+			"@semantic-release/github",
+			{
+				"assets": []
+			}
+		],
+        [
+            "@semantic-release/git",
+            {
+                "message": "chore: release ${nextRelease.version}",
+                "assets": [
+                    "CHANGELOG.md",
+                    ".github/RELEASE"
+                ]
+            }
+        ]
+    ]
+}

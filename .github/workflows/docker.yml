@@ -1,79 +1,34 @@
 ---
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
 name: docker
 
 "on":
   workflow_dispatch:
-  pull_request:
-    branches:
-      - master
   push:
     branches:
       - master
     tags:
       - v*
+  pull_request:
+    branches:
+      - master
 
 permissions:
   contents: read
-  packages: write
 
 jobs:
   docker:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        include:
-          - platform: linux/386
-            goos: linux
-            goarch: 386
-            tags: netgo sqlite
-          - platform: linux/amd64
-            goos: linux
-            goarch: amd64
-            tags: netgo chai sqlite
-          - platform: linux/arm/6
-            goos: linux
-            goarch: arm
-            goarm: 6
-            tags: netgo sqlite
-          - platform: linux/arm64
-            goos: linux
-            goarch: arm64
-            tags: netgo chai sqlite
-
     steps:
       - name: Checkout source
-        id: source
         uses: actions/checkout@v4
-
-      - name: Setup golang
-        id: golang
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-
-      - name: Run generate
-        id: generate
-        env:
-          GOOS: ${{ matrix.goos }}
-          GOARCH: ${{ matrix.goarch }}
-          GOARM: ${{ matrix.goarm }}
-          TAGS: ${{ matrix.tags }}
-        run: make generate
-
-      - name: Run build
-        id: build
-        env:
-          GOOS: ${{ matrix.goos }}
-          GOARCH: ${{ matrix.goarch }}
-          GOARM: ${{ matrix.goarm }}
-          TAGS: ${{ matrix.tags }}
-        run: make build
 
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           images: |
             promhippie/github-exporter
             quay.io/promhippie/github-exporter
@@ -88,19 +43,19 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-          flavor: |
-            suffix=-${{ matrix.goos }}-${{ matrix.goarch }}
 
       - name: Setup qemu
-        id: qemu
         uses: docker/setup-qemu-action@v3
 
       - name: Setup buildx
         id: buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Setup cosign
+        if: github.event_name != 'pull_request'
+        uses: sigstore/cosign-installer@v3
+
       - name: Hub login
-        id: login1
         uses: docker/login-action@v3
         if: github.event_name != 'pull_request'
         with:
@@ -108,7 +63,6 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Quay login
-        id: login2
         uses: docker/login-action@v3
         if: github.event_name != 'pull_request'
         with:
@@ -117,105 +71,33 @@ jobs:
           password: ${{ secrets.QUAY_PASSWORD }}
 
       - name: Ghcr login
-        id: login3
         uses: docker/login-action@v3
         if: github.event_name != 'pull_request'
         with:
           registry: ghcr.io
           username: bothippie
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.BOT_ACCESS_TOKEN }}
 
       - name: Build image
-        id: publish
         uses: docker/build-push-action@v6
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
-          provenance: false
-          file: docker/Dockerfile.${{ matrix.goos }}.${{ matrix.goarch }}
-          platforms: ${{ matrix.platform }}
+          file: Dockerfile
+          platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v6
           push: ${{ github.event_name != 'pull_request' }}
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
 
-  manifest:
-    runs-on: ubuntu-latest
-    needs: docker
-    if: github.event_name != 'pull_request'
-
-    steps:
-      - name: Checkout source
-        id: source
-        uses: actions/checkout@v4
-
-      - name: Hub tags
-        id: hubTags
-        uses: docker/metadata-action@v5
-        with:
-          images: promhippie/github-exporter
-          tags: |
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-
-      - name: Hub manifest
-        id: hub
-        uses: actionhippie/manifest@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v6
-          template: promhippie/github-exporter:VERSION-OS-ARCH
-          target: ${{ steps.hubTags.outputs.tags }}
-          ignore_missing: true
-
-      - name: Quay tags
-        id: quayTags
-        uses: docker/metadata-action@v5
-        with:
-          images: quay.io/promhippie/github-exporter
-          tags: |
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-
-      - name: Quay manifest
-        id: quay
+      - name: Sign images
         if: github.event_name != 'pull_request'
-        uses: actionhippie/manifest@v1
-        with:
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_PASSWORD }}
-          platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v6
-          template: quay.io/promhippie/github-exporter:VERSION-OS-ARCH
-          target: ${{ steps.quayTags.outputs.tags }}
-          ignore_missing: true
-
-      - name: Ghcr tags
-        id: ghcrTags
-        if: github.event_name != 'pull_request'
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/promhippie/github-exporter
-          tags: |
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-
-      - name: Ghcr manifest
-        id: ghcr
-        if: github.event_name != 'pull_request'
-        uses: actionhippie/manifest@v1
-        with:
-          username: bothippie
-          password: ${{ secrets.GITHUB_TOKEN }}
-          platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v6
-          template: ghcr.io/promhippie/github-exporter:VERSION-OS-ARCH
-          target: ${{ steps.ghcrTags.outputs.tags }}
-          ignore_missing: true
+        env:
+          COSIGN_KEY: ${{ secrets.COSIGN_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        run: |
+          echo "${{ steps.meta.outputs.tags }}" | while read -r TAG; do
+            cosign sign --yes --key env://COSIGN_KEY ${TAG}
+          done
 
   readme:
     runs-on: ubuntu-latest
@@ -224,12 +106,9 @@ jobs:
 
     steps:
       - name: Checkout source
-        id: source
         uses: actions/checkout@v4
 
       - name: Hub readme
-        id: hub
-        if: github.event_name != 'pull_request'
         uses: actionhippie/pushrm@v1
         with:
           provider: dockerhub
@@ -240,8 +119,6 @@ jobs:
           readme: README.md
 
       - name: Quay readme
-        id: quay
-        if: github.event_name != 'pull_request'
         uses: actionhippie/pushrm@v1
         with:
           provider: quay
