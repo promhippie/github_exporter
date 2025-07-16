@@ -1,5 +1,46 @@
 # Changelog
 
+## [5.0.0](https://github.com/promhippie/github_exporter/compare/v4.1.1...v5.0.0) (2025-07-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* update billing github endpoints
+* restructure build and release process
+
+### Features
+
+* **deps:** update minor versions ([#492](https://github.com/promhippie/github_exporter/issues/492)) ([dcabfe3](https://github.com/promhippie/github_exporter/commit/dcabfe378f183edd4de9c5f4c1fc34cc6b7b0480))
+* **deps:** update module github.com/google/go-github/v72 to v73 ([#502](https://github.com/promhippie/github_exporter/issues/502)) ([2370470](https://github.com/promhippie/github_exporter/commit/237047096bd87eac49b7e95cfee84936d48aae93))
+* **deps:** update module github.com/mgechev/revive to v1.11.0 ([e471926](https://github.com/promhippie/github_exporter/commit/e471926b11501328ae6c195189c4338c38cb4a3c))
+* **deps:** update module github.com/oklog/run to v1.2.0 ([#503](https://github.com/promhippie/github_exporter/issues/503)) ([e773469](https://github.com/promhippie/github_exporter/commit/e773469ab49277f66286befd6ae4726ba15de194))
+* **deps:** update module modernc.org/sqlite to v1.38.0 ([#494](https://github.com/promhippie/github_exporter/issues/494)) ([fccc16e](https://github.com/promhippie/github_exporter/commit/fccc16e17ee9db9828a32e70e1202f1e4f24be39))
+* restructure build and release process ([56a256f](https://github.com/promhippie/github_exporter/commit/56a256f5394ee27094469efd1d381689cfcda112))
+
+
+### Bugfixes
+
+* **deps:** update golang docker tag to v1.24.5 ([7f54b52](https://github.com/promhippie/github_exporter/commit/7f54b52b20343d66cc50da15cb42485deb198cb3))
+* **deps:** update module github.com/golangci/golangci-lint/v2 to v2.2.2 ([ada2988](https://github.com/promhippie/github_exporter/commit/ada2988c1c261d3d7a642f609aaffe23ef44e476))
+* **deps:** update module modernc.org/sqlite to v1.37.1 ([#491](https://github.com/promhippie/github_exporter/issues/491)) ([9ef5a7c](https://github.com/promhippie/github_exporter/commit/9ef5a7cfa0cc2347e62f271517bfdfe0bda9f217))
+* **deps:** update patch versions ([#495](https://github.com/promhippie/github_exporter/issues/495)) ([0bdb35a](https://github.com/promhippie/github_exporter/commit/0bdb35a5f3ff6967f603b731645586530447a01e))
+* update billing github endpoints ([cb3d1c3](https://github.com/promhippie/github_exporter/commit/cb3d1c39fc3d568e608f4ba185446a59dd7cbe83))
+
+
+### Miscellaneous
+
+* **deps:** bump github.com/go-chi/chi/v5 from 5.2.1 to 5.2.2 ([ca9ac03](https://github.com/promhippie/github_exporter/commit/ca9ac03fde33e46d96e3bd2c72e44c79422054b9))
+* **deps:** pin dependencies ([933da70](https://github.com/promhippie/github_exporter/commit/933da70980fae4012eb29c3da119011fa40e1a2b))
+* **deps:** update docker digests ([ab87bb9](https://github.com/promhippie/github_exporter/commit/ab87bb924bcf5a8d0223b7fa036c7e340003f292))
+* **flake:** updated lockfile [skip ci] ([d371274](https://github.com/promhippie/github_exporter/commit/d37127403ac74b660e150d0449854d41246337f2))
+* **flake:** updated lockfile [skip ci] ([6c6ae51](https://github.com/promhippie/github_exporter/commit/6c6ae51170f5f5f180336c597453061ba0d52fd9))
+* **flake:** updated lockfile [skip ci] ([da7e1b3](https://github.com/promhippie/github_exporter/commit/da7e1b303ddb79af932db7e9924ca34c04102d58))
+* **flake:** updated lockfile [skip ci] ([68525ac](https://github.com/promhippie/github_exporter/commit/68525ac197a41585f9c06c2b1273ede26d912a5d))
+* **flake:** updated lockfile [skip ci] ([e48bc34](https://github.com/promhippie/github_exporter/commit/e48bc345212e026c3c44d3d45519e8a6ca33025b))
+* **flake:** updated lockfile [skip ci] ([89cac2d](https://github.com/promhippie/github_exporter/commit/89cac2dc20c59616152e824944c8b44dac2cfff9))
+* **flake:** updated lockfile [skip ci] ([388cd3a](https://github.com/promhippie/github_exporter/commit/388cd3ae4f1dda2c4b698210228133e59a579d7a))
+* **flake:** updated lockfile [skip ci] ([de25547](https://github.com/promhippie/github_exporter/commit/de255470035e4f8aedbc880bdd2b1aa33cd19cc4))
+* update bingo deps and go version ([31b2e2f](https://github.com/promhippie/github_exporter/commit/31b2e2f5db9d353b900c61cbd0aea39a89a21d9d))
 
 ## 4.1.1
 
@@ -745,5 +786,3 @@ The following sections list the changes for 0.2.0.
    integrated a check that something have been set when launching the exporter.
 
    https://github.com/promhippie/github_exporter/issues/4
-
-
