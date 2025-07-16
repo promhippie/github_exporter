@@ -689,14 +689,6 @@ you will always get the standard metrics exported by the Golang client of
 take a look at the <a href="https://github.com/prometheus/client_golang/blob/master/prometheus/process_collector.go">process collector</a> and the
 <a href="https://github.com/prometheus/client_golang/blob/master/prometheus/go_collector.go">Go collector</a>.</p>
 <dl>
-<dt>github_action_billing_included_minutes{type, name}</dt>
-<dd>Included minutes for this type</dd>
-<dt>github_action_billing_minutes_used{type, name}</dt>
-<dd>Total action minutes used for this type</dd>
-<dt>github_action_billing_minutes_used_breakdown{type, name, os}</dt>
-<dd>Total action minutes used for this type broken down by operating system</dd>
-<dt>github_action_billing_paid_minutes{type, name}</dt>
-<dd>Total paid minutes used for this type</dd>
 <dt>github_admin_comments_commit{}</dt>
 <dd>Number of commit comments</dd>
 <dt>github_admin_comments_gist{}</dt>
@@ -765,6 +757,16 @@ take a look at the <a href="https://github.com/prometheus/client_golang/blob/mas
 <dd>Number of suspended users</dd>
 <dt>github_admin_users_total{}</dt>
 <dd>Total number of users</dd>
+<dt>github_billing_usage{type, name, product, sku, unit, date, org, repo}</dt>
+<dd>Usage quantity from GitHub Enhanced Billing Platform</dd>
+<dt>github_billing_usage_discount_amount{type, name, product, sku, unit, date, org, repo}</dt>
+<dd>Discount amount applied to this usage item</dd>
+<dt>github_billing_usage_gross_amount{type, name, product, sku, unit, date, org, repo}</dt>
+<dd>Gross amount charged for this usage item</dd>
+<dt>github_billing_usage_net_amount{type, name, product, sku, unit, date, org, repo}</dt>
+<dd>Net amount charged for this usage item after discounts</dd>
+<dt>github_billing_usage_price_per_unit{type, name, product, sku, unit, date, org, repo}</dt>
+<dd>Price per unit for this usage item</dd>
 <dt>github_org_collaborators{name}</dt>
 <dd>Number of collaborators within org</dd>
 <dt>github_org_create_timestamp{name}</dt>
@@ -791,12 +793,6 @@ take a look at the <a href="https://github.com/prometheus/client_golang/blob/mas
 <dd>Seats for org</dd>
 <dt>github_org_updated_timestamp{name}</dt>
 <dd>Timestamp of the last modification of org</dd>
-<dt>github_package_billing_gigabytes_bandwidth_used{type, name}</dt>
-<dd>Total bandwidth used by this type in Gigabytes</dd>
-<dt>github_package_billing_included_gigabytes_bandwidth{type, name}</dt>
-<dd>Included bandwidth for this type in Gigabytes</dd>
-<dt>github_package_billing_paid_gigabytes_bandwidth_used{type, name}</dt>
-<dd>Total paid bandwidth used by this type in Gigabytes</dd>
 <dt>github_repo_allow_merge_commit{owner, name}</dt>
 <dd>Show if this repository allows merge commits</dd>
 <dt>github_repo_allow_rebase_merge{owner, name}</dt>
@@ -855,12 +851,6 @@ take a look at the <a href="https://github.com/prometheus/client_golang/blob/mas
 <dd>1 if the runner is busy, 0 otherwise</dd>
 <dt>github_runner_repo_online{owner, id, name, os, status}</dt>
 <dd>Static metrics of runner is online or not</dd>
-<dt>github_storage_billing_days_left_in_cycle{type, name}</dt>
-<dd>Days left within this billing cycle for this type</dd>
-<dt>github_storage_billing_estimated_paid_storage_for_month{type, name}</dt>
-<dd>Estimated paid storage for this month for this type</dd>
-<dt>github_storage_billing_estimated_storage_for_month{type, name}</dt>
-<dd>Estimated total storage for this month for this type</dd>
 <dt>github_workflow_job_created_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}</dt>
 <dd>Timestamp when the workflow job have been created</dd>
 <dt>github_workflow_job_duration_ms{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}</dt>
