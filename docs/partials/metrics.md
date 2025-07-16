@@ -1,15 +1,3 @@
-github_action_billing_included_minutes{type, name}
-: Included minutes for this type
-
-github_action_billing_minutes_used{type, name}
-: Total action minutes used for this type
-
-github_action_billing_minutes_used_breakdown{type, name, os}
-: Total action minutes used for this type broken down by operating system
-
-github_action_billing_paid_minutes{type, name}
-: Total paid minutes used for this type
-
 github_admin_comments_commit{}
 : Number of commit comments
 
@@ -112,6 +100,21 @@ github_admin_users_suspended{}
 github_admin_users_total{}
 : Total number of users
 
+github_billing_usage{type, name, product, sku, unit, date, org, repo}
+: Usage quantity from GitHub Enhanced Billing Platform
+
+github_billing_usage_discount_amount{type, name, product, sku, unit, date, org, repo}
+: Discount amount applied to this usage item
+
+github_billing_usage_gross_amount{type, name, product, sku, unit, date, org, repo}
+: Gross amount charged for this usage item
+
+github_billing_usage_net_amount{type, name, product, sku, unit, date, org, repo}
+: Net amount charged for this usage item after discounts
+
+github_billing_usage_price_per_unit{type, name, product, sku, unit, date, org, repo}
+: Price per unit for this usage item
+
 github_org_collaborators{name}
 : Number of collaborators within org
 
@@ -150,15 +153,6 @@ github_org_seats{name}
 
 github_org_updated_timestamp{name}
 : Timestamp of the last modification of org
-
-github_package_billing_gigabytes_bandwidth_used{type, name}
-: Total bandwidth used by this type in Gigabytes
-
-github_package_billing_included_gigabytes_bandwidth{type, name}
-: Included bandwidth for this type in Gigabytes
-
-github_package_billing_paid_gigabytes_bandwidth_used{type, name}
-: Total paid bandwidth used by this type in Gigabytes
 
 github_repo_allow_merge_commit{owner, name}
 : Show if this repository allows merge commits
@@ -246,15 +240,6 @@ github_runner_repo_busy{owner, id, name, os, status}
 
 github_runner_repo_online{owner, id, name, os, status}
 : Static metrics of runner is online or not
-
-github_storage_billing_days_left_in_cycle{type, name}
-: Days left within this billing cycle for this type
-
-github_storage_billing_estimated_paid_storage_for_month{type, name}
-: Estimated paid storage for this month for this type
-
-github_storage_billing_estimated_storage_for_month{type, name}
-: Estimated total storage for this month for this type
 
 github_workflow_job_created_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
 : Timestamp when the workflow job have been created
