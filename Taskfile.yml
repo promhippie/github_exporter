@@ -63,7 +63,7 @@ tasks:
     desc: Build server component
     cmds:
       - go build -v
-          -tags 'netgo'
+          -tags '{{ .TAGS }}'
           -ldflags '-s -w -extldflags "-static" -X "{{ .IMPORT }}/pkg/version.String={{ .VERSION }}" -X "{{ .IMPORT }}/pkg/version.Revision={{ .REVISION }}" -X "{{ .IMPORT }}/pkg/version.Date={{ now | date "20060102" }}"'
           -o bin/github_exporter{{if eq OS "windows"}}.exe{{end}}
           ./cmd/github_exporter
@@ -75,6 +75,26 @@ tasks:
         sh: if [[ -z "${CI_COMMIT_TAG}" ]]; then git rev-parse --short HEAD; else echo "${CI_COMMIT_TAG#v}"; fi
       REVISION:
         sh: git rev-parse --short HEAD
+      GOOS:
+        sh: go env GOOS
+      GOARCH:
+        sh: go env GOARCH
+      TAGS: |-
+        {{- if eq .GOOS "linux" -}}
+          {{- if eq .GOARCH "amd64" }}netgo sqlite chai{{ end }}
+          {{- if eq .GOARCH "386" }}netgo sqlite{{ end }}
+          {{- if eq .GOARCH "arm64" }}netgo sqlite chai{{ end }}
+          {{- if eq .GOARCH "arm" }}netgo sqlite{{ end }}
+          {{- if eq .GOARCH "mips64" }}netgo chai{{ end }}
+          {{- if eq .GOARCH "mips" }}netgo{{ end }}
+          {{- if eq .GOARCH "mips64le" }}netgo chai{{ end }}
+          {{- if eq .GOARCH "mipsle" }}netgo{{ end }}
+        {{- else if eq .GOOS "windows" -}}
+          {{- if eq .GOARCH "amd64" }}netgo sqlite chai{{ end }}
+          {{- if eq .GOARCH "386" }}netgo{{ end }}
+        {{- else -}}
+          netgo sqlite chai
+        {{- end -}}
 
   watch:
     desc: Run reloading development server
