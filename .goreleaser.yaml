@@ -22,6 +22,10 @@ builds:
       - "386"
       - arm64
       - arm
+      - mips64
+      - mips
+      - mips64le
+      - mipsle
     ignore:
       - goos: darwin
         goarch: "386"
@@ -38,6 +42,24 @@ builds:
         tags:
           - netgo
           - sqlite
+      - goos: linux
+        goarch: mips64
+        tags:
+          - netgo
+          - chai
+      - goos: linux
+        goarch: mips
+        tags:
+          - netgo
+      - goos: linux
+        goarch: mips64le
+        tags:
+          - netgo
+          - chai
+      - goos: linux
+        goarch: mipsle
+        tags:
+          - netgo
       - goos: windows
         goarch: "386"
         tags:
