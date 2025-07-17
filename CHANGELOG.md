@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.1.0](https://github.com/promhippie/github_exporter/compare/v5.0.0...v5.1.0) (2025-07-17)
+
+
+### Features
+
+* reenable binaries for mips and mips64 ([16a025e](https://github.com/promhippie/github_exporter/commit/16a025eb7373f68097391496681dfaf7a945c192))
+
+
+### Bugfixes
+
+* use build tags for sqlite and chai ([a92651c](https://github.com/promhippie/github_exporter/commit/a92651c14edcc7b1380252d30febf2f468edcac4))
+
 ## [5.0.0](https://github.com/promhippie/github_exporter/compare/v4.1.1...v5.0.0) (2025-07-16)
 
 
