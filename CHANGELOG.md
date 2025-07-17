@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.1](https://github.com/promhippie/github_exporter/compare/v5.1.0...v5.1.1) (2025-07-17)
+
+
+### Bugfixes
+
+* use correct build tags within build task for docker ([af6ff26](https://github.com/promhippie/github_exporter/commit/af6ff26e7ea4624eca98c449e136676e51b341b9))
+
 ## [5.1.0](https://github.com/promhippie/github_exporter/compare/v5.0.0...v5.1.0) (2025-07-17)
 
 
