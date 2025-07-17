@@ -11,6 +11,8 @@ builds:
       - -s -w -extldflags "-static" -X "github.com/promhippie/github_exporter/pkg/version.String={{.Version}}" -X "github.com/promhippie/github_exporter/pkg/version.Revision={{.Commit}}" -X "github.com/promhippie/github_exporter/pkg/version.Date={{.Date}}"
     tags:
       - netgo
+      - sqlite
+      - chai
     goos:
       - linux
       - windows
@@ -25,6 +27,21 @@ builds:
         goarch: "386"
       - goos: windows
         goarch: arm
+    overrides:
+      - goos: linux
+        goarch: "386"
+        tags:
+          - netgo
+          - sqlite
+      - goos: linux
+        goarch: arm
+        tags:
+          - netgo
+          - sqlite
+      - goos: windows
+        goarch: "386"
+        tags:
+          - netgo
 
 archives:
   - id: server
