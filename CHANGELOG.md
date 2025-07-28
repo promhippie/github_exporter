@@ -1,5 +1,26 @@
 # Changelog
 
+## [6.0.0](https://github.com/promhippie/github_exporter/compare/v5.1.1...v6.0.0) (2025-07-28)
+
+
+### Features
+
+* **deps:** update module github.com/golangci/golangci-lint/v2 to v2.3.0 ([a0749e0](https://github.com/promhippie/github_exporter/commit/a0749e0878db7e28f3bf58cd77fbabb51a410be8))
+* **deps:** update module github.com/google/go-github/v73 to v74 ([7bdf9f1](https://github.com/promhippie/github_exporter/commit/7bdf9f1d66e7e17bfe78443e67e474bdaccb7bd5))
+
+
+### Bugfixes
+
+* **deps:** update module github.com/cenkalti/backoff/v5 to v5.0.3 ([1154516](https://github.com/promhippie/github_exporter/commit/11545162dd9b7c67266af9990cc324df777d44c4))
+* **deps:** update module modernc.org/sqlite to v1.38.1 ([6e27c16](https://github.com/promhippie/github_exporter/commit/6e27c163133307358fe457a8145a5f51b36590ec))
+
+
+### Miscellaneous
+
+* **deps:** update golang:1.24.5-alpine3.21 docker digest to 6edc205 ([73789af](https://github.com/promhippie/github_exporter/commit/73789af46ab60cd1e0e08151332f3b8ba05d8a7a))
+* **flake:** updated lockfile [skip ci] ([5e1549f](https://github.com/promhippie/github_exporter/commit/5e1549f2fb87492973b046e4ad40fa2b567a2eed))
+* **flake:** updated lockfile [skip ci] ([fe4b507](https://github.com/promhippie/github_exporter/commit/fe4b50758f323e04943b8c6922968d2144c3e1d3))
+
 ## [5.1.1](https://github.com/promhippie/github_exporter/compare/v5.1.0...v5.1.1) (2025-07-17)
 
 
