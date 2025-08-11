@@ -21,13 +21,13 @@ jobs:
     steps:
       - name: Checkout source
         if: github.event_name != 'pull_request'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           token: ${{ secrets.BOT_ACCESS_TOKEN }}
 
       - name: PR checkout
         if: github.event_name == 'pull_request'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup golang
         uses: actions/setup-go@v5
@@ -60,13 +60,13 @@ jobs:
     steps:
       - name: Checkout source
         if: github.event_name != 'pull_request'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           token: ${{ secrets.BOT_ACCESS_TOKEN }}
 
       - name: PR checkout
         if: github.event_name == 'pull_request'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup golang
         uses: actions/setup-go@v5
@@ -99,13 +99,13 @@ jobs:
     steps:
       - name: Checkout source
         if: github.event_name != 'pull_request'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           token: ${{ secrets.BOT_ACCESS_TOKEN }}
 
       - name: PR checkout
         if: github.event_name == 'pull_request'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup golang
         uses: actions/setup-go@v5
