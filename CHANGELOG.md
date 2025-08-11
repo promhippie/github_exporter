@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.0.2](https://github.com/promhippie/github_exporter/compare/v6.0.1...v6.0.2) (2025-08-11)
+
+
+### Bugfixes
+
+* **deps:** update golang docker tag to v1.24.6 ([60015f4](https://github.com/promhippie/github_exporter/commit/60015f493a761ace813e1361844366cbdc1d1591))
+
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([6ee9061](https://github.com/promhippie/github_exporter/commit/6ee9061120a8c984124fe896fbe928374d360de7))
+
 ## [6.0.1](https://github.com/promhippie/github_exporter/compare/v6.0.0...v6.0.1) (2025-08-04)
 
 
