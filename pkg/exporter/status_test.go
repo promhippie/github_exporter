@@ -92,6 +92,110 @@ func TestExtractStatusFromHTML_NonOperationalVariants_TextStatuses(t *testing.T)
 		}
 	}
 }
+
+func TestExtractStatusFromHTML_UnknownComponentsIgnored(t *testing.T) {
+	html := `
+    <div class="components-section">
+      <div class="component-inner-container">
+        <span class="name">Not A Known Component</span>
+        <span class="component-status">Operational</span>
+      </div>
+      <div class="component-inner-container">
+        <span class="name">API Requests</span>
+        <span class="component-status">Operational</span>
+      </div>
+    </div>`
+
+	got := extractStatusFromHTML(html)
+
+	if _, ok := got["Not A Known Component"]; ok {
+		t.Fatalf("expected unknown component to be ignored (not present)")
+	}
+	if up, ok := got["API Requests"]; !ok || !up {
+		t.Fatalf("expected known component 'API Requests' to be up and present, got ok=%v up=%v", ok, up)
+	}
+}
+
+func TestExtractStatusFromHTML_TrimsNameAndStatus(t *testing.T) {
+	html := `
+    <div class="components-section">
+      <div class="component-inner-container">
+        <span class="name">  Git Operations  </span>
+        <span class="component-status">   Operational   </span>
+      </div>
+    </div>`
+
+	got := extractStatusFromHTML(html)
+
+	if up, ok := got["Git Operations"]; !ok || !up {
+		t.Fatalf("expected trimmed name/status to be recognized as up, got ok=%v up=%v", ok, up)
+	}
+}
+
+func TestExtractStatusFromHTML_NoComponentsSection(t *testing.T) {
+	html := `<div><p>No components here</p></div>`
+	got := extractStatusFromHTML(html)
+	if len(got) != 0 {
+		t.Fatalf("expected empty result when components section is missing, got len=%d", len(got))
+	}
+}
+
+func TestExtractStatusFromHTML_MissingNameSkipped(t *testing.T) {
+	html := `
+    <div class="components-section">
+      <div class="component-inner-container">
+        <span class="component-status">Operational</span>
+      </div>
+      <div class="component-inner-container">
+        <span class="name"></span>
+        <span class="component-status">Operational</span>
+      </div>
+      <div class="component-inner-container">
+        <span class="name">Pages</span>
+        <span class="component-status">Operational</span>
+      </div>
+    </div>`
+
+	got := extractStatusFromHTML(html)
+
+	if up, ok := got["Pages"]; !ok || !up {
+		t.Fatalf("expected 'Pages' to be present and up, got ok=%v up=%v", ok, up)
+	}
+	// Only the valid known component should be present
+	if len(got) != 1 {
+		t.Fatalf("expected only one valid component to be captured, got len=%d", len(got))
+	}
+}
+
+func TestExtractStatusFromHTML_NonOperationalVariants_KnownComponents(t *testing.T) {
+	html := `
+    <div class="components-section">
+      <div class="component-inner-container">
+        <span class="name">Issues</span>
+        <span class="component-status">Degraded Performance</span>
+      </div>
+      <div class="component-inner-container">
+        <span class="name">Pages</span>
+        <span class="component-status">Partial Outage</span>
+      </div>
+      <div class="component-inner-container">
+        <span class="name">Copilot</span>
+        <span class="component-status">Maintenance</span>
+      </div>
+    </div>`
+
+	got := extractStatusFromHTML(html)
+
+	for _, name := range []string{"Issues", "Pages", "Copilot"} {
+		up, ok := got[name]
+		if !ok {
+			t.Fatalf("expected known component %q to be present", name)
+		}
+		if up {
+			t.Fatalf("expected %s to be down for non-operational status text", name)
+		}
+	}
+}
 func TestExtractStatusFromFullPageIfPresent(t *testing.T) {
 	// Best-effort test: only execute if the provided page source exists.
 	// This verifies real-world parsing against the captured HTML.

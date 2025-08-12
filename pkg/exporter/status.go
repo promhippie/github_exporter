@@ -183,7 +183,6 @@ func (c *StatusCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.CopilotUp
 }
 
-// Collect intentionally left empty for now; population will be implemented later.
 func (c *StatusCollector) Collect(ch chan<- prometheus.Metric) {
 	// Perform a single scrape of the status page and populate all gauges.
 	// Follow redirects; treat "Operational" as up (1), everything else as down (0).
