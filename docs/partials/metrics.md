@@ -241,6 +241,36 @@ github_runner_repo_busy{owner, id, name, os, status}
 github_runner_repo_online{owner, id, name, os, status}
 : Static metrics of runner is online or not
 
+github_status_actions_up{}
+: Current health status of Actions on githubstatus.com
+
+github_status_api_requests_up{}
+: Current health status of API Requests on githubstatus.com
+
+github_status_codespaces_up{}
+: Current health status of Codespaces on githubstatus.com
+
+github_status_copilot_up{}
+: Current health status of Copilot on githubstatus.com
+
+github_status_git_operations_up{}
+: Current health status of Git Operations on githubstatus.com
+
+github_status_issues_up{}
+: Current health status of Issues on githubstatus.com
+
+github_status_packages_up{}
+: Current health status of Packages on githubstatus.com
+
+github_status_pages_up{}
+: Current health status of Pages on githubstatus.com
+
+github_status_pull_requests_up{}
+: Current health status of Pull Requests on githubstatus.com
+
+github_status_webhooks_up{}
+: Current health status of Webhooks on githubstatus.com
+
 github_workflow_job_created_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
 : Timestamp when the workflow job have been created
 
