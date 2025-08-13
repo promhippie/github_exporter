@@ -1,13 +1,13 @@
 package exporter
 
 import (
+	"encoding/json"
 	"io"
 	"log/slog"
 	"net/http"
 	"strings"
 	"time"
 
-	"github.com/PuerkitoBio/goquery"
 	"github.com/google/go-github/v74/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
@@ -184,14 +184,14 @@ func (c *StatusCollector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (c *StatusCollector) Collect(ch chan<- prometheus.Metric) {
-	// Perform a single scrape of the status page and populate all gauges.
-	// Follow redirects; treat "Operational" as up (1), everything else as down (0).
+	// Perform a single scrape of the status JSON and populate all gauges.
+	// Treat "operational" as up (1), everything else as down (0).
 	client := &http.Client{Timeout: c.config.Timeout}
 
 	now := time.Now()
-	req, err := http.NewRequest("GET", "https://www.githubstatus.com/", nil)
+	req, err := http.NewRequest("GET", "https://www.githubstatus.com/api/v2/summary.json", nil)
 	if err != nil {
-		c.logger.Error("Failed to build status request", "err", err)
+		c.logger.Error("Failed to build status summary request", "err", err)
 		if c.failures != nil {
 			c.failures.WithLabelValues("status").Inc()
 		}
@@ -200,7 +200,7 @@ func (c *StatusCollector) Collect(ch chan<- prometheus.Metric) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		c.logger.Error("Failed to fetch status page", "err", err)
+		c.logger.Error("Failed to fetch status summary", "err", err)
 		if c.failures != nil {
 			c.failures.WithLabelValues("status").Inc()
 		}
@@ -214,15 +214,14 @@ func (c *StatusCollector) Collect(ch chan<- prometheus.Metric) {
 
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
-		c.logger.Error("Failed to read status page", "err", err)
+		c.logger.Error("Failed to read status summary", "err", err)
 		if c.failures != nil {
 			c.failures.WithLabelValues("status").Inc()
 		}
 		return
 	}
 
-	body := string(bodyBytes)
-	statuses := extractStatusFromHTML(body)
+	statuses := extractStatusFromJSON(bodyBytes)
 
 	// Prepare the set of components to check → metric descriptors mapping.
 	components := []struct {
@@ -255,7 +254,7 @@ func (c *StatusCollector) Collect(ch chan<- prometheus.Metric) {
 			}
 		} else {
 			// If not found at all, consider as down and log for visibility.
-			c.logger.Warn("Component status not found on status page", "component", comp.name)
+			c.logger.Warn("Component status not found in status summary", "component", comp.name)
 			up = 0.0
 		}
 		c.logger.Debug("Component status scraped", "component", string(comp.name), "up", up)
@@ -268,38 +267,32 @@ func (c *StatusCollector) Collect(ch chan<- prometheus.Metric) {
 	}
 }
 
-// extractStatusFromHTML parses the GitHub Status page HTML and returns a map of component name -> up (true if operational).
-func extractStatusFromHTML(html string) map[string]bool {
+// extractStatusFromJSON parses the GitHub Status summary JSON and returns
+// a map of component name -> up (true if operational).
+func extractStatusFromJSON(data []byte) map[string]bool {
+	type component struct {
+		Name   string `json:"name"`
+		Status string `json:"status"`
+	}
+	type summary struct {
+		Components []component `json:"components"`
+	}
+
 	result := make(map[string]bool)
 
-	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
-	if err != nil {
+	var s summary
+	if err := json.Unmarshal(data, &s); err != nil {
 		return result
 	}
 
-	doc.Find(".components-section .component-inner-container").Each(func(_ int, sel *goquery.Selection) {
-		// Extract and normalize fields
-		name := strings.TrimSpace(sel.Find(".name").Text())
-		statusText := strings.ToLower(strings.TrimSpace(sel.Find(".component-status").Text()))
-
-		if name == "" {
-			return
+	for _, c := range s.Components {
+		name := strings.TrimSpace(c.Name)
+		if name == "" || !isStatusComponent(name) {
+			continue
 		}
-
-		// Only process names that are in our known list of components
-		if !isStatusComponent(name) {
-			return
-		}
-
-		// Determine up/down strictly from the visible status text
-		if statusText == "operational" {
-			result[name] = true
-			return
-		}
-
-		// Any other value or missing status is down
-		result[name] = false
-	})
+		statusText := strings.ToLower(strings.TrimSpace(c.Status))
+		result[name] = statusText == "operational"
+	}
 
 	return result
 }
