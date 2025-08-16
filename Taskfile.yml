@@ -69,6 +69,8 @@ tasks:
           ./cmd/github_exporter
     env:
       CGO_ENABLED: "0"
+      GOOS: "{{ .GOOS }}"
+      GOARCH: "{{ .GOARCH }}"
     vars:
       IMPORT: github.com/promhippie/github_exporter
       VERSION:
