@@ -183,6 +183,8 @@ func (c *StatusCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.CopilotUp
 }
 
+// Collect gathers component status metrics from githubstatus.com and sends them
+// to the provided channel.
 func (c *StatusCollector) Collect(ch chan<- prometheus.Metric) {
 	// Perform a single scrape of the status JSON and populate all gauges.
 	// Treat "operational" as up (1), everything else as down (0).
