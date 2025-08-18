@@ -1,5 +1,26 @@
 # Changelog
 
+## [6.0.3](https://github.com/promhippie/github_exporter/compare/v6.0.2...v6.0.3) (2025-08-18)
+
+
+### Bugfixes
+
+* correctly hand over goos/goarch to build task ([498ba62](https://github.com/promhippie/github_exporter/commit/498ba62afeede0aa5bd53e00151d5f366aad97cf))
+* **deps:** update golang docker tag to v1.25.0 ([a136745](https://github.com/promhippie/github_exporter/commit/a136745765dff3b8926f7fc28761cf997c9250de))
+* **deps:** update golang:1.25.0-alpine3.21 docker digest to 382d1a7 ([3d94d7c](https://github.com/promhippie/github_exporter/commit/3d94d7cc2cd2c42df9bd68a87b2c8a5478fe6755))
+* **deps:** update golang:1.25.0-alpine3.21 docker digest to a92c1ab ([89834b4](https://github.com/promhippie/github_exporter/commit/89834b464c2ba9c2ff00c00cd1f827840bd31b92))
+* **deps:** update golang:1.25.0-alpine3.21 docker digest to c8e1680 ([3d3f0a6](https://github.com/promhippie/github_exporter/commit/3d3f0a6c4b8d4da8c2764d34f4cd41dc7b0bd900))
+* **deps:** update module github.com/chaisql/chai to v0.16.1 ([6cef7d4](https://github.com/promhippie/github_exporter/commit/6cef7d4f428bb421a527fc51e2ccb5f90bd07e7c))
+* **deps:** update module github.com/golangci/golangci-lint/v2 to v2.4.0 ([11fb135](https://github.com/promhippie/github_exporter/commit/11fb135d72a46a2a9a5dc9559fda9aa3fb10b556))
+* **deps:** update module github.com/urfave/cli/v3 to v3.3.9 ([b9bf54d](https://github.com/promhippie/github_exporter/commit/b9bf54d565f66084157eac33620745244135c4cf))
+* **deps:** update module github.com/urfave/cli/v3 to v3.4.0 ([05e9685](https://github.com/promhippie/github_exporter/commit/05e968562ebf20dfb732fd5f059c184043918ca5))
+* **deps:** update module github.com/urfave/cli/v3 to v3.4.1 ([ee3b9d3](https://github.com/promhippie/github_exporter/commit/ee3b9d36f3606d54f45ea69b433ba8867b3dd65a))
+
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([cebc723](https://github.com/promhippie/github_exporter/commit/cebc7235eaefec3b7184244ea8d888bd56f16e30))
+
 ## [6.0.2](https://github.com/promhippie/github_exporter/compare/v6.0.1...v6.0.2) (2025-08-11)
 
 
