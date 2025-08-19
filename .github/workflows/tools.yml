@@ -20,39 +20,61 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'tools')
 
     steps:
+      - name: Check branch
+        id: branch
+        run: |
+          BRANCH="${{ github.event.pull_request.head.ref }}"
+          REPO="https://github.com/${{ github.repository }}.git"
+          echo "Checking if branch $BRANCH exists in $REPO..."
+          if git ls-remote --exit-code "$REPO" "refs/heads/$BRANCH" >/dev/null 2>&1; then
+            echo "Branch '$BRANCH' does exist."
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Branch '$BRANCH' don't exist."
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Checkout source
+        if: steps.branch.outputs.exists == 'true'
         uses: actions/checkout@v5
         with:
           token: ${{ secrets.BOT_ACCESS_TOKEN }}
           ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Setup golang
+        if: steps.branch.outputs.exists == 'true'
         uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
 
       - name: Update golangci
-        if: contains(github.event.pull_request.labels.*.name, 'golangci')
+        if: steps.branch.outputs.exists == 'true' && contains(github.event.pull_request.labels.*.name, 'golangci')
         run: |
-          go get github.com/golangci/golangci-lint/v2/cmd/golangci-lint
-          go mod tidy
+          TOOL="github.com/golangci/golangci-lint/v2/cmd/golangci-lint"
+          MOD="$(go list -mod=readonly -f '{{.Module.Path}}' ${TOOL})"
+          VERSION="$(go list -mod=readonly -u -json -m ${MOD} | jq -r .Version)"
+          go get -tool "${TOOL}@${VERSION}" && go mod tidy
 
       - name: Update revive
-        if: contains(github.event.pull_request.labels.*.name, 'revive')
+        if: steps.branch.outputs.exists == 'true' && contains(github.event.pull_request.labels.*.name, 'revive')
         run: |
-          go get github.com/mgechev/revive
-          go mod tidy
+          TOOL="github.com/mgechev/revive"
+          MOD="$(go list -mod=readonly -f '{{.Module.Path}}' ${TOOL})"
+          VERSION="$(go list -mod=readonly -u -json -m ${MOD} | jq -r .Version)"
+          go get -tool "${TOOL}@${VERSION}" && go mod tidy
 
       - name: Update repo
+        if: steps.branch.outputs.exists == 'true'
         run: git pull --rebase --autostash
 
       - name: Commit changes
+        if: steps.branch.outputs.exists == 'true'
         uses: EndBug/add-and-commit@v9
         with:
           author_name: GitHub Actions
           author_email: github@webhippie.de
           add: go.*
-          message: "chore: update modules for tools update"
+          message: "chore: update modules for tools"
           push: true
           commit: --signoff
 
