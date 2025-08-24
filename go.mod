@@ -17,7 +17,7 @@ require (
 	github.com/prometheus/client_golang v1.23.0
 	github.com/prometheus/exporter-toolkit v0.14.0
 	github.com/ryanuber/go-glob v1.0.0
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.0
 	github.com/urfave/cli/v3 v3.4.1
 	golang.org/x/oauth2 v0.30.0
 	modernc.org/sqlite v1.38.2
