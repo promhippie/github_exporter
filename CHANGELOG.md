@@ -1,5 +1,19 @@
 # Changelog
 
+## [6.0.5](https://github.com/promhippie/github_exporter/compare/v6.0.4...v6.0.5) (2025-09-01)
+
+
+### Bugfixes
+
+* **deps:** update module github.com/go-chi/chi/v5 to v5.2.3 ([50eed82](https://github.com/promhippie/github_exporter/commit/50eed82a9fbddbfe5611e453b6a10de7164911c5))
+* **deps:** update module github.com/mgechev/revive to v1.12.0 ([72876fe](https://github.com/promhippie/github_exporter/commit/72876febe2d8179cffa3a5ae3000b96613371beb))
+* **deps:** update module github.com/stretchr/testify to v1.11.1 ([97c55f8](https://github.com/promhippie/github_exporter/commit/97c55f856fa3ed2961e5ed01950c1e68774da7d1))
+
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([7857d82](https://github.com/promhippie/github_exporter/commit/7857d821b8876fcc485418f415964613b01d52dc))
+
 ## [6.0.4](https://github.com/promhippie/github_exporter/compare/v6.0.3...v6.0.4) (2025-08-25)
 
 
