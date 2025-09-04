@@ -43,7 +43,7 @@ jobs:
 
       - name: Setup golang
         if: steps.branch.outputs.exists == 'true'
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
 
