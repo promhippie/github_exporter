@@ -6,7 +6,7 @@ require (
 	github.com/GuiaBolso/darwin v0.0.0-20191218124601-fd6d2aa3d244
 	github.com/bradleyfalzon/ghinstallation/v2 v2.16.0
 	github.com/cenkalti/backoff/v5 v5.0.3
-	github.com/chaisql/chai v0.16.1
+	github.com/chaisql/chai v0.17.0
 	github.com/go-chi/chi/v5 v5.2.3
 	github.com/go-sql-driver/mysql v1.9.3
 	github.com/google/go-github/v74 v74.0.0
