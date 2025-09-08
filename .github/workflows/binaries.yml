@@ -57,30 +57,21 @@ jobs:
             task build:snapshot
           fi
 
+      - name: Install cloudsmith
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: cloudsmith-io/cloudsmith-cli-action@v1.0.4
+        with:
+          api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+
       - name: Upload packages
         if: startsWith(github.ref, 'refs/tags/')
-        env:
-          BALTOREPO_TOKEN: ${{ secrets.BALTOREPO_TOKEN }}
         run: |
           for PACKAGE in dist/github-exporter-*.deb; do
-            echo "> uploading $PACKAGE"
-            curl  -sSL \
-              --header "Authorization: Bearer $BALTOREPO_TOKEN" \
-              --form "package=@$PACKAGE" \
-              --form "distribution=all" \
-              https://webhippie.baltorepo.com/promhippie/debian/upload/
-            echo "> done"
+            cloudsmith push deb webhippie/promhippie/any-distro/any-version "${PACKAGE}"
           done
 
           for PACKAGE in dist/github-exporter-*.rpm; do
-            [[ "${PACKAGE}" == *"armv6"* ]] && continue
-            echo "> uploading $PACKAGE"
-            curl  -sSL \
-              --header "Authorization: Bearer $BALTOREPO_TOKEN" \
-              --form "package=@$PACKAGE" \
-              --form "distribution=all" \
-              https://webhippie.baltorepo.com/promhippie/redhat/upload/
-            echo "> done"
+            cloudsmith push rpm webhippie/promhippie/any-distro/any-version "${PACKAGE}"
           done
 
 ...
