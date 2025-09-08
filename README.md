@@ -90,7 +90,7 @@ Copyright (c) 2018 Thomas Boerger <thomas@webhippie.de>
 [prometheus]: https://prometheus.io
 [github]: https://github.com
 [releases]: https://github.com/promhippie/github_exporter/releases
-[pkgrepo]: hhttps://cloudsmith.io/~webhippie/repos/promhippie/groups/
+[pkgrepo]: https://cloudsmith.io/~webhippie/repos/promhippie/groups/
 [cloudsmith]: https://cloudsmith.com/
 [ghcr]: https://github.com/promhippie/github_exporter/pkgs/container/github_exporter
 [dockerhub]: https://hub.docker.com/r/promhippie/github-exporter/tags/
