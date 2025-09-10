@@ -2,5 +2,16 @@
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": [
         "github>promhippie/.github//renovate/preset"
+    ],
+    "packageRules": [
+        {
+            "matchManagers": [
+                "gomod"
+            ],
+            "ignoreDeps": [
+                "github.com/golangci/golangci-lint/v2/cmd/golangci-lint",
+                "github.com/mgechev/revive"
+            ]
+        }
     ]
 }
