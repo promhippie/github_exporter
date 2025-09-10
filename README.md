@@ -21,7 +21,7 @@ any format, to any place, with total confidence.
 ## Development
 
 If you are not familiar with [Nix][nix] it is up to you to have a working
-environment for Go (>= 1.24.0) as the setup won't we covered within this guide.
+environment for Go (>= 1.25.0) as the setup won't we covered within this guide.
 Please follow the official install instructions for [Go][golang]. Beside that
 we are using [go-task][gotask] to define all commands to build this project.
 

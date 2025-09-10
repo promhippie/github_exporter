@@ -15,7 +15,7 @@ import (
 	"github.com/promhippie/github_exporter/pkg/migration/dialect"
 
 	// Import Chai driver for database/sql
-	_ "github.com/chaisql/chai/driver"
+	_ "github.com/chaisql/chai"
 )
 
 var (
