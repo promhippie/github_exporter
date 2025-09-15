@@ -1,5 +1,19 @@
 # Changelog
 
+## [6.0.7](https://github.com/promhippie/github_exporter/compare/v6.0.6...v6.0.7) (2025-09-15)
+
+
+### Bugfixes
+
+* **deps:** update module github.com/chaisql/chai to v0.17.0 ([c45ad72](https://github.com/promhippie/github_exporter/commit/c45ad7200e60fe5b47f400168c32b42413f4adbe))
+* upgrade go to 1.25 to support latest version of chai ([404dc5d](https://github.com/promhippie/github_exporter/commit/404dc5ded18cb5e111adbe4d60d7a97ab77ffdce))
+
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([8654ae5](https://github.com/promhippie/github_exporter/commit/8654ae5b67c9c54f5a17eaa9b3c4fc3e8b6e8b2f))
+* move from baltorepo to cloudsmith ([4882040](https://github.com/promhippie/github_exporter/commit/4882040dae24f281204c13a015e71a7246fec712))
+
 ## [6.0.6](https://github.com/promhippie/github_exporter/compare/v6.0.5...v6.0.6) (2025-09-08)
 
 
