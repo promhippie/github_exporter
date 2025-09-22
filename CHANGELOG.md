@@ -1,5 +1,18 @@
 # Changelog
 
+## [6.0.8](https://github.com/promhippie/github_exporter/compare/v6.0.7...v6.0.8) (2025-09-22)
+
+
+### Bugfixes
+
+* **deps:** update module github.com/golangci/golangci-lint/v2 to v2.5.0 ([4c6b91e](https://github.com/promhippie/github_exporter/commit/4c6b91e5147da7c1bc195ff4e4d04a6e28c2f3ae))
+* **deps:** update module modernc.org/sqlite to v1.39.0 ([b5ed326](https://github.com/promhippie/github_exporter/commit/b5ed3268129c130a6592ba50a1207f65deaff602))
+
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([aa3993b](https://github.com/promhippie/github_exporter/commit/aa3993be9c9be109d0fd95e1f9ea2277bba96999))
+
 ## [6.0.7](https://github.com/promhippie/github_exporter/compare/v6.0.6...v6.0.7) (2025-09-15)
 
 
