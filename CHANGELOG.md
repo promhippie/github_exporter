@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.0.9](https://github.com/promhippie/github_exporter/compare/v6.0.8...v6.0.9) (2025-09-29)
+
+
+### Bugfixes
+
+* **deps:** update module github.com/google/go-github/v74 to v75 ([a618bb4](https://github.com/promhippie/github_exporter/commit/a618bb49f79f441f5d2b888f7acc6febdfee929e))
+
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([09e3732](https://github.com/promhippie/github_exporter/commit/09e3732858a579524f7898026f44d553e0305c0b))
+
 ## [6.0.8](https://github.com/promhippie/github_exporter/compare/v6.0.7...v6.0.8) (2025-09-22)
 
 
