@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.0.10](https://github.com/promhippie/github_exporter/compare/v6.0.9...v6.0.10) (2025-10-06)
+
+
+### Bugfixes
+
+* **deps:** update module github.com/bradleyfalzon/ghinstallation/v2 to v2.17.0 ([46947f6](https://github.com/promhippie/github_exporter/commit/46947f60bc492a8af5a5ac7cf857948e52920f27))
+
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([2515a76](https://github.com/promhippie/github_exporter/commit/2515a760f925c3a6f3dcebbbf00e838698501e69))
+
 ## [6.0.9](https://github.com/promhippie/github_exporter/compare/v6.0.8...v6.0.9) (2025-09-29)
 
 
