@@ -1,5 +1,23 @@
 # Changelog
 
+## [6.0.11](https://github.com/promhippie/github_exporter/compare/v6.0.10...v6.0.11) (2025-10-13)
+
+
+### Bugfixes
+
+* **deps:** update alpine:3.22 docker digest to 4b7ce07 ([22bba42](https://github.com/promhippie/github_exporter/commit/22bba425c3d6b9027b736e0774b6bfc2f7d4c99a))
+* **deps:** update golang docker tag to v1.25.2 ([04b482f](https://github.com/promhippie/github_exporter/commit/04b482f0554fa0ce14d236415c843181e216131e))
+* **deps:** update golang:1.25.2-alpine3.21 docker digest to 0134653 ([5d4e9c6](https://github.com/promhippie/github_exporter/commit/5d4e9c6cfc666e36247ea3435491a82108b772cf))
+* **deps:** update golang:1.25.2-alpine3.21 docker digest to 0ae17b3 ([ce2cb23](https://github.com/promhippie/github_exporter/commit/ce2cb23afa451f940be283087b9f51931d0bbadf))
+* **deps:** update golang:1.25.2-alpine3.21 docker digest to 7300a8d ([3ba10ac](https://github.com/promhippie/github_exporter/commit/3ba10acfab33ca3d4bd312cd5b46c1d0067bef04))
+* **deps:** update module golang.org/x/oauth2 to v0.32.0 ([1d6c499](https://github.com/promhippie/github_exporter/commit/1d6c49955247da3c7ca778122a1e9b067b150229))
+* **deps:** update module modernc.org/sqlite to v1.39.1 ([5bc5000](https://github.com/promhippie/github_exporter/commit/5bc5000b62f52aa74ea0a6fb3d114b37760ba2c5))
+
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([c9bf05a](https://github.com/promhippie/github_exporter/commit/c9bf05a76624b27d82b09a5da35b27fb0e61ab51))
+
 ## [6.0.10](https://github.com/promhippie/github_exporter/compare/v6.0.9...v6.0.10) (2025-10-06)
 
 
