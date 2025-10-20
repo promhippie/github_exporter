@@ -1,5 +1,19 @@
 # Changelog
 
+## [6.0.12](https://github.com/promhippie/github_exporter/compare/v6.0.11...v6.0.12) (2025-10-20)
+
+
+### Bugfixes
+
+* **deps:** update golang docker tag to v1.25.3 ([e7b664f](https://github.com/promhippie/github_exporter/commit/e7b664f16a1e57681d31dc20766d2c239f56f641))
+* **deps:** update golang:1.25.3-alpine3.21 docker digest to 0c9f3e0 ([363452a](https://github.com/promhippie/github_exporter/commit/363452a22511757c62011b397d6b28393cf11f48))
+* **deps:** update module github.com/google/go-github/v75 to v76 ([0f76d14](https://github.com/promhippie/github_exporter/commit/0f76d14d6b0875712fd1d5d7f6931052ecb2e78d))
+
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([8d10477](https://github.com/promhippie/github_exporter/commit/8d1047784e2e763ba1e561c6835af713c3070159))
+
 ## [6.0.11](https://github.com/promhippie/github_exporter/compare/v6.0.10...v6.0.11) (2025-10-13)
 
 
