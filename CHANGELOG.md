@@ -1,5 +1,18 @@
 # Changelog
 
+## [6.0.13](https://github.com/promhippie/github_exporter/compare/v6.0.12...v6.0.13) (2025-10-27)
+
+
+### Bugfixes
+
+* **deps:** update module github.com/prometheus/exporter-toolkit to v0.15.0 ([19295db](https://github.com/promhippie/github_exporter/commit/19295dbf7c9df89974c1f7cda8655ae1c9d636c5))
+* **deps:** update module github.com/urfave/cli/v3 to v3.5.0 ([30afbf8](https://github.com/promhippie/github_exporter/commit/30afbf8cd94542671ebcbb1eaa9ddbd4d32f55df))
+
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([c6f1629](https://github.com/promhippie/github_exporter/commit/c6f16297250d72ed59987a71ea672e3b179b18a6))
+
 ## [6.0.12](https://github.com/promhippie/github_exporter/compare/v6.0.11...v6.0.12) (2025-10-20)
 
 
