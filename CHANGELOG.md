@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.0.14](https://github.com/promhippie/github_exporter/compare/v6.0.13...v6.0.14) (2025-11-03)
+
+
+### Bugfixes
+
+* **deps:** update module github.com/golangci/golangci-lint/v2 to v2.6.0 ([65dbe25](https://github.com/promhippie/github_exporter/commit/65dbe258e264da15a200ded3c24c8a0357686432))
+
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([ed44882](https://github.com/promhippie/github_exporter/commit/ed448824979f44d16715d3bbbd762396cc49c343))
+
 ## [6.0.13](https://github.com/promhippie/github_exporter/compare/v6.0.12...v6.0.13) (2025-10-27)
 
 
