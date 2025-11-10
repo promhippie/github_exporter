@@ -1,5 +1,25 @@
 # Changelog
 
+## [6.0.15](https://github.com/promhippie/github_exporter/compare/v6.0.14...v6.0.15) (2025-11-10)
+
+
+### Bugfixes
+
+* **deps:** update golang docker tag to v1.25.4 ([c5400fc](https://github.com/promhippie/github_exporter/commit/c5400fca0dadf0d48ec212bb2f1f14ed09b1a8bf))
+* **deps:** update golang:1.25.4-alpine3.21 docker digest to 3289aac ([8f3bd7d](https://github.com/promhippie/github_exporter/commit/8f3bd7dbf99833ebef6a16f6441db6535a74ff6d))
+* **deps:** update module github.com/chaisql/chai to v0.18.0 ([6119c31](https://github.com/promhippie/github_exporter/commit/6119c3185738f25060db20cadd42ac578dab913f))
+* **deps:** update module github.com/golangci/golangci-lint/v2 to v2.6.1 ([679655c](https://github.com/promhippie/github_exporter/commit/679655c7c9ca847ed5880597a4e1e7a6f5fda149))
+* **deps:** update module github.com/google/go-github/v76 to v77 ([f49734d](https://github.com/promhippie/github_exporter/commit/f49734d6d4d230dabd01dfc36348b2ebf32d5e59))
+* **deps:** update module github.com/google/go-github/v77 to v78 ([985aa83](https://github.com/promhippie/github_exporter/commit/985aa836b704b7106b9e8b41cd2e36e863883aa2))
+* **deps:** update module github.com/urfave/cli/v3 to v3.6.0 ([6b566a3](https://github.com/promhippie/github_exporter/commit/6b566a392100ed6bb7026ea95ef448abe219f51c))
+* **deps:** update module golang.org/x/oauth2 to v0.33.0 ([1dfe88a](https://github.com/promhippie/github_exporter/commit/1dfe88a9355fb7840c781b9265c26fd99f79650b))
+* **deps:** update module modernc.org/sqlite to v1.40.0 ([89b69ae](https://github.com/promhippie/github_exporter/commit/89b69ae246842d93096575e43c5967d5817bf80a))
+
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([3fc5600](https://github.com/promhippie/github_exporter/commit/3fc56001f3c96451cef4120ca8c5fd5593fb22ae))
+
 ## [6.0.14](https://github.com/promhippie/github_exporter/compare/v6.0.13...v6.0.14) (2025-11-03)
 
 
