@@ -1,5 +1,19 @@
 # Changelog
 
+## [6.0.16](https://github.com/promhippie/github_exporter/compare/v6.0.15...v6.0.16) (2025-11-17)
+
+
+### Bugfixes
+
+* **deps:** update module github.com/golangci/golangci-lint/v2 to v2.6.2 ([f2138f2](https://github.com/promhippie/github_exporter/commit/f2138f2884d064d6fe72b8fee9aa16ca14bf1d4e))
+* **deps:** update module github.com/google/go-github/v78 to v79 ([2910eb2](https://github.com/promhippie/github_exporter/commit/2910eb245c2a4c36c44c36aabcecae8852719e28))
+* **deps:** update module github.com/urfave/cli/v3 to v3.6.1 ([205e107](https://github.com/promhippie/github_exporter/commit/205e107f256c05524f21aad818cc08d866d8bbf2))
+
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([10d6dd3](https://github.com/promhippie/github_exporter/commit/10d6dd357f747911346ca633ef01b3ed40737b71))
+
 ## [6.0.15](https://github.com/promhippie/github_exporter/compare/v6.0.14...v6.0.15) (2025-11-10)
 
 
