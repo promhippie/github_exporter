@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Generate token
         id: token
-        uses: tibdex/github-app-token@v2
+        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a # v2
         with:
           app_id: ${{ secrets.TOKEN_EXCHANGE_APP }}
           installation_retrieval_mode: id
@@ -30,7 +30,7 @@ jobs:
             {"contents": "write", "pull_requests": "write", "issues": "write"}
 
       - name: Fetch metadata
-        uses: dependabot/fetch-metadata@v2
+        uses: dependabot/fetch-metadata@08eff52bf64351f401fb50d4972fa95b9f2c2d1b # v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
