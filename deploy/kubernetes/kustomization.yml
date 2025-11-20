@@ -18,6 +18,6 @@ secretGenerator:
 images:
   - name: github-exporter
     newName: quay.io/promhippie/github-exporter
-    newTag: latest@sha256:0ee13e6c2dced5e5c23ef11db033511f3820d473d0c632f4a0b3a414a2ba2e44
+    newTag: latest@sha256:f07431363f3585d56a1bdab22fed6f288abc7d1fc07c97b5bc94e27077ddf9b2
 
 ...
