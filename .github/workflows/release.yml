@@ -30,7 +30,8 @@ jobs:
             semantic-release@23.1.1 \
             @semantic-release/changelog \
             @semantic-release/git \
-            @semantic-release/github
+            @semantic-release/github \
+            semantic-release-replace-plugin
 
       - name: Run releaser
         env:
