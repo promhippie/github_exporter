@@ -116,13 +116,13 @@
                 "replacements": [
                     {
                         "files": [
-                            "deploy/kubernetes/kustomization.yaml"
+                            "deploy/kubernetes/kustomization.yml"
                         ],
                         "from": "newTag: .*",
                         "to": "newTag: ${nextRelease.version}",
                         "results": [
                             {
-                                "file": "deploy/kubernetes/kustomization.yaml",
+                                "file": "deploy/kubernetes/kustomization.yml",
                                 "hasChanged": true,
                                 "numMatches": 1,
                                 "numReplacements": 1
@@ -146,7 +146,7 @@
                 "assets": [
                     "CHANGELOG.md",
                     ".github/RELEASE",
-                    "deploy/kubernetes/kustomization.yaml"
+                    "deploy/kubernetes/kustomization.yml"
                 ]
             }
         ]
