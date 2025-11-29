@@ -19,5 +19,6 @@ types:
   - major
   - minor
   - patch
+  - deps
 
 ...
