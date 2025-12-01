@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.0.18](https://github.com/promhippie/github_exporter/compare/v6.0.17...v6.0.18) (2025-12-01)
+
+
+### Bugfixes
+
+* **deps:** update quay.io/promhippie/github-exporter:latest docker digest to 4b21a7c ([4cf30d5](https://github.com/promhippie/github_exporter/commit/4cf30d5ba0f7499ac1b0f3599146919c6bebcc3d))
+
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([a558e02](https://github.com/promhippie/github_exporter/commit/a558e029a7e2dcd70a3cff624acdc27437717181))
+
 ## [6.0.17](https://github.com/promhippie/github_exporter/compare/v6.0.16...v6.0.17) (2025-11-24)
 
 
