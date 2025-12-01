@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
 
       - name: Generate manifest
-        uses: actionhippie/kustomize@74da477ce23150a2e2e68a0b8f4db4734440c22b # v3
+        uses: actionhippie/kustomize@9daa2da688dfc1a94a0fad3b801537bec60452cd # v3
         with:
           version: 5.7.0
           path: deploy/kubernetes/
