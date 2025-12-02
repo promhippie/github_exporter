@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - name: Docker meta
         id: meta
@@ -106,7 +106,7 @@ jobs:
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - name: Hub readme
         uses: actionhippie/pushrm@2f7e4beeb0c27f1c319e85ef5bb7cf3a420e9d96 # v1
