@@ -49,8 +49,6 @@ rulesets:
         parameters:
           strict_required_status_checks_policy: true
           required_status_checks:
-            - context: Semantic PR
-              integration_id: 198092
             - context: envvars
               integration_id: 15368
             - context: metrics
