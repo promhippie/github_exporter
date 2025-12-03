@@ -19,11 +19,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Generate token
+        if: github.event_name != 'pull_request'
+        id: token
+        uses: actions/create-github-app-token@7e473efe3cb98aa54f8d4bac15400b15fad77d94 # v2
+        with:
+          app-id: ${{ secrets.TOKEN_EXCHANGE_APP }}
+          private-key: ${{ secrets.TOKEN_EXCHANGE_KEY }}
+          permission-contents: write
+
       - name: Checkout source
         if: github.event_name != 'pull_request'
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
         with:
-          token: ${{ secrets.BOT_ACCESS_TOKEN }}
+          token: ${{ steps.token.outputs.token }}
 
       - name: PR checkout
         if: github.event_name == 'pull_request'
@@ -43,6 +52,9 @@ jobs:
       - name: Generate envvars
         run: task envvars
 
+      - name: Source rebase
+        run: git pull --autostash --rebase
+
       - name: Commit changes
         if: github.event_name != 'pull_request'
         uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9
@@ -58,11 +70,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Generate token
+        if: github.event_name != 'pull_request'
+        id: token
+        uses: actions/create-github-app-token@7e473efe3cb98aa54f8d4bac15400b15fad77d94 # v2
+        with:
+          app-id: ${{ secrets.TOKEN_EXCHANGE_APP }}
+          private-key: ${{ secrets.TOKEN_EXCHANGE_KEY }}
+          permission-contents: write
+
       - name: Checkout source
         if: github.event_name != 'pull_request'
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
         with:
-          token: ${{ secrets.BOT_ACCESS_TOKEN }}
+          token: ${{ steps.token.outputs.token }}
 
       - name: PR checkout
         if: github.event_name == 'pull_request'
@@ -97,11 +118,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Generate token
+        if: github.event_name != 'pull_request'
+        id: token
+        uses: actions/create-github-app-token@7e473efe3cb98aa54f8d4bac15400b15fad77d94 # v2
+        with:
+          app-id: ${{ secrets.TOKEN_EXCHANGE_APP }}
+          private-key: ${{ secrets.TOKEN_EXCHANGE_KEY }}
+          permission-contents: write
+
       - name: Checkout source
         if: github.event_name != 'pull_request'
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
         with:
-          token: ${{ secrets.BOT_ACCESS_TOKEN }}
+          token: ${{ steps.token.outputs.token }}
 
       - name: PR checkout
         if: github.event_name == 'pull_request'
@@ -120,6 +150,9 @@ jobs:
 
       - name: Generate labels
         run: task labels
+
+      - name: Source rebase
+        run: git pull --autostash --rebase
 
       - name: Commit changes
         if: github.event_name != 'pull_request'
