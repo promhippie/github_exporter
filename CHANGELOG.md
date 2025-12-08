@@ -1,5 +1,25 @@
 # Changelog
 
+## [7.0.0](https://github.com/promhippie/github_exporter/compare/v6.0.18...v7.0.0) (2025-12-08)
+
+
+### Features
+
+* **major:** update module github.com/google/go-github/v79 to v80 ([#602](https://github.com/promhippie/github_exporter/issues/602)) ([466a348](https://github.com/promhippie/github_exporter/commit/466a348a1dcf5d1e07885c2d15f41c78083ef418))
+* **minor:** update alpine docker tag to v3.23 ([#601](https://github.com/promhippie/github_exporter/issues/601)) ([4cbe73a](https://github.com/promhippie/github_exporter/commit/4cbe73ab5923763d91e4b5d36e10ff08a6d84ca6))
+
+
+### Bugfixes
+
+* **patch:** update golang docker tag to v1.25.5 ([#600](https://github.com/promhippie/github_exporter/issues/600)) ([2c510b2](https://github.com/promhippie/github_exporter/commit/2c510b23709990c2c69b07a5c47f28b9eee7bbcd))
+
+
+### Miscellaneous
+
+* drop issue and pull request template ([d7d0d9a](https://github.com/promhippie/github_exporter/commit/d7d0d9aabb453264ab280bc3a71746a56debb08b))
+* **flake:** updated lockfile [skip ci] ([3c77002](https://github.com/promhippie/github_exporter/commit/3c7700223bdf77cfb584c533b4ad6b218768d070))
+* just format some yaml comment ([79ed41e](https://github.com/promhippie/github_exporter/commit/79ed41e5bf286da6fd93e908aaa79077066a9c2a))
+
 ## [6.0.18](https://github.com/promhippie/github_exporter/compare/v6.0.17...v6.0.18) (2025-12-01)
 
 
