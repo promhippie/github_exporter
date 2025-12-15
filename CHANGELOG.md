@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.1.0](https://github.com/promhippie/github_exporter/compare/v7.0.0...v7.1.0) (2025-12-15)
+
+
+### Features
+
+* **minor:** update module golang.org/x/oauth2 to v0.34.0 ([#608](https://github.com/promhippie/github_exporter/issues/608)) ([d250bf4](https://github.com/promhippie/github_exporter/commit/d250bf45915b8b45304a07078b6bfffd6fbe5330))
+
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([8df2595](https://github.com/promhippie/github_exporter/commit/8df2595d1f01c417a644388d0bb47f3a8312bf18))
+
 ## [7.0.0](https://github.com/promhippie/github_exporter/compare/v6.0.18...v7.0.0) (2025-12-08)
 
 
