@@ -201,6 +201,19 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 		))
 	}
 
+	if cfg.Collector.Status {
+		logger.Debug("Status collector registered")
+
+		registry.MustRegister(exporter.NewStatusCollector(
+			logger,
+			client,
+			db,
+			requestFailures,
+			requestDuration,
+			cfg.Target,
+		))
+	}
+
 	reg := promhttp.HandlerFor(
 		registry,
 		promhttp.HandlerOpts{
