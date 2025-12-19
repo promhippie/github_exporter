@@ -2,7 +2,7 @@
 
 <html id="html" lang="en-us">
 	<head>
-	<meta name="generator" content="Hugo 0.152.2">
+	<meta name="generator" content="Hugo 0.153.0">
 		<meta http-equiv="content-type" content="text/html;charset=utf-8">
 		<meta name="viewport" content="width=device-width"/>
 
@@ -427,8 +427,8 @@ name as a hostname:</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">scrape_timeout</span><span class="p">:</span><span class="w"> </span><span class="l">10s</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">evaluation_interval</span><span class="p">:</span><span class="w"> </span><span class="l">1m</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">scrape_configs</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="l">github</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">scrape_configs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl">- <span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="l">github</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">static_configs</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">targets</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">github_exporter:9504</span></span></span></code></pre></div>
@@ -438,10 +438,10 @@ within the same folder, this <code>docker-compose.yml</code> starts a simple
 update the environment variables with the required credentials.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;2&#39;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">volumes</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">prometheus</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">services</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">services</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">prometheus</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">prom/prometheus:latest</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l">always</span><span class="w">
@@ -467,8 +467,8 @@ architectures without any change to the image name. You should apply a change
 like this to the <code>docker-compose.yml</code> file:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">  github_exporter:
 </span></span><span class="line"><span class="cl"><span class="gd">-   image: promhippie/github-exporter:latest
-</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+   image: promhippie/github-exporter:x.x.x
-</span></span></span><span class="line"><span class="cl"><span class="gi"></span>    restart: always
+</span></span></span><span class="line"><span class="cl"><span class="gi">+   image: promhippie/github-exporter:x.x.x
+</span></span></span><span class="line"><span class="cl">    restart: always
 </span></span><span class="line"><span class="cl">    environment:
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_LOG_PRETTY=true
@@ -485,7 +485,7 @@ directly at <a href="http://localhost:9504/metrics">http://localhost:9504/metric
 </span></span><span class="line"><span class="cl">    restart: always
 </span></span><span class="line"><span class="cl"><span class="gi">+   ports:
 </span></span></span><span class="line"><span class="cl"><span class="gi">+     - 127.0.0.1:9504:9504
-</span></span></span><span class="line"><span class="cl"><span class="gi"></span>    environment:
+</span></span></span><span class="line"><span class="cl">    environment:
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_LOG_PRETTY=true
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_ORG=promhippie
@@ -500,8 +500,8 @@ following format:</p>
 </span></span><span class="line"><span class="cl">    restart: always
 </span></span><span class="line"><span class="cl">    environment:
 </span></span><span class="line"><span class="cl"><span class="gd">-     - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
-</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+     - GITHUB_EXPORTER_TOKEN=file://path/to/secret/file/with/token
-</span></span></span><span class="line"><span class="cl"><span class="gi"></span>      - GITHUB_EXPORTER_LOG_PRETTY=true
+</span></span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_TOKEN=file://path/to/secret/file/with/token
+</span></span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_LOG_PRETTY=true
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_ORG=promhippie
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_REPO=promhippie/example
 </span></span></code></pre></div>
@@ -523,7 +523,7 @@ specific repositories like the example mentioned above.</p>
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_LOG_PRETTY=true
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_ORG=promhippie
 </span></span><span class="line"><span class="cl"><span class="gd">-     - GITHUB_EXPORTER_REPO=promhippie/example
-</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+     - GITHUB_EXPORTER_REPO=promhippie/*_exporter,promhippie/prometheus*
+</span></span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_REPO=promhippie/*_exporter,promhippie/prometheus*
 </span></span></span></code></pre></div>
 <p>If you want to secure the access to the exporter you can provide a web config.
 You just need to provide a path to the config file in order to enable the
@@ -534,7 +534,7 @@ support for it, for details about the config format look at the
 </span></span><span class="line"><span class="cl">    restart: always
 </span></span><span class="line"><span class="cl">    environment:
 </span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_WEB_CONFIG=path/to/web-config.json
-</span></span></span><span class="line"><span class="cl"><span class="gi"></span>      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
+</span></span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_LOG_PRETTY=true
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_ORG=promhippie
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_REPO=promhippie/example
@@ -557,7 +557,7 @@ configure HTTPS access via <a href="#web-configuration">web configuration</a>.</
 </span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_COLLECTOR_WORKFLOW_RUNS=true
 </span></span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_COLLECTOR_WORKFLOW_JOBS=true
 </span></span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_WEBHOOK_SECRET=your-prepared-random-secret
-</span></span></span><span class="line"><span class="cl"><span class="gi"></span>      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
+</span></span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_LOG_PRETTY=true
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_ORG=promhippie
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_REPO=promhippie/example
@@ -576,8 +576,8 @@ following environment variables after that:</p>
 </span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_APP_ID=your-application-id
 </span></span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_INSTALLATION_ID=your-installation-id
 </span></span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_PRIVATE_KEY=file://path/to/secret.pem
-</span></span></span><span class="line"><span class="cl"><span class="gi"></span><span class="gd">-     - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
-</span></span></span><span class="line"><span class="cl"><span class="gd"></span>      - GITHUB_EXPORTER_LOG_PRETTY=true
+</span></span></span><span class="line"><span class="cl"><span class="gd">-     - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
+</span></span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_LOG_PRETTY=true
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_ORG=promhippie
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_REPO=promhippie/example
 </span></span></code></pre></div>
@@ -590,8 +590,8 @@ provide is in a base64 encoded format:</p>
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_APP_ID=your-application-id
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_INSTALLATION_ID=your-installation-id
 </span></span><span class="line"><span class="cl"><span class="gi">+     - GITHUB_EXPORTER_PRIVATE_KEY=base64://Q0VSVElGSUNBVEU=
-</span></span></span><span class="line"><span class="cl"><span class="gi"></span><span class="gd">-     - GITHUB_EXPORTER_PRIVATE_KEY=file://path/to/secret.pem
-</span></span></span><span class="line"><span class="cl"><span class="gd"></span>      - GITHUB_EXPORTER_LOG_PRETTY=true
+</span></span></span><span class="line"><span class="cl"><span class="gd">-     - GITHUB_EXPORTER_PRIVATE_KEY=file://path/to/secret.pem
+</span></span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_LOG_PRETTY=true
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_ORG=promhippie
 </span></span><span class="line"><span class="cl">      - GITHUB_EXPORTER_REPO=promhippie/example
 </span></span></code></pre></div>
@@ -943,18 +943,18 @@ get it installed and working please read the upstream documentation. After the
 installation of <a href="https://github.com/kubernetes-sigs/kustomize">Kustomize</a> you just need to prepare a
 <code>kustomization.yml</code> wherever you like similar to this:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">kustomize.config.k8s.io/v1beta1</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Kustomization</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">github-exporter</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Kustomization</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">github-exporter</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">resources</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">github.com/promhippie/github_exporter//deploy/kubernetes?ref=master</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">configMapGenerator</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">configMapGenerator</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">github-exporter</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">behavior</span><span class="p">:</span><span class="w"> </span><span class="l">merge</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">literals</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">secretGenerator</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">secretGenerator</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">github-exporter</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">behavior</span><span class="p">:</span><span class="w"> </span><span class="l">merge</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">literals</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span></span></span></code></pre></div>
