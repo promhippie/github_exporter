@@ -110,7 +110,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - name: Hub readme
-        uses: actionhippie/pushrm@771e4305eb41fd54b6e0ae7f60264ab7501bdeb6 # v1
+        uses: actionhippie/pushrm@db8835668f770a1b8be17d19b5e6b36450c6766f # v1
         with:
           provider: dockerhub
           target: promhippie/github-exporter
@@ -120,7 +120,7 @@ jobs:
           readme: README.md
 
       - name: Quay readme
-        uses: actionhippie/pushrm@771e4305eb41fd54b6e0ae7f60264ab7501bdeb6 # v1
+        uses: actionhippie/pushrm@db8835668f770a1b8be17d19b5e6b36450c6766f # v1
         with:
           provider: quay
           target: quay.io/promhippie/github-exporter
