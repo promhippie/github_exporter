@@ -134,12 +134,6 @@
             }
         ],
         [
-            "@semantic-release/github",
-            {
-                "assets": []
-            }
-        ],
-        [
             "@semantic-release/git",
             {
                 "message": "chore: release ${nextRelease.version}",
@@ -148,6 +142,12 @@
                     ".github/RELEASE",
                     "deploy/kubernetes/kustomization.yml"
                 ]
+            }
+        ],
+        [
+            "@semantic-release/github",
+            {
+                "assets": []
             }
         ]
     ]
