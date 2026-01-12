@@ -1,5 +1,21 @@
 # Changelog
 
+## [8.0.0](https://github.com/promhippie/github_exporter/compare/v7.3.0...v8.0.0) (2026-01-12)
+
+### Features
+
+* **major:** update module github.com/google/go-github/v80 to v81 ([#622](https://github.com/promhippie/github_exporter/issues/622)) ([325d2e5](https://github.com/promhippie/github_exporter/commit/325d2e56e61d704e01ae4855262da6c5a17e7503))
+* **minor:** update module modernc.org/sqlite to v1.43.0 ([#623](https://github.com/promhippie/github_exporter/issues/623)) ([2a924b6](https://github.com/promhippie/github_exporter/commit/2a924b6d122db211c6f9743f0509140cd0c1b82b))
+
+### Bugfixes
+
+* **patch:** update module github.com/prometheus/exporter-toolkit to v0.15.1 ([#620](https://github.com/promhippie/github_exporter/issues/620)) ([6d858c0](https://github.com/promhippie/github_exporter/commit/6d858c0a3cae9d6fcd6e29f8646b12281ce77f3c))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([336f885](https://github.com/promhippie/github_exporter/commit/336f885345bb6d6194878e3a49a3daf243734f2f))
+* **flake:** updated lockfile [skip ci] ([3537c66](https://github.com/promhippie/github_exporter/commit/3537c6690513dbf9a0b1c7c0b563364a6bc1e896))
+
 ## [7.3.0](https://github.com/promhippie/github_exporter/compare/v7.2.0...v7.3.0) (2025-12-29)
 
 
