@@ -1,5 +1,21 @@
 # Changelog
 
+## [8.1.0](https://github.com/promhippie/github_exporter/compare/v8.0.0...v8.1.0) (2026-01-19)
+
+### Features
+
+* **minor:** update module modernc.org/sqlite to v1.44.0 ([#626](https://github.com/promhippie/github_exporter/issues/626)) ([2c3e057](https://github.com/promhippie/github_exporter/commit/2c3e0579588d1f59bcd9366ea8bc05c131af9cf1))
+
+### Bugfixes
+
+* **patch:** update module github.com/go-chi/chi/v5 to v5.2.4 ([#627](https://github.com/promhippie/github_exporter/issues/627)) ([ec60f89](https://github.com/promhippie/github_exporter/commit/ec60f891012958bbd7c1ad465c4087866c718641))
+* **patch:** update module github.com/urfave/cli/v3 to v3.6.2 ([#630](https://github.com/promhippie/github_exporter/issues/630)) ([4257cf4](https://github.com/promhippie/github_exporter/commit/4257cf4e7c012d4eb88157139d9d5418a35bdd4e))
+* **patch:** update module modernc.org/sqlite to v1.44.1 ([#629](https://github.com/promhippie/github_exporter/issues/629)) ([c0efc59](https://github.com/promhippie/github_exporter/commit/c0efc59a18f3a082fe546c24e71969068a9fb06e))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([c5a3c52](https://github.com/promhippie/github_exporter/commit/c5a3c525dc9c6d82760a4f92a5fa58d73f286473))
+
 ## [8.0.0](https://github.com/promhippie/github_exporter/compare/v7.3.0...v8.0.0) (2026-01-12)
 
 ### Features
