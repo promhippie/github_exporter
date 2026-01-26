@@ -1,5 +1,16 @@
 # Changelog
 
+## [8.1.1](https://github.com/promhippie/github_exporter/compare/v8.1.0...v8.1.1) (2026-01-26)
+
+### Bugfixes
+
+* **patch:** update module modernc.org/sqlite to v1.44.2 ([#631](https://github.com/promhippie/github_exporter/issues/631)) ([7999910](https://github.com/promhippie/github_exporter/commit/79999109631b49e447d6e020efb65f00fc5a0b9d))
+* **patch:** update module modernc.org/sqlite to v1.44.3 ([#632](https://github.com/promhippie/github_exporter/issues/632)) ([13bf411](https://github.com/promhippie/github_exporter/commit/13bf41129efb853472854d77fe3d72544c88883b))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([8ef816c](https://github.com/promhippie/github_exporter/commit/8ef816cb468d01af1f4a8f1cd5c8946e90f7071c))
+
 ## [8.1.0](https://github.com/promhippie/github_exporter/compare/v8.0.0...v8.1.0) (2026-01-19)
 
 ### Features
