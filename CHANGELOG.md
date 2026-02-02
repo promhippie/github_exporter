@@ -1,5 +1,20 @@
 # Changelog
 
+## [9.0.0](https://github.com/promhippie/github_exporter/compare/v8.1.1...v9.0.0) (2026-02-02)
+
+### Features
+
+* **major:** update module github.com/google/go-github/v81 to v82 ([#633](https://github.com/promhippie/github_exporter/issues/633)) ([893bc15](https://github.com/promhippie/github_exporter/commit/893bc156384815f1f90d37cdf113f4ce4a2b5023))
+* **minor:** update module github.com/lib/pq to v1.11.1 ([#635](https://github.com/promhippie/github_exporter/issues/635)) ([9f4a6c0](https://github.com/promhippie/github_exporter/commit/9f4a6c054f0fe0e5a0e75b829d56fbde7dd1b713))
+
+### Bugfixes
+
+* **deps:** update alpine:3.23 docker digest to 2510918 ([#634](https://github.com/promhippie/github_exporter/issues/634)) ([8ecab5f](https://github.com/promhippie/github_exporter/commit/8ecab5feff58638592fb7f78328677edec4f5280))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([58bdd21](https://github.com/promhippie/github_exporter/commit/58bdd21bb048a3dd63e8dc169075a598ef37b91a))
+
 ## [8.1.1](https://github.com/promhippie/github_exporter/compare/v8.1.0...v8.1.1) (2026-01-26)
 
 ### Bugfixes
