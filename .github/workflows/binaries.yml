@@ -68,7 +68,7 @@ jobs:
 
       - name: Install cloudsmith
         if: startsWith(github.ref, 'refs/tags/')
-        uses: cloudsmith-io/cloudsmith-cli-action@v2.0.1
+        uses: cloudsmith-io/cloudsmith-cli-action@v2.0.2
         with:
           api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
 
