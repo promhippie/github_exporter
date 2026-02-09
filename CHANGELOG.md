@@ -1,5 +1,19 @@
 # Changelog
 
+## [9.1.0](https://github.com/promhippie/github_exporter/compare/v9.0.0...v9.1.0) (2026-02-09)
+
+### Features
+
+* **minor:** update module golang.org/x/oauth2 to v0.35.0 ([#638](https://github.com/promhippie/github_exporter/issues/638)) ([0b3f661](https://github.com/promhippie/github_exporter/commit/0b3f661e048682b10328873ceaee25efb0864644))
+
+### Bugfixes
+
+* **patch:** update module github.com/go-chi/chi/v5 to v5.2.5 ([#637](https://github.com/promhippie/github_exporter/issues/637)) ([2f93254](https://github.com/promhippie/github_exporter/commit/2f93254262ed48fe92afb724942ebafec00daf1a))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([a98d65f](https://github.com/promhippie/github_exporter/commit/a98d65f55f923a6264770ae85f4ce08147610c61))
+
 ## [9.0.0](https://github.com/promhippie/github_exporter/compare/v8.1.1...v9.0.0) (2026-02-02)
 
 ### Features
