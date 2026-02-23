@@ -1,5 +1,21 @@
 # Changelog
 
+## [10.0.0](https://github.com/promhippie/github_exporter/compare/v9.2.0...v10.0.0) (2026-02-23)
+
+### Features
+
+* **major:** update module github.com/google/go-github/v82 to v83 ([#642](https://github.com/promhippie/github_exporter/issues/642)) ([c6b371d](https://github.com/promhippie/github_exporter/commit/c6b371d4f8d89b33eab23acce55b5c886022802f))
+* **minor:** update module modernc.org/sqlite to v1.46.0 ([#643](https://github.com/promhippie/github_exporter/issues/643)) ([f24dc12](https://github.com/promhippie/github_exporter/commit/f24dc12794601bb69763be0bf747179d80e9423e))
+
+### Bugfixes
+
+* **patch:** update module modernc.org/sqlite to v1.46.1 ([#644](https://github.com/promhippie/github_exporter/issues/644)) ([1d9407b](https://github.com/promhippie/github_exporter/commit/1d9407bdb47d82b55b634b441dcaaefcf8823189))
+
+### Miscellaneous
+
+* **deps:** bump filippo.io/edwards25519 from 1.1.0 to 1.1.1 ([2351052](https://github.com/promhippie/github_exporter/commit/23510524a42450ef904987bd8f4a0f4b15a1c2aa))
+* **flake:** updated lockfile [skip ci] ([e96c9e9](https://github.com/promhippie/github_exporter/commit/e96c9e92f2e01e7a81e9408410d06b03fe8727ca))
+
 ## [9.2.0](https://github.com/promhippie/github_exporter/compare/v9.1.0...v9.2.0) (2026-02-16)
 
 ### Features
