@@ -58,7 +58,7 @@
               default = {
                 git-hooks = {
                   hooks = {
-                    nixfmt-rfc-style = {
+                    nixfmt = {
                       enable = true;
                     };
                     gofmt = {
@@ -84,7 +84,7 @@
                   go-task
                   goreleaser
                   hugo
-                  nixfmt-rfc-style
+                  nixfmt
                 ];
 
                 env = {
