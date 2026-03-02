@@ -1,5 +1,18 @@
 # Changelog
 
+## [11.0.0](https://github.com/promhippie/github_exporter/compare/v10.0.0...v11.0.0) (2026-03-02)
+
+### Features
+
+* **major:** update module github.com/google/go-github/v83 to v84 ([#647](https://github.com/promhippie/github_exporter/issues/647)) ([e2641b8](https://github.com/promhippie/github_exporter/commit/e2641b82738c46e6e187a61c0c6c61231bd74da4))
+* **minor:** update module github.com/urfave/cli/v3 to v3.7.0 ([#648](https://github.com/promhippie/github_exporter/issues/648)) ([60e909b](https://github.com/promhippie/github_exporter/commit/60e909b19c5c7949f8e02ae5bf66adf9797d0211))
+
+### Miscellaneous
+
+* enable skip-package-name-collision-with-go-std for revive ([fadf09b](https://github.com/promhippie/github_exporter/commit/fadf09bfcf138b36411df38186c0d5f81dc427a3))
+* **flake:** updated lockfile [skip ci] ([5859741](https://github.com/promhippie/github_exporter/commit/58597410a95c37b69a3b699f41a7a73a08a19cfc))
+* replace nixfmt package ([5a1a285](https://github.com/promhippie/github_exporter/commit/5a1a285a11bf411fafa8fe77b7271a065a82ab78))
+
 ## [10.0.0](https://github.com/promhippie/github_exporter/compare/v9.2.0...v10.0.0) (2026-02-23)
 
 ### Features
