@@ -1,5 +1,15 @@
 # Changelog
 
+## [11.1.0](https://github.com/promhippie/github_exporter/compare/v11.0.0...v11.1.0) (2026-03-09)
+
+### Features
+
+* **minor:** update module golang.org/x/oauth2 to v0.36.0 ([#654](https://github.com/promhippie/github_exporter/issues/654)) ([f816a49](https://github.com/promhippie/github_exporter/commit/f816a49581b456f31cc608791073ddb4495c9cad))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([6aca91f](https://github.com/promhippie/github_exporter/commit/6aca91f5d9fe882c45434c2ca01a32e712cbdaee))
+
 ## [11.0.0](https://github.com/promhippie/github_exporter/compare/v10.0.0...v11.0.0) (2026-03-02)
 
 ### Features
