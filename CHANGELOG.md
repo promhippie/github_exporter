@@ -1,5 +1,15 @@
 # Changelog
 
+## [11.2.0](https://github.com/promhippie/github_exporter/compare/v11.1.0...v11.2.0) (2026-03-16)
+
+### Features
+
+* **minor:** update module github.com/bradleyfalzon/ghinstallation/v2 to v2.18.0 ([#656](https://github.com/promhippie/github_exporter/issues/656)) ([6f169cc](https://github.com/promhippie/github_exporter/commit/6f169ccc211673007425d1a1cee8f642682ca542))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([f0928d7](https://github.com/promhippie/github_exporter/commit/f0928d753c44f06b10896b360fbebf644801e993))
+
 ## [11.1.0](https://github.com/promhippie/github_exporter/compare/v11.0.0...v11.1.0) (2026-03-09)
 
 ### Features
