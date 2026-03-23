@@ -1,5 +1,20 @@
 # Changelog
 
+## [11.3.0](https://github.com/promhippie/github_exporter/compare/v11.2.0...v11.3.0) (2026-03-23)
+
+### Features
+
+* **minor:** update module github.com/lib/pq to v1.12.0 ([#661](https://github.com/promhippie/github_exporter/issues/661)) ([9c133ff](https://github.com/promhippie/github_exporter/commit/9c133ffa165d18dc8fe68d294119bf57120884c3))
+* **minor:** update module modernc.org/sqlite to v1.47.0 ([#660](https://github.com/promhippie/github_exporter/issues/660)) ([8ca2e58](https://github.com/promhippie/github_exporter/commit/8ca2e588928da1a4fd022a94bfbf218cc8a3cee3))
+
+### Bugfixes
+
+* **patch:** update module modernc.org/sqlite to v1.46.2 ([#659](https://github.com/promhippie/github_exporter/issues/659)) ([aa17803](https://github.com/promhippie/github_exporter/commit/aa17803b2a8f77b6e9e9d98dc8db7d3834499778))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([c97b8af](https://github.com/promhippie/github_exporter/commit/c97b8af55b803b1ac603b58ef6099dfae46b5f45))
+
 ## [11.2.0](https://github.com/promhippie/github_exporter/compare/v11.1.0...v11.2.0) (2026-03-16)
 
 ### Features
