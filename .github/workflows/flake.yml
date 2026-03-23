@@ -38,7 +38,7 @@ jobs:
         run: git pull --autostash --rebase
 
       - name: Commit changes
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v10
         with:
           author_name: GitHub Actions
           author_email: github@webhippie.de

@@ -58,7 +58,7 @@ jobs:
 
       - name: Commit changes
         if: github.event_name != 'pull_request'
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v10
         with:
           author_name: GitHub Actions
           author_email: github@webhippie.de
@@ -110,7 +110,7 @@ jobs:
 
       - name: Commit changes
         if: github.event_name != 'pull_request'
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v10
         with:
           author_name: GitHub Actions
           author_email: github@webhippie.de
@@ -162,7 +162,7 @@ jobs:
 
       - name: Commit changes
         if: github.event_name != 'pull_request'
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v10
         with:
           author_name: GitHub Actions
           author_email: github@webhippie.de
