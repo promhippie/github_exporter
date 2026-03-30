@@ -1,5 +1,17 @@
 # Changelog
 
+## [11.4.0](https://github.com/promhippie/github_exporter/compare/v11.3.0...v11.4.0) (2026-03-30)
+
+### Features
+
+* **minor:** update module github.com/urfave/cli/v3 to v3.8.0 ([#665](https://github.com/promhippie/github_exporter/issues/665)) ([7861dd2](https://github.com/promhippie/github_exporter/commit/7861dd27b80e0c744929722f7e9469054400a5a9))
+* **minor:** update module modernc.org/sqlite to v1.48.0 ([#667](https://github.com/promhippie/github_exporter/issues/667)) ([4862d58](https://github.com/promhippie/github_exporter/commit/4862d58b814f9b213af3def9ee2d307404c696de))
+
+### Miscellaneous
+
+* **deps:** bump github.com/buger/jsonparser from 1.1.1 to 1.1.2 ([6c1f1ba](https://github.com/promhippie/github_exporter/commit/6c1f1ba4428b055cace3b60c31211e3a1d8dfc97))
+* **flake:** updated lockfile [skip ci] ([86e1e68](https://github.com/promhippie/github_exporter/commit/86e1e6858538ca8ea12ecf87857887374036bf39))
+
 ## [11.3.0](https://github.com/promhippie/github_exporter/compare/v11.2.0...v11.3.0) (2026-03-23)
 
 ### Features
