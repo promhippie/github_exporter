@@ -1,5 +1,22 @@
 # Changelog
 
+## [11.5.0](https://github.com/promhippie/github_exporter/compare/v11.4.0...v11.5.0) (2026-04-06)
+
+### Features
+
+* **minor:** update module github.com/prometheus/exporter-toolkit to v0.16.0 ([#672](https://github.com/promhippie/github_exporter/issues/672)) ([2d75918](https://github.com/promhippie/github_exporter/commit/2d75918a258812ad6e47b7d9a5b169426989edbc))
+
+### Bugfixes
+
+* **patch:** update module github.com/lib/pq to v1.12.1 ([#668](https://github.com/promhippie/github_exporter/issues/668)) ([0619d81](https://github.com/promhippie/github_exporter/commit/0619d81117f129c412fe353cbf4bcbe29e929a36))
+* **patch:** update module github.com/lib/pq to v1.12.2 ([#669](https://github.com/promhippie/github_exporter/issues/669)) ([17a31c5](https://github.com/promhippie/github_exporter/commit/17a31c510a78632d4560227627ad797fec633bb9))
+* **patch:** update module github.com/lib/pq to v1.12.3 ([#670](https://github.com/promhippie/github_exporter/issues/670)) ([36ddad1](https://github.com/promhippie/github_exporter/commit/36ddad161a20c953c3b2df7c47c078f31c94f56d))
+* **patch:** update module modernc.org/sqlite to v1.48.1 ([#671](https://github.com/promhippie/github_exporter/issues/671)) ([7695e09](https://github.com/promhippie/github_exporter/commit/7695e09a8229e1dbf5fd963a57ff5b5d6f0794c2))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([d95bfdb](https://github.com/promhippie/github_exporter/commit/d95bfdb31398fb2f0eaa84a333af5470ec5288d9))
+
 ## [11.4.0](https://github.com/promhippie/github_exporter/compare/v11.3.0...v11.4.0) (2026-03-30)
 
 ### Features
