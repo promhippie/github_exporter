@@ -1,5 +1,15 @@
 # Changelog
 
+## [11.5.1](https://github.com/promhippie/github_exporter/compare/v11.5.0...v11.5.1) (2026-04-13)
+
+### Bugfixes
+
+* **patch:** update module modernc.org/sqlite to v1.48.2 ([#674](https://github.com/promhippie/github_exporter/issues/674)) ([12720d8](https://github.com/promhippie/github_exporter/commit/12720d89bf16845725db3d1298bd57df6d1c20da))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([ec13b24](https://github.com/promhippie/github_exporter/commit/ec13b246311678ad836ceb31e93eed2ed6e186c1))
+
 ## [11.5.0](https://github.com/promhippie/github_exporter/compare/v11.4.0...v11.5.0) (2026-04-06)
 
 ### Features
