@@ -54,7 +54,7 @@ jobs:
 
       - name: Setup cosign
         if: github.event_name != 'pull_request'
-        uses: sigstore/cosign-installer@v3
+        uses: sigstore/cosign-installer@v4
 
       - name: Hub login
         uses: docker/login-action@v4
