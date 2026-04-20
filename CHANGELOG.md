@@ -1,5 +1,19 @@
 # Changelog
 
+## [11.6.0](https://github.com/promhippie/github_exporter/compare/v11.5.1...v11.6.0) (2026-04-20)
+
+### Features
+
+* **minor:** update module modernc.org/sqlite to v1.49.1 ([#678](https://github.com/promhippie/github_exporter/issues/678)) ([0943d58](https://github.com/promhippie/github_exporter/commit/0943d58eadcafb59f13b96af9b13857e02ac54d7))
+
+### Bugfixes
+
+* **deps:** update alpine:3.23 docker digest to 5b10f43 ([#676](https://github.com/promhippie/github_exporter/issues/676)) ([129c663](https://github.com/promhippie/github_exporter/commit/129c663474fdf21e7ef7c39f48de09da93f4be8f))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([7039f7f](https://github.com/promhippie/github_exporter/commit/7039f7fa661636cfa766ce6fb56fccf0c1dbba3f))
+
 ## [11.5.1](https://github.com/promhippie/github_exporter/compare/v11.5.0...v11.5.1) (2026-04-13)
 
 ### Bugfixes
