@@ -1,5 +1,16 @@
 # Changelog
 
+## [12.0.0](https://github.com/promhippie/github_exporter/compare/v11.6.0...v12.0.0) (2026-04-27)
+
+### Features
+
+* **major:** update module github.com/google/go-github/v84 to v85 ([#679](https://github.com/promhippie/github_exporter/issues/679)) ([33ac4bb](https://github.com/promhippie/github_exporter/commit/33ac4bb2c8455ed1d4f5615a51ef5dbd986091ec))
+* **minor:** update module modernc.org/sqlite to v1.50.0 ([#680](https://github.com/promhippie/github_exporter/issues/680)) ([7f7fe62](https://github.com/promhippie/github_exporter/commit/7f7fe62c00e9f5ba38d521e60bba6aaf0ce51671))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([af95e39](https://github.com/promhippie/github_exporter/commit/af95e393b37af8b27c8567e0d9f48ba5d233563c))
+
 ## [11.6.0](https://github.com/promhippie/github_exporter/compare/v11.5.1...v11.6.0) (2026-04-20)
 
 ### Features
