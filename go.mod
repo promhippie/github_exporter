@@ -8,7 +8,7 @@ require (
 	github.com/cenkalti/backoff/v5 v5.0.3
 	github.com/chaisql/chai v0.18.0
 	github.com/go-chi/chi/v5 v5.2.5
-	github.com/go-sql-driver/mysql v1.9.3
+	github.com/go-sql-driver/mysql v1.10.0
 	github.com/google/go-github/v85 v85.0.0
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/joho/godotenv v1.5.1
@@ -30,7 +30,7 @@ require (
 	codeberg.org/polyfloyd/go-errorlint v1.9.0 // indirect
 	dev.gaijin.team/go/exhaustruct/v4 v4.0.0 // indirect
 	dev.gaijin.team/go/golib v0.6.0 // indirect
-	filippo.io/edwards25519 v1.1.1 // indirect
+	filippo.io/edwards25519 v1.2.0 // indirect
 	github.com/4meepo/tagalign v1.4.3 // indirect
 	github.com/Abirdcfly/dupword v0.1.7 // indirect
 	github.com/AdminBenni/iota-mixing v1.0.0 // indirect
