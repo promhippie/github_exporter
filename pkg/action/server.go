@@ -369,6 +369,15 @@ func useApplication(cfg *config.Config, _ *slog.Logger) bool {
 	return cfg.Target.PrivateKey != "" && cfg.Target.AppID != 0 && cfg.Target.InstallID != 0
 }
 
+func githubTransport(cfg *config.Config) *http.Transport {
+	transport := http.DefaultTransport.(*http.Transport).Clone()
+	transport.TLSClientConfig = &tls.Config{
+		InsecureSkipVerify: cfg.Target.Insecure,
+	}
+
+	return transport
+}
+
 func getClient(cfg *config.Config, logger *slog.Logger) (*github.Client, error) {
 	if useEnterprise(cfg, logger) {
 		return getEnterprise(cfg, logger)
@@ -386,7 +395,7 @@ func getClient(cfg *config.Config, logger *slog.Logger) (*github.Client, error) 
 		}
 
 		transport, err := ghinstallation.New(
-			http.DefaultTransport,
+			githubTransport(cfg),
 			cfg.Target.AppID,
 			cfg.Target.InstallID,
 			[]byte(privateKey),
@@ -442,7 +451,7 @@ func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, err
 		}
 
 		transport, err := ghinstallation.New(
-			http.DefaultTransport,
+			githubTransport(cfg),
 			cfg.Target.AppID,
 			cfg.Target.InstallID,
 			[]byte(privateKey),
@@ -499,11 +508,7 @@ func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, err
 				context.Background(),
 				oauth2.HTTPClient,
 				&http.Client{
-					Transport: &http.Transport{
-						TLSClientConfig: &tls.Config{
-							InsecureSkipVerify: cfg.Target.Insecure,
-						},
-					},
+					Transport: githubTransport(cfg),
 				},
 			),
 			oauth2.StaticTokenSource(
