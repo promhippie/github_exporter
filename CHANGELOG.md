@@ -1,5 +1,15 @@
 # Changelog
 
+## [12.1.0](https://github.com/promhippie/github_exporter/compare/v12.0.0...v12.1.0) (2026-05-04)
+
+### Features
+
+* **minor:** update module github.com/go-sql-driver/mysql to v1.10.0 ([#681](https://github.com/promhippie/github_exporter/issues/681)) ([bf3e421](https://github.com/promhippie/github_exporter/commit/bf3e42165ce1701ee2b7e007e4ec39bc89536e90))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([9fae81c](https://github.com/promhippie/github_exporter/commit/9fae81cfa2607900fb44b954340091bf8d817a99))
+
 ## [12.0.0](https://github.com/promhippie/github_exporter/compare/v11.6.0...v12.0.0) (2026-04-27)
 
 ### Features
