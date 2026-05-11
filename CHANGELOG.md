@@ -1,5 +1,16 @@
 # Changelog
 
+## [12.1.1](https://github.com/promhippie/github_exporter/compare/v12.1.0...v12.1.1) (2026-05-11)
+
+### Bugfixes
+
+* honor insecure skip verify on github app authentication ([82ce02c](https://github.com/promhippie/github_exporter/commit/82ce02c709fb26df3bcba3ee8f9b5aa02a43b492))
+* **patch:** update module modernc.org/sqlite to v1.50.1 ([#686](https://github.com/promhippie/github_exporter/issues/686)) ([3247074](https://github.com/promhippie/github_exporter/commit/324707408dd1a7563ea296ad83e63836a78f9b30))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([e3840ef](https://github.com/promhippie/github_exporter/commit/e3840efd4390c69fe198c961019822219cf607da))
+
 ## [12.1.0](https://github.com/promhippie/github_exporter/compare/v12.0.0...v12.1.0) (2026-05-04)
 
 ### Features
