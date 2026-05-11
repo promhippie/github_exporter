@@ -244,7 +244,7 @@ func (c *BillingCollector) fetchUsageForEntity(ctx context.Context, entity, name
 		endpoint = fmt.Sprintf("/organizations/%s/settings/billing/usage", name)
 	}
 
-	req, err := c.client.NewRequest("GET", endpoint, nil)
+	req, err := c.client.NewRequest(ctx, "GET", endpoint, nil)
 
 	if err != nil {
 		c.logger.Error("Failed to prepare billing usage",
@@ -258,7 +258,7 @@ func (c *BillingCollector) fetchUsageForEntity(ctx context.Context, entity, name
 	}
 
 	response := &UsageResponse{}
-	resp, err := c.client.Do(ctx, req, response)
+	resp, err := c.client.Do(req, response)
 
 	if err != nil {
 		c.logger.Error("Failed to fetch billing usage",
