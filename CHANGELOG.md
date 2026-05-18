@@ -1,5 +1,16 @@
 # Changelog
 
+## [13.0.0](https://github.com/promhippie/github_exporter/compare/v12.1.1...v13.0.0) (2026-05-18)
+
+### Features
+
+* **major:** update module github.com/google/go-github/v85 to v86 ([#685](https://github.com/promhippie/github_exporter/issues/685)) ([53e1182](https://github.com/promhippie/github_exporter/commit/53e11828f6e2b154f10393a198d35024c58b1813))
+* **minor:** update module github.com/urfave/cli/v3 to v3.9.0 ([#688](https://github.com/promhippie/github_exporter/issues/688)) ([9541b98](https://github.com/promhippie/github_exporter/commit/9541b98a6b9b11580b727a9473ce111ec4a59f26))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([b7fcced](https://github.com/promhippie/github_exporter/commit/b7fcced4cdea47e556d4b149557007744e37b215))
+
 ## [12.1.1](https://github.com/promhippie/github_exporter/compare/v12.1.0...v12.1.1) (2026-05-11)
 
 ### Bugfixes
