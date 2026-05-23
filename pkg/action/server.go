@@ -13,7 +13,7 @@ import (
 
 	"github.com/bradleyfalzon/ghinstallation/v2"
 	"github.com/go-chi/chi/v5"
-	"github.com/google/go-github/v86/github"
+	"github.com/google/go-github/v88/github"
 	"github.com/oklog/run"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/exporter-toolkit/web"
@@ -22,7 +22,6 @@ import (
 	"github.com/promhippie/github_exporter/pkg/middleware"
 	"github.com/promhippie/github_exporter/pkg/store"
 	"github.com/promhippie/github_exporter/pkg/version"
-	"golang.org/x/oauth2"
 )
 
 // Server handles the server sub-command.
@@ -383,6 +382,8 @@ func getClient(cfg *config.Config, logger *slog.Logger) (*github.Client, error) 
 		return getEnterprise(cfg, logger)
 	}
 
+	opts := make([]github.ClientOptionsFunc, 0)
+
 	if useApplication(cfg, logger) {
 		privateKey, err := config.Value(cfg.Target.PrivateKey)
 
@@ -409,36 +410,45 @@ func getClient(cfg *config.Config, logger *slog.Logger) (*github.Client, error) 
 			return nil, err
 		}
 
-		return github.NewClient(
-			&http.Client{
-				Transport: transport,
-			},
-		), nil
+		opts = append(opts, github.WithTransport(
+			transport,
+		))
+	} else {
+		accessToken, err := config.Value(cfg.Target.Token)
+
+		if err != nil {
+			logger.Error("Failed to read GitHub token",
+				"err", err,
+			)
+
+			return nil, err
+		}
+
+		opts = append(opts, github.WithTransport(
+			githubTransport(cfg),
+		), github.WithAuthToken(
+			accessToken,
+		))
 	}
 
-	accessToken, err := config.Value(cfg.Target.Token)
+	client, err := github.NewClient(
+		opts...,
+	)
 
 	if err != nil {
-		logger.Error("Failed to read token",
+		logger.Error("Failed to create GitHub client",
 			"err", err,
 		)
 
 		return nil, err
 	}
 
-	return github.NewClient(
-		oauth2.NewClient(
-			context.Background(),
-			oauth2.StaticTokenSource(
-				&oauth2.Token{
-					AccessToken: accessToken,
-				},
-			),
-		),
-	), nil
+	return client, err
 }
 
 func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, error) {
+	opts := make([]github.ClientOptionsFunc, 0)
+
 	if useApplication(cfg, logger) {
 		privateKey, err := config.Value(cfg.Target.PrivateKey)
 
@@ -472,58 +482,38 @@ func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, err
 			transport.BaseURL = cfg.Target.BaseURL
 		}
 
-		client, err := github.NewClient(
-			&http.Client{
-				Transport: transport,
-			},
-		).WithEnterpriseURLs(
-			cfg.Target.BaseURL,
-			cfg.Target.BaseURL,
-		)
+		opts = append(opts, github.WithTransport(
+			transport,
+		))
+	} else {
+		accessToken, err := config.Value(cfg.Target.Token)
 
 		if err != nil {
-			logger.Error("Failed to parse base URL",
+			logger.Error("Failed to read GitHub token",
 				"err", err,
 			)
 
 			return nil, err
 		}
 
-		return client, err
+		opts = append(opts, github.WithTransport(
+			githubTransport(cfg),
+		), github.WithAuthToken(
+			accessToken,
+		))
 	}
 
-	accessToken, err := config.Value(cfg.Target.Token)
-
-	if err != nil {
-		logger.Error("Failed to read token",
-			"err", err,
-		)
-
-		return nil, err
-	}
+	opts = append(opts, github.WithEnterpriseURLs(
+		cfg.Target.BaseURL,
+		cfg.Target.BaseURL,
+	))
 
 	client, err := github.NewClient(
-		oauth2.NewClient(
-			context.WithValue(
-				context.Background(),
-				oauth2.HTTPClient,
-				&http.Client{
-					Transport: githubTransport(cfg),
-				},
-			),
-			oauth2.StaticTokenSource(
-				&oauth2.Token{
-					AccessToken: accessToken,
-				},
-			),
-		),
-	).WithEnterpriseURLs(
-		cfg.Target.BaseURL,
-		cfg.Target.BaseURL,
+		opts...,
 	)
 
 	if err != nil {
-		logger.Error("Failed to parse base URL",
+		logger.Error("Failed to create GitHub client",
 			"err", err,
 		)
 
