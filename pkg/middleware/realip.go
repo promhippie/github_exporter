@@ -8,5 +8,5 @@ import (
 
 // RealIP just wraps the go-chi realip middleware.
 func RealIP(next http.Handler) http.Handler {
-	return middleware.RealIP(next)
+	return middleware.ClientIPFromRemoteAddr(next)
 }
