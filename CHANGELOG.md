@@ -1,5 +1,23 @@
 # Changelog
 
+## [14.0.0](https://github.com/promhippie/github_exporter/compare/v13.0.0...v14.0.0) (2026-05-25)
+
+### Features
+
+* **major:** update module github.com/google/go-github/v86 to v88 ([#690](https://github.com/promhippie/github_exporter/issues/690)) ([0c593df](https://github.com/promhippie/github_exporter/commit/0c593df1e48120a617b114bb6a660cf0ddf021e0))
+* **minor:** update module github.com/go-chi/chi/v5 to v5.3.0 ([#691](https://github.com/promhippie/github_exporter/issues/691)) ([792aee5](https://github.com/promhippie/github_exporter/commit/792aee5fe95f930dce455ec529575b9dfa4187ab))
+* upgrade required go version to 1.26 ([4656ad3](https://github.com/promhippie/github_exporter/commit/4656ad3e1b87a16fe0f792d001ff56ad0c597af2))
+
+### Bugfixes
+
+* **deps:** pin golang docker tag to 91eda97 ([#693](https://github.com/promhippie/github_exporter/issues/693)) ([dccd87f](https://github.com/promhippie/github_exporter/commit/dccd87f0674e5e39fe45878bc4150dba24085a47))
+* enforce 1.26.3 for docker image ([5c8d140](https://github.com/promhippie/github_exporter/commit/5c8d14057d93ca0f16ff20aa42ac081f05b2700a))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([ad0825d](https://github.com/promhippie/github_exporter/commit/ad0825d5e75e7bce71620524868419b7efbd9c5a))
+* switch flake input to 25.11 release ([876b2d8](https://github.com/promhippie/github_exporter/commit/876b2d8e56770679ce4b426bc3d374947099cd7a))
+
 ## [13.0.0](https://github.com/promhippie/github_exporter/compare/v12.1.1...v13.0.0) (2026-05-18)
 
 ### Features
