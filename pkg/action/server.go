@@ -424,11 +424,13 @@ func getClient(cfg *config.Config, logger *slog.Logger) (*github.Client, error) 
 			return nil, err
 		}
 
-		opts = append(opts, github.WithTransport(
-			githubTransport(cfg),
-		), github.WithAuthToken(
-			accessToken,
-		))
+		if accessToken != "" {
+			opts = append(opts, github.WithTransport(
+				githubTransport(cfg),
+			), github.WithAuthToken(
+				accessToken,
+			))
+		}
 	}
 
 	client, err := github.NewClient(
@@ -496,11 +498,13 @@ func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, err
 			return nil, err
 		}
 
-		opts = append(opts, github.WithTransport(
-			githubTransport(cfg),
-		), github.WithAuthToken(
-			accessToken,
-		))
+		if accessToken != "" {
+			opts = append(opts, github.WithTransport(
+				githubTransport(cfg),
+			), github.WithAuthToken(
+				accessToken,
+			))
+		}
 	}
 
 	opts = append(opts, github.WithEnterpriseURLs(
