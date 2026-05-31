@@ -1,5 +1,15 @@
 # Changelog
 
+## [14.1.0](https://github.com/promhippie/github_exporter/compare/v14.0.0...v14.1.0) (2026-05-31)
+
+### Features
+
+* **minor:** update module modernc.org/sqlite to v1.51.0 ([#694](https://github.com/promhippie/github_exporter/issues/694)) ([e015f83](https://github.com/promhippie/github_exporter/commit/e015f83f1d75f1f16629782e4924db1d9ec1984c))
+
+### Bugfixes
+
+* allow anonymous access again as regression issue ([f9b3017](https://github.com/promhippie/github_exporter/commit/f9b3017852396eb7092b09a34567721a5721df1a))
+
 ## [14.0.0](https://github.com/promhippie/github_exporter/compare/v13.0.0...v14.0.0) (2026-05-25)
 
 ### Features
