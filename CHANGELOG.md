@@ -1,5 +1,21 @@
 # Changelog
 
+## [14.2.0](https://github.com/promhippie/github_exporter/compare/v14.1.0...v14.2.0) (2026-06-08)
+
+### Features
+
+* **minor:** update module modernc.org/sqlite to v1.52.0 ([#697](https://github.com/promhippie/github_exporter/issues/697)) ([054931a](https://github.com/promhippie/github_exporter/commit/054931ae21850d7b7e897568f77d37d5cb48641f))
+
+### Bugfixes
+
+* **deps:** update docker digests ([#696](https://github.com/promhippie/github_exporter/issues/696)) ([1b819af](https://github.com/promhippie/github_exporter/commit/1b819affe6e35afdf4dee9abc6bf9aae85d88b33))
+* **patch:** update golang docker tag to v1.26.4 ([#695](https://github.com/promhippie/github_exporter/issues/695)) ([340d7e4](https://github.com/promhippie/github_exporter/commit/340d7e4c3868621dbd231ec5967a7b30df205dd5))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([560d4f4](https://github.com/promhippie/github_exporter/commit/560d4f452d3e94c4e20030c126bc69cf7ab32a5f))
+* **flake:** updated lockfile [skip ci] ([d0f0db2](https://github.com/promhippie/github_exporter/commit/d0f0db239586ac844cb58f4256875a753dc24c6b))
+
 ## [14.1.0](https://github.com/promhippie/github_exporter/compare/v14.0.0...v14.1.0) (2026-05-31)
 
 ### Features
