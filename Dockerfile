@@ -16,7 +16,7 @@ RUN --mount=type=cache,target=/go/pkg \
     --mount=type=cache,target=/root/.cache/go-build \
     task generate build GOOS=${TARGETOS} GOARCH=${TARGETARCH}
 
-FROM alpine:3.23@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a5019afde11
+FROM alpine:3.24@sha256:660e0827bd401543d81323d4886abbd08fda0fe3ba84337837d0b11a67251283
 
 RUN apk add --no-cache ca-certificates mailcap && \
     addgroup -g 1337 exporter && \
