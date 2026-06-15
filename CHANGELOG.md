@@ -1,5 +1,24 @@
 # Changelog
 
+## [14.3.0](https://github.com/promhippie/github_exporter/compare/v14.2.0...v14.3.0) (2026-06-15)
+
+### Features
+
+* **minor:** update alpine docker tag to v3.24 ([#698](https://github.com/promhippie/github_exporter/issues/698)) ([7849ac3](https://github.com/promhippie/github_exporter/commit/7849ac3dbcb013d07d1e40da3c53bc68f89d1812))
+* **minor:** update module github.com/bradleyfalzon/ghinstallation/v2 to v2.19.0 ([#703](https://github.com/promhippie/github_exporter/issues/703)) ([c5cebe3](https://github.com/promhippie/github_exporter/commit/c5cebe3c4adf6a0293d9dd9bafdfa65ff2080584))
+* **minor:** update module github.com/urfave/cli/v3 to v3.10.0 ([#704](https://github.com/promhippie/github_exporter/issues/704)) ([1cb4267](https://github.com/promhippie/github_exporter/commit/1cb42674039bc96d785309ae503e484ab801dc21))
+
+### Bugfixes
+
+* **deps:** update docker digests ([b2ac491](https://github.com/promhippie/github_exporter/commit/b2ac491ddaafd647629ef3200718e9512ddb0db6))
+* **deps:** update docker digests ([7d40d92](https://github.com/promhippie/github_exporter/commit/7d40d92eab9019fef6582e601839dd478e7e624f))
+* **deps:** update docker digests ([#702](https://github.com/promhippie/github_exporter/issues/702)) ([ca611fe](https://github.com/promhippie/github_exporter/commit/ca611fec31a475a5ef5015d5fbee754be6c38639))
+* **patch:** update module github.com/urfave/cli/v3 to v3.9.1 ([#700](https://github.com/promhippie/github_exporter/issues/700)) ([5e00fb2](https://github.com/promhippie/github_exporter/commit/5e00fb2bcfa69e0baf497c8e9644f80b64e94b58))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([4c95f33](https://github.com/promhippie/github_exporter/commit/4c95f337300d60cf627b3247ea9b15cd40fbb987))
+
 ## [14.2.0](https://github.com/promhippie/github_exporter/compare/v14.1.0...v14.2.0) (2026-06-08)
 
 ### Features
