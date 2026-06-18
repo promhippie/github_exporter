@@ -30,13 +30,13 @@ jobs:
 
       - name: Checkout source
         if: github.event_name != 'pull_request'
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           token: ${{ steps.token.outputs.token }}
 
       - name: PR checkout
         if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup golang
         uses: actions/setup-go@v6
@@ -82,13 +82,13 @@ jobs:
 
       - name: Checkout source
         if: github.event_name != 'pull_request'
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           token: ${{ steps.token.outputs.token }}
 
       - name: PR checkout
         if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup golang
         uses: actions/setup-go@v6
@@ -134,13 +134,13 @@ jobs:
 
       - name: Checkout source
         if: github.event_name != 'pull_request'
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           token: ${{ steps.token.outputs.token }}
 
       - name: PR checkout
         if: github.event_name == 'pull_request'
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup golang
         uses: actions/setup-go@v6
