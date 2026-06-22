@@ -1,5 +1,21 @@
 # Changelog
 
+## [15.0.0](https://github.com/promhippie/github_exporter/compare/v14.3.0...v15.0.0) (2026-06-22)
+
+### Features
+
+* **major:** update module github.com/cenkalti/backoff/v5 to v6 ([#706](https://github.com/promhippie/github_exporter/issues/706)) ([e56f599](https://github.com/promhippie/github_exporter/commit/e56f5993af5053ca468853bcd26908b2929c2f14))
+* **minor:** update module modernc.org/sqlite to v1.53.0 ([#709](https://github.com/promhippie/github_exporter/issues/709)) ([436dbeb](https://github.com/promhippie/github_exporter/commit/436dbeb03822624d6250f6073a38322ff5e193f8))
+
+### Bugfixes
+
+* **deps:** update docker digests ([#705](https://github.com/promhippie/github_exporter/issues/705)) ([2d029a0](https://github.com/promhippie/github_exporter/commit/2d029a01358ad207380299a3c50110fa493111ea))
+* **deps:** update docker digests ([#707](https://github.com/promhippie/github_exporter/issues/707)) ([5d1037e](https://github.com/promhippie/github_exporter/commit/5d1037e59ceb7d477e545bc5fe88314f0e0d9f11))
+
+### Miscellaneous
+
+* **flake:** updated lockfile [skip ci] ([e3ca987](https://github.com/promhippie/github_exporter/commit/e3ca9875f0e18b886c963ed5ab6b5af102c581ef))
+
 ## [14.3.0](https://github.com/promhippie/github_exporter/compare/v14.2.0...v14.3.0) (2026-06-15)
 
 ### Features
