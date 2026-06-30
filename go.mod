@@ -5,7 +5,7 @@ go 1.26.0
 require (
 	github.com/GuiaBolso/darwin v0.0.0-20191218124601-fd6d2aa3d244
 	github.com/bradleyfalzon/ghinstallation/v2 v2.19.0
-	github.com/cenkalti/backoff/v6 v6.0.1
+	github.com/cenkalti/backoff/v7 v7.0.0
 	github.com/chaisql/chai v0.18.0
 	github.com/go-chi/chi/v5 v5.3.0
 	github.com/go-sql-driver/mysql v1.10.0
