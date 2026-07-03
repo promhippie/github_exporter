@@ -164,7 +164,9 @@ ORDER BY
 
 var findWorkflowJobQuery = `
 SELECT
-	identifier
+	identifier,
+	created_at,
+	status
 FROM
 	workflow_jobs
 WHERE
