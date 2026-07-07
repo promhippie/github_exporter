@@ -34,7 +34,7 @@ func NewBillingCollector(logger *slog.Logger, client *github.Client, db store.St
 		failures.WithLabelValues("billing").Add(0)
 	}
 
-	labels := []string{"type", "name", "product", "sku", "unit", "date", "org", "repo"}
+	labels := []string{"type", "name", "product", "sku", "unit", "org", "repo"}
 	return &BillingCollector{
 		client:   client,
 		logger:   logger.With("collector", "billing"),
@@ -44,31 +44,31 @@ func NewBillingCollector(logger *slog.Logger, client *github.Client, db store.St
 		config:   cfg,
 
 		Usage: prometheus.NewDesc(
-			"github_billing_usage",
+			"github_billing_current_usage",
 			"Usage quantity from GitHub Enhanced Billing Platform",
 			labels,
 			nil,
 		),
 		GrossAmount: prometheus.NewDesc(
-			"github_billing_usage_gross_amount",
+			"github_billing_current_usage_gross_amount",
 			"Gross amount charged for this usage item",
 			labels,
 			nil,
 		),
 		DiscountAmount: prometheus.NewDesc(
-			"github_billing_usage_discount_amount",
+			"github_billing_current_usage_discount_amount",
 			"Discount amount applied to this usage item",
 			labels,
 			nil,
 		),
 		NetAmount: prometheus.NewDesc(
-			"github_billing_usage_net_amount",
+			"github_billing_current_usage_net_amount",
 			"Net amount charged for this usage item after discounts",
 			labels,
 			nil,
 		),
 		PricePerUnit: prometheus.NewDesc(
-			"github_billing_usage_price_per_unit",
+			"github_billing_current_usage_price_per_unit",
 			"Price per unit for this usage item",
 			labels,
 			nil,
@@ -110,12 +110,11 @@ func (c *BillingCollector) Collect(ch chan<- prometheus.Metric) {
 
 	for _, item := range usage {
 		key := fmt.Sprintf(
-			"%s-%s-%s-%s-%s",
+			"%s-%s-%s-%s",
 			item.Type,
 			item.Name,
 			item.Product,
 			item.SKU,
-			item.Date,
 		)
 
 		if collected[key] {
@@ -124,7 +123,6 @@ func (c *BillingCollector) Collect(ch chan<- prometheus.Metric) {
 				"name", item.Name,
 				"product", item.Product,
 				"sku", item.SKU,
-				"date", item.Date,
 			)
 
 			continue
@@ -147,21 +145,20 @@ func (c *BillingCollector) Collect(ch chan<- prometheus.Metric) {
 			item.Product,
 			item.SKU,
 			item.UnitType,
-			item.Date,
 			item.OrganizationName,
 			item.RepositoryName,
 		}
 
 		ch <- prometheus.MustNewConstMetric(
 			c.Usage,
-			prometheus.GaugeValue,
+			prometheus.CounterValue,
 			item.Quantity,
 			labels...,
 		)
 
 		ch <- prometheus.MustNewConstMetric(
 			c.GrossAmount,
-			prometheus.GaugeValue,
+			prometheus.CounterValue,
 			item.GrossAmount,
 			labels...,
 		)
@@ -175,7 +172,7 @@ func (c *BillingCollector) Collect(ch chan<- prometheus.Metric) {
 
 		ch <- prometheus.MustNewConstMetric(
 			c.NetAmount,
-			prometheus.GaugeValue,
+			prometheus.CounterValue,
 			item.NetAmount,
 			labels...,
 		)
@@ -244,6 +241,8 @@ func (c *BillingCollector) fetchUsageForEntity(ctx context.Context, entity, name
 		endpoint = fmt.Sprintf("/organizations/%s/settings/billing/usage", name)
 	}
 
+	now := time.Now().UTC()
+	endpoint = fmt.Sprintf("%s?year=%d&month=%d&day=%d", endpoint, now.Year(), int(now.Month()), now.Day())
 	req, err := c.client.NewRequest(ctx, "GET", endpoint, nil)
 
 	if err != nil {
