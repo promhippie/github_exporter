@@ -111,17 +111,17 @@ func TestWorkflowJobCollector(t *testing.T) {
 			nil, nil,
 		),
 		Started: prometheus.NewDesc(
-			"workflow_job_started_timestamp_seconds",
-			"Started time of the workflow job",
+			"github_workflow_job_started_timestamp",
+			"Timestamp when the workflow job have been started",
 			nil, nil,
 		),
 		CompletedTotal: prometheus.NewDesc(
-			"workflow_job_completed_total",
+			"github_workflow_job_completed_total",
 			"Total number of completed workflow jobs",
 			nil, nil,
 		),
 		DurationSecondsTotal: prometheus.NewDesc(
-			"workflow_job_duration_seconds_total",
+			"github_workflow_job_duration_seconds_total",
 			"Total duration of completed workflow jobs in seconds",
 			nil, nil,
 		),
