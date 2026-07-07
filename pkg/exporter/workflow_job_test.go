@@ -1,7 +1,6 @@
 package exporter
 
 import (
-	"fmt"
 	"log/slog"
 	"os"
 	"reflect"
@@ -10,23 +9,12 @@ import (
 
 	"github.com/google/go-github/v89/github"
 	"github.com/prometheus/client_golang/prometheus"
+	dto "github.com/prometheus/client_model/go"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
 )
 
 type StaticStore struct{}
-
-func (s StaticStore) GetWorkflowJobRuns(owner, repo, workflow string) ([]*store.WorkflowRun, error) {
-	_, _ = fmt.Fprintf(
-		os.Stdout,
-		"GetWorkflowJobRuns for %s/%s %s \n",
-		owner,
-		repo,
-		workflow,
-	)
-
-	return nil, nil
-}
 
 func (s StaticStore) StoreWorkflowRunEvent(*github.WorkflowRunEvent) error {
 	return nil
@@ -50,6 +38,10 @@ func (s StaticStore) GetWorkflowJobs(time.Duration) ([]*store.WorkflowJob, error
 
 func (s StaticStore) PruneWorkflowJobs(time.Duration) error {
 	return nil
+}
+
+func (s StaticStore) GetWorkflowJobCompletions() ([]*store.WorkflowJobCompletionAggregate, error) {
+	return nil, nil
 }
 
 func (s StaticStore) Open() (bool, error) {
@@ -118,6 +110,21 @@ func TestWorkflowJobCollector(t *testing.T) {
 			"Created time of the workflow job",
 			nil, nil,
 		),
+		Started: prometheus.NewDesc(
+			"workflow_job_started_timestamp_seconds",
+			"Started time of the workflow job",
+			nil, nil,
+		),
+		CompletedTotal: prometheus.NewDesc(
+			"workflow_job_completed_total",
+			"Total number of completed workflow jobs",
+			nil, nil,
+		),
+		DurationSecondsTotal: prometheus.NewDesc(
+			"workflow_job_duration_seconds_total",
+			"Total duration of completed workflow jobs in seconds",
+			nil, nil,
+		),
 	}
 
 	if collector.client != mockClient {
@@ -138,4 +145,105 @@ func TestWorkflowJobCollector(t *testing.T) {
 	if !reflect.DeepEqual(collector.config, mockConfig) {
 		t.Errorf("Expected config to be %v, got %v", mockConfig, collector.config)
 	}
+}
+
+type completionStore struct {
+	StaticStore
+	completions []*store.WorkflowJobCompletionAggregate
+}
+
+func (s completionStore) GetWorkflowJobCompletions() ([]*store.WorkflowJobCompletionAggregate, error) {
+	return s.completions, nil
+}
+
+func TestWorkflowJobCollectorCounters(t *testing.T) {
+	mockLogger := slog.New(
+		slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		}),
+	)
+
+	mockFailures := prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "test_failures_total",
+		Help: "Total number of test failures",
+	}, []string{"type"})
+
+	mockDuration := prometheus.NewHistogramVec(prometheus.HistogramOpts{
+		Name: "test_duration_seconds",
+		Help: "Duration of test",
+	}, []string{"type"})
+
+	completions := []*store.WorkflowJobCompletionAggregate{
+		{
+			Owner:                "promhippie",
+			Repo:                 "github_exporter",
+			WorkflowName:         "CI",
+			Name:                 "test",
+			Conclusion:           "success",
+			Count:                2,
+			DurationSecondsTotal: 42.5,
+		},
+		{
+			Owner:                "promhippie",
+			Repo:                 "github_exporter",
+			WorkflowName:         "CI",
+			Name:                 "test",
+			Conclusion:           "failure",
+			Count:                1,
+			DurationSecondsTotal: 10.0,
+		},
+	}
+
+	store := completionStore{completions: completions}
+	collector := NewWorkflowJobCollector(
+		mockLogger,
+		nil,
+		store,
+		mockFailures,
+		mockDuration,
+		config.Target{},
+	)
+
+	registry := prometheus.NewRegistry()
+	registry.MustRegister(collector)
+
+	metrics, err := registry.Gather()
+	if err != nil {
+		t.Fatalf("failed to gather metrics: %v", err)
+	}
+
+	expected := map[string]float64{
+		"github_workflow_job_completed_total":        3,
+		"github_workflow_job_duration_seconds_total": 52.5,
+	}
+
+	for name, expectedValue := range expected {
+		value := metricFamilyValue(t, metrics, name)
+		if value != expectedValue {
+			t.Errorf("expected %s to be %v, got %v", name, expectedValue, value)
+		}
+	}
+}
+
+func metricFamilyValue(t *testing.T, metrics []*dto.MetricFamily, name string) float64 {
+	t.Helper()
+
+	for _, mf := range metrics {
+		if mf.GetName() != name {
+			continue
+		}
+
+		var total float64
+
+		for _, m := range mf.GetMetric() {
+			if m.Counter != nil {
+				total += m.Counter.GetValue()
+			}
+		}
+
+		return total
+	}
+
+	t.Errorf("metric family %s not found", name)
+	return 0
 }

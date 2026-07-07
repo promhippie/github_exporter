@@ -241,6 +241,9 @@ github_runner_repo_busy{owner, id, name, os, status}
 github_runner_repo_online{owner, id, name, os, status}
 : Static metrics of runner is online or not
 
+github_workflow_job_completed_total{owner, repo, workflow_name, name, conclusion}
+: Total number of completed workflow jobs
+
 github_workflow_job_created_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
 : Timestamp when the workflow job have been created
 
@@ -249,6 +252,9 @@ github_workflow_job_duration_ms{owner, repo, name, title, branch, sha, identifie
 
 github_workflow_job_duration_run_created_minutes{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
 : Duration since the workflow run creation time in minutes
+
+github_workflow_job_duration_seconds_total{owner, repo, workflow_name, name, conclusion}
+: Total duration of completed workflow jobs in seconds
 
 github_workflow_job_started_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
 : Timestamp when the workflow job have been started

@@ -73,6 +73,28 @@ var (
 				PRIMARY KEY(owner, repo, identifier)
 			);`,
 		},
+		{
+			Version:     4,
+			Description: "Creating table workflow_job_completions",
+			Script: `CREATE TABLE workflow_job_completions (
+				owner VARCHAR(64) NOT NULL,
+				repo VARCHAR(100) NOT NULL,
+				identifier BIGINT NOT NULL,
+				run_attempt INTEGER NOT NULL,
+				workflow_name VARCHAR(128),
+				name VARCHAR(128),
+				conclusion VARCHAR(64),
+				duration_seconds DOUBLE,
+				recorded_at BIGINT,
+				PRIMARY KEY(owner, repo, identifier, run_attempt)
+			) ENGINE=InnoDB CHARACTER SET=utf8;`,
+		},
+		{
+			Version:     5,
+			Description: "Creating index for workflow_job_completions aggregate",
+			Script: `CREATE INDEX idx_workflow_job_completions_aggregate
+				ON workflow_job_completions(owner, repo, workflow_name, name, conclusion);`,
+		},
 	}
 )
 
@@ -175,6 +197,11 @@ func (s *mysqlStore) GetWorkflowJobs(window time.Duration) ([]*WorkflowJob, erro
 // PruneWorkflowJobs implements the Store interface.
 func (s *mysqlStore) PruneWorkflowJobs(timeframe time.Duration) error {
 	return pruneWorkflowJobs(s.handle, timeframe)
+}
+
+// GetWorkflowJobCompletions implements the Store interface.
+func (s *mysqlStore) GetWorkflowJobCompletions() ([]*WorkflowJobCompletionAggregate, error) {
+	return getWorkflowJobCompletions(s.handle)
 }
 
 func (s *mysqlStore) dsn() string {
