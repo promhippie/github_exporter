@@ -30,6 +30,7 @@ type Store interface {
 	StoreWorkflowJobEvent(*github.WorkflowJobEvent) error
 	GetWorkflowJobs(time.Duration) ([]*WorkflowJob, error)
 	PruneWorkflowJobs(time.Duration) error
+	GetWorkflowJobCompletions() ([]*WorkflowJobCompletionAggregate, error)
 
 	Open() (bool, error)
 	Close() error
