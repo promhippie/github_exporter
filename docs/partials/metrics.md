@@ -100,19 +100,19 @@ github_admin_users_suspended{}
 github_admin_users_total{}
 : Total number of users
 
-github_billing_usage{type, name, product, sku, unit, date, org, repo}
+github_billing_current_usage{type, name, product, sku, unit, org, repo}
 : Usage quantity from GitHub Enhanced Billing Platform
 
-github_billing_usage_discount_amount{type, name, product, sku, unit, date, org, repo}
+github_billing_current_usage_discount_amount{type, name, product, sku, unit, org, repo}
 : Discount amount applied to this usage item
 
-github_billing_usage_gross_amount{type, name, product, sku, unit, date, org, repo}
+github_billing_current_usage_gross_amount{type, name, product, sku, unit, org, repo}
 : Gross amount charged for this usage item
 
-github_billing_usage_net_amount{type, name, product, sku, unit, date, org, repo}
+github_billing_current_usage_net_amount{type, name, product, sku, unit, org, repo}
 : Net amount charged for this usage item after discounts
 
-github_billing_usage_price_per_unit{type, name, product, sku, unit, date, org, repo}
+github_billing_current_usage_price_per_unit{type, name, product, sku, unit, org, repo}
 : Price per unit for this usage item
 
 github_org_collaborators{name}
