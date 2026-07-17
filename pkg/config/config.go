@@ -75,6 +75,7 @@ type Collector struct {
 	WorkflowRuns bool
 	WorkflowJobs bool
 	Runners      bool
+	Status       bool
 }
 
 // Database defines the database specific configuration.

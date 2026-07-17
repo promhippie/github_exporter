@@ -65,6 +65,11 @@ func main() {
 		exporter.NewWorkflowJobCollector(slog.Default(), nil, nil, nil, nil, cfg).Metrics()...,
 	)
 
+	collectors = append(
+		collectors,
+		exporter.NewStatusCollector(slog.Default(), nil, nil, nil, nil, cfg).Metrics()...,
+	)
+
 	metrics := make([]metric, 0)
 
 	metrics = append(metrics, metric{

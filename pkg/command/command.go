@@ -363,6 +363,13 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 			Sources:     cli.EnvVars("GITHUB_EXPORTER_COLLECTOR_RUNNERS"),
 			Destination: &cfg.Collector.Runners,
 		},
+		&cli.BoolFlag{
+			Name:        "collector.status",
+			Value:       false,
+			Usage:       "Enable collector for github.com service status",
+			Sources:     cli.EnvVars("GITHUB_EXPORTER_COLLECTOR_STATUS"),
+			Destination: &cfg.Collector.Status,
+		},
 		&cli.StringSliceFlag{
 			Name:        "collector.runners.labels",
 			Value:       config.RunnerLabels(),
