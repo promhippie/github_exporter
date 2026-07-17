@@ -15,6 +15,7 @@ require (
 	github.com/lib/pq v1.12.3
 	github.com/oklog/run v1.2.0
 	github.com/prometheus/client_golang v1.23.2
+	github.com/prometheus/client_model v0.6.2
 	github.com/prometheus/exporter-toolkit v0.17.1
 	github.com/ryanuber/go-glob v1.0.0
 	github.com/stretchr/testify v1.11.1
@@ -200,7 +201,6 @@ require (
 	github.com/pelletier/go-toml/v2 v2.3.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/common v0.69.0 // indirect
 	github.com/prometheus/procfs v0.17.0 // indirect
 	github.com/quasilyte/go-ruleguard v0.4.5 // indirect

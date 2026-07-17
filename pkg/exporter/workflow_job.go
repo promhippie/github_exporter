@@ -19,11 +19,13 @@ type WorkflowJobCollector struct {
 	duration *prometheus.HistogramVec
 	config   config.Target
 
-	Status   *prometheus.Desc
-	Duration *prometheus.Desc
-	Creation *prometheus.Desc
-	Created  *prometheus.Desc
-	Started  *prometheus.Desc
+	Status               *prometheus.Desc
+	Duration             *prometheus.Desc
+	Creation             *prometheus.Desc
+	Created              *prometheus.Desc
+	Started              *prometheus.Desc
+	CompletedTotal       *prometheus.Desc
+	DurationSecondsTotal *prometheus.Desc
 }
 
 // NewWorkflowJobCollector returns a new WorkflowCollector.
@@ -33,6 +35,14 @@ func NewWorkflowJobCollector(logger *slog.Logger, client *github.Client, db stor
 	}
 
 	labels := cfg.WorkflowJobs.Labels
+	completionLabels := []string{
+		"owner",
+		"repo",
+		"workflow_name",
+		"name",
+		"conclusion",
+	}
+
 	return &WorkflowJobCollector{
 		client:   client,
 		logger:   logger.With("collector", "workflow_job"),
@@ -71,6 +81,18 @@ func NewWorkflowJobCollector(logger *slog.Logger, client *github.Client, db stor
 			labels,
 			nil,
 		),
+		CompletedTotal: prometheus.NewDesc(
+			"github_workflow_job_completed_total",
+			"Total number of completed workflow jobs",
+			completionLabels,
+			nil,
+		),
+		DurationSecondsTotal: prometheus.NewDesc(
+			"github_workflow_job_duration_seconds_total",
+			"Total duration of completed workflow jobs in seconds",
+			completionLabels,
+			nil,
+		),
 	}
 }
 
@@ -82,6 +104,8 @@ func (c *WorkflowJobCollector) Metrics() []*prometheus.Desc {
 		c.Creation,
 		c.Created,
 		c.Started,
+		c.CompletedTotal,
+		c.DurationSecondsTotal,
 	}
 }
 
@@ -92,6 +116,8 @@ func (c *WorkflowJobCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.Creation
 	ch <- c.Created
 	ch <- c.Started
+	ch <- c.CompletedTotal
+	ch <- c.DurationSecondsTotal
 }
 
 // Collect is called by the Prometheus registry when collecting metrics.
@@ -171,6 +197,45 @@ func (c *WorkflowJobCollector) Collect(ch chan<- prometheus.Metric) {
 			c.Started,
 			prometheus.GaugeValue,
 			float64(record.StartedAt),
+			labels...,
+		)
+	}
+
+	completions, err := c.db.GetWorkflowJobCompletions()
+
+	if err != nil {
+		c.logger.Error("Failed to fetch workflow job completions",
+			"err", err,
+		)
+
+		c.failures.WithLabelValues("workflow_job").Inc()
+		return
+	}
+
+	c.logger.Debug("Fetched workflow job completions",
+		"count", len(completions),
+	)
+
+	for _, completion := range completions {
+		labels := []string{
+			completion.Owner,
+			completion.Repo,
+			completion.WorkflowName,
+			completion.Name,
+			completion.Conclusion,
+		}
+
+		ch <- prometheus.MustNewConstMetric(
+			c.CompletedTotal,
+			prometheus.CounterValue,
+			float64(completion.Count),
+			labels...,
+		)
+
+		ch <- prometheus.MustNewConstMetric(
+			c.DurationSecondsTotal,
+			prometheus.CounterValue,
+			completion.DurationSecondsTotal,
 			labels...,
 		)
 	}

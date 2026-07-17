@@ -83,6 +83,24 @@ var (
 			Description: "Fix run_id be BIGINT",
 			Script:      `ALTER TABLE workflow_jobs ALTER COLUMN run_id TYPE BIGINT USING run_id::BIGINT;`,
 		},
+		{
+			Version:     6,
+			Description: "Creating table workflow_job_completions",
+			Script: `CREATE TABLE workflow_job_completions (
+				owner TEXT NOT NULL,
+				repo TEXT NOT NULL,
+				identifier BIGINT NOT NULL,
+				run_attempt INTEGER NOT NULL,
+				workflow_name TEXT,
+				name TEXT,
+				conclusion TEXT,
+				duration_seconds DOUBLE PRECISION,
+				recorded_at BIGINT,
+				PRIMARY KEY(owner, repo, identifier, run_attempt)
+			);
+			CREATE INDEX idx_workflow_job_completions_aggregate
+				ON workflow_job_completions(owner, repo, workflow_name, name, conclusion);`,
+		},
 	}
 )
 
@@ -185,6 +203,11 @@ func (s *postgresStore) GetWorkflowJobs(window time.Duration) ([]*WorkflowJob, e
 // PruneWorkflowJobs implements the Store interface.
 func (s *postgresStore) PruneWorkflowJobs(timeframe time.Duration) error {
 	return pruneWorkflowJobs(s.handle, timeframe)
+}
+
+// GetWorkflowJobCompletions implements the Store interface.
+func (s *postgresStore) GetWorkflowJobCompletions() ([]*WorkflowJobCompletionAggregate, error) {
+	return getWorkflowJobCompletions(s.handle)
 }
 
 func (s *postgresStore) dsn() string {

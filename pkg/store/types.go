@@ -126,3 +126,30 @@ func (r *WorkflowJob) ByLabel(label string) string {
 
 	return ""
 }
+
+// WorkflowJobCompletion defines the append-only record of a terminal workflow
+// job event. Each (owner, repo, identifier, run_attempt) tuple is recorded at
+// most once; the first terminal payload wins.
+type WorkflowJobCompletion struct {
+	Owner           string  `db:"owner"`
+	Repo            string  `db:"repo"`
+	Identifier      int64   `db:"identifier"`
+	RunAttempt      int     `db:"run_attempt"`
+	WorkflowName    string  `db:"workflow_name"`
+	Name            string  `db:"name"`
+	Conclusion      string  `db:"conclusion"`
+	DurationSeconds float64 `db:"duration_seconds"`
+	RecordedAt      int64   `db:"recorded_at"`
+}
+
+// WorkflowJobCompletionAggregate groups completion records for counter
+// emission.
+type WorkflowJobCompletionAggregate struct {
+	Owner                string  `db:"owner"`
+	Repo                 string  `db:"repo"`
+	WorkflowName         string  `db:"workflow_name"`
+	Name                 string  `db:"name"`
+	Conclusion           string  `db:"conclusion"`
+	Count                int64   `db:"count"`
+	DurationSecondsTotal float64 `db:"duration_seconds_total"`
+}

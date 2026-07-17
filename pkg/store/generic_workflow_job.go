@@ -37,7 +37,11 @@ func storeWorkflowJobEvent(handle *sqlx.DB, event *github.WorkflowJobEvent) erro
 		WorkflowName:    job.GetWorkflowName(),
 	}
 
-	return createOrUpdateWorkflowJob(handle, record)
+	if err := createOrUpdateWorkflowJob(handle, record); err != nil {
+		return err
+	}
+
+	return recordWorkflowJobCompletion(handle, record)
 }
 
 // createOrUpdateWorkflowJob creates or updates the record.
@@ -81,6 +85,60 @@ func createOrUpdateWorkflowJob(handle *sqlx.DB, record *WorkflowJob) error {
 	return nil
 }
 
+// recordWorkflowJobCompletion records a terminal workflow job event in an
+// append-only table. The first terminal payload for a given
+// (owner, repo, identifier, run_attempt) tuple wins; later payloads with the
+// same key are silently ignored to keep the Prometheus counters monotonic.
+func recordWorkflowJobCompletion(handle *sqlx.DB, record *WorkflowJob) error {
+	if record.Status != "completed" || record.Conclusion == "" {
+		return nil
+	}
+
+	duration := 0.0
+	startedAt := record.StartedAt
+	completedAt := record.CompletedAt
+
+	if startedAt > 0 && completedAt > 0 {
+		duration = float64(completedAt - startedAt)
+
+		if duration < 0 {
+			duration = 0
+		}
+	}
+
+	completion := &WorkflowJobCompletion{
+		Owner:           record.Owner,
+		Repo:            record.Repo,
+		Identifier:      record.Identifier,
+		RunAttempt:      record.RunAttempt,
+		WorkflowName:    record.WorkflowName,
+		Name:            record.Name,
+		Conclusion:      record.Conclusion,
+		DurationSeconds: duration,
+		RecordedAt:      time.Now().Unix(),
+	}
+
+	if _, err := handle.NamedExec(
+		createWorkflowJobCompletionQuery(handle.DriverName()),
+		completion,
+	); err != nil {
+		return fmt.Errorf("failed to record completion: %w", err)
+	}
+
+	return nil
+}
+
+// createWorkflowJobCompletionQuery returns the dialect-specific idempotent
+// insert for a workflow job completion.
+func createWorkflowJobCompletionQuery(driver string) string {
+	switch driver {
+	case "mysql", "mariadb":
+		return createWorkflowJobCompletionQueryMySQL
+	default:
+		return createWorkflowJobCompletionQueryDefault
+	}
+}
+
 // getWorkflowJobs retrieves the workflow jobs from the database.
 func getWorkflowJobs(handle *sqlx.DB, window time.Duration) ([]*WorkflowJob, error) {
 	records := make([]*WorkflowJob, 0)
@@ -114,6 +172,20 @@ func getWorkflowJobs(handle *sqlx.DB, window time.Duration) ([]*WorkflowJob, err
 	}
 
 	if err := rows.Err(); err != nil {
+		return records, err
+	}
+
+	return records, nil
+}
+
+// getWorkflowJobCompletions retrieves aggregated workflow job completions.
+func getWorkflowJobCompletions(handle *sqlx.DB) ([]*WorkflowJobCompletionAggregate, error) {
+	records := make([]*WorkflowJobCompletionAggregate, 0)
+
+	if err := handle.Select(
+		&records,
+		selectWorkflowJobCompletionsQuery,
+	); err != nil {
 		return records, err
 	}
 
@@ -241,3 +313,69 @@ DELETE FROM
 	workflow_jobs
 WHERE
 	created_at < :timeframe;`
+
+var createWorkflowJobCompletionQueryDefault = `
+INSERT INTO workflow_job_completions (
+	owner,
+	repo,
+	identifier,
+	run_attempt,
+	workflow_name,
+	name,
+	conclusion,
+	duration_seconds,
+	recorded_at
+) VALUES (
+	:owner,
+	:repo,
+	:identifier,
+	:run_attempt,
+	:workflow_name,
+	:name,
+	:conclusion,
+	:duration_seconds,
+	:recorded_at
+)
+ON CONFLICT DO NOTHING;`
+
+var createWorkflowJobCompletionQueryMySQL = `
+INSERT INTO workflow_job_completions (
+	owner,
+	repo,
+	identifier,
+	run_attempt,
+	workflow_name,
+	name,
+	conclusion,
+	duration_seconds,
+	recorded_at
+) VALUES (
+	:owner,
+	:repo,
+	:identifier,
+	:run_attempt,
+	:workflow_name,
+	:name,
+	:conclusion,
+	:duration_seconds,
+	:recorded_at
+)
+ON DUPLICATE KEY UPDATE owner=owner;`
+
+var selectWorkflowJobCompletionsQuery = `
+SELECT
+	owner,
+	repo,
+	workflow_name,
+	name,
+	conclusion,
+	COUNT(*) AS count,
+	COALESCE(SUM(duration_seconds), 0.0) AS duration_seconds_total
+FROM
+	workflow_job_completions
+GROUP BY
+	owner,
+	repo,
+	workflow_name,
+	name,
+	conclusion;`

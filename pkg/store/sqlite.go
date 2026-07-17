@@ -74,6 +74,24 @@ var (
 				PRIMARY KEY(owner, repo, identifier)
 			);`,
 		},
+		{
+			Version:     4,
+			Description: "Creating table workflow_job_completions",
+			Script: `CREATE TABLE workflow_job_completions (
+				owner TEXT NOT NULL,
+				repo TEXT NOT NULL,
+				identifier BIGINT NOT NULL,
+				run_attempt INTEGER NOT NULL,
+				workflow_name TEXT,
+				name TEXT,
+				conclusion TEXT,
+				duration_seconds REAL,
+				recorded_at BIGINT,
+				PRIMARY KEY(owner, repo, identifier, run_attempt)
+			);
+			CREATE INDEX idx_workflow_job_completions_aggregate
+				ON workflow_job_completions(owner, repo, workflow_name, name, conclusion);`,
+		},
 	}
 )
 
@@ -172,6 +190,11 @@ func (s *sqliteStore) GetWorkflowJobs(window time.Duration) ([]*WorkflowJob, err
 // PruneWorkflowJobs implements the Store interface.
 func (s *sqliteStore) PruneWorkflowJobs(timeframe time.Duration) error {
 	return pruneWorkflowJobs(s.handle, timeframe)
+}
+
+// GetWorkflowJobCompletions implements the Store interface.
+func (s *sqliteStore) GetWorkflowJobCompletions() ([]*WorkflowJobCompletionAggregate, error) {
+	return getWorkflowJobCompletions(s.handle)
 }
 
 func (s *sqliteStore) dsn() string {
