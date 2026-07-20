@@ -1,5 +1,7 @@
 # Changelog
 
+## [17.1.0](https://github.com/promhippie/github_exporter/compare/v17.0.0...v17.1.0) (2026-07-20)
+
 ## [17.0.0](https://github.com/promhippie/github_exporter/compare/v16.0.0...v17.0.0) (2026-07-13)
 
 ## [16.0.0](https://github.com/promhippie/github_exporter/compare/v15.0.1...v16.0.0) (2026-07-06)
