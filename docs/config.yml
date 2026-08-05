@@ -1,0 +1,35 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/hugo.json
+baseURL: https://promhippie.github.io/github_exporter/
+locale: en-us
+title: GitHub Exporter
+
+params:
+  author: Thomas Boerger
+  description: Prometheus exporter for GitHub
+  keywords: prometheus, exporter, github
+
+disableKinds:
+  - rss
+  - sitemap
+  - taxonomy
+  - term
+  - section
+
+pygmentsUseClasses: true
+enableRobotsTXT: true
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
+blackfriday:
+  angledQuotes: true
+  fractions: false
+  plainIDAnchors: true
+  smartlists: true
+  extensions:
+    - hardLineBreak
+
+...

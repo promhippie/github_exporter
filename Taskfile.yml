@@ -1,11 +1,10 @@
 ---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3.40"
 
 vars:
-  SOURCES:
-    sh: find . -name "*.go" -type f -not -iname mock.go -not -path "./.devenv/*" -not -path "./.direnv/*" | xargs echo
-  PACKAGES:
-    sh: go list ./... | xargs echo
+  IMPORT: github.com/promhippie/github_exporter
+  BINARY: github_exporter
 
 tasks:
   clean:
@@ -16,21 +15,33 @@ tasks:
 
   generate:
     desc: Generate code for server
+    vars:
+      PACKAGES:
+        sh: go list ./... | xargs echo
     cmds:
       - go generate {{ .PACKAGES }}
 
   fmt:
     desc: Run standard formatter for server
+    vars:
+      SOURCES:
+        sh: find . -name "*.go" -type f -not -iname mock.go | xargs echo
     cmds:
       - gofmt -s -w {{ .SOURCES }}
 
   vet:
     desc: Run vet linting for server
+    vars:
+      PACKAGES:
+        sh: go list ./... | xargs echo
     cmds:
       - go vet {{ .PACKAGES }}
 
   lint:
     desc: Run revive linting for server
+    vars:
+      PACKAGES:
+        sh: go list ./... | xargs echo
     cmds:
       - for PKG in {{ .PACKAGES }}; do go tool github.com/mgechev/revive -config revive.toml -set_exit_status $PKG || exit 1; done;
 
@@ -41,6 +52,9 @@ tasks:
 
   test:
     desc: Run tests for server
+    vars:
+      PACKAGES:
+        sh: go list ./... | xargs echo
     cmds:
       - go test -coverprofile coverage.out {{ .PACKAGES }}
 
@@ -65,14 +79,13 @@ tasks:
       - go build -v
           -tags '{{ .TAGS }}'
           -ldflags '-s -w -extldflags "-static" -X "{{ .IMPORT }}/pkg/version.String={{ .VERSION }}" -X "{{ .IMPORT }}/pkg/version.Revision={{ .REVISION }}" -X "{{ .IMPORT }}/pkg/version.Date={{ now | date "20060102" }}"'
-          -o bin/github_exporter{{if eq OS "windows"}}.exe{{end}}
-          ./cmd/github_exporter
+          -o bin/{{ .BINARY }}{{if eq OS "windows"}}.exe{{end}}
+          ./cmd/{{ .BINARY }}
     env:
       CGO_ENABLED: "0"
       GOOS: "{{ .GOOS }}"
       GOARCH: "{{ .GOARCH }}"
     vars:
-      IMPORT: github.com/promhippie/github_exporter
       VERSION:
         sh: if [[ -z "${CI_COMMIT_TAG}" ]]; then git rev-parse --short HEAD; else echo "${CI_COMMIT_TAG#v}"; fi
       REVISION:
@@ -102,7 +115,7 @@ tasks:
     desc: Run reloading development server
     cmds:
       - task: build:server
-      - bin/github_exporter --log.level=debug --log.pretty
+      - bin/{{ .BINARY }}
     watch: true
     method: none
     sources:

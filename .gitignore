@@ -1,12 +1,7 @@
-.direnv/
-.devenv/
-.task/
+mise.local.toml
 
-.envrc
+.task/
 coverage.out
 
-/bin
-/dist
-/storage
-
-.pre-commit-config.yaml
+bin/
+dist/

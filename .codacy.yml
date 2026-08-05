@@ -1,10 +1,7 @@
 ---
+# yaml-language-server: $schema=https://json-schema.org/draft-07/schema#
 exclude_paths:
   - .github/**
-  - .bingo/**
-  - changelog/**
-  - docs/**
-
   - CHANGELOG.md
 
 ...

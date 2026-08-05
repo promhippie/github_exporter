@@ -13,14 +13,25 @@ name: binaries
     tags:
       - v*
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
+  packages: write
 
 jobs:
   binaries:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Setup nodejs
+        if: github.event_name != 'pull_request'
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+
       - name: Generate token
         if: github.event_name != 'pull_request'
         id: token
@@ -33,22 +44,11 @@ jobs:
 
       - name: Checkout source
         uses: actions/checkout@v7
-
-      - name: Setup golang
-        uses: actions/setup-go@v7
         with:
-          go-version-file: go.mod
+          fetch-depth: 0
 
-      - name: Setup task
-        uses: arduino/setup-task@v3.0.0
-        with:
-          version: 3.x
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup goreleaser
-        uses: goreleaser/goreleaser-action@v7
-        with:
-          install-only: true
+      - name: Install tools
+        uses: jdx/mise-action@v4
 
       - name: Setup signing
         if: github.event_name != 'pull_request'
@@ -67,14 +67,10 @@ jobs:
             task build:snapshot
           fi
 
-      - name: Install cloudsmith
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: cloudsmith-io/cloudsmith-cli-action@v3.1.0
-        with:
-          api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
-
       - name: Upload packages
         if: startsWith(github.ref, 'refs/tags/')
+        env:
+          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
         run: |
           for PACKAGE in dist/github-exporter-*.deb; do
             cloudsmith push deb webhippie/promhippie/any-distro/any-version "${PACKAGE}"

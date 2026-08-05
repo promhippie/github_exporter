@@ -1,10 +1,15 @@
 ---
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
 name: tools
 
 "on":
   workflow_dispatch:
   schedule:
     - cron: "0 8 * * 1"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -15,6 +20,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Setup nodejs
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+
       - name: Generate token
         id: token
         uses: actions/create-github-app-token@v3
@@ -31,10 +41,8 @@ jobs:
           token: ${{ steps.token.outputs.token }}
           fetch-depth: 0
 
-      - name: Setup golang
-        uses: actions/setup-go@v7
-        with:
-          go-version-file: go.mod
+      - name: Install tools
+        uses: jdx/mise-action@v4
 
       - name: Update golangci
         run: |

@@ -11,9 +11,14 @@ trim_trailing_whitespace = true
 indent_style = tab
 indent_size = 4
 
-[*.go]
+[*.{html,tmpl,py,go}]
 indent_style = tab
 indent_size = 4
 
-[*.md]
-trim_trailing_whitespace = true
+[*.{yml,yaml,toml,json,css,less,js,vue,rb,nix}]
+indent_style = space
+indent_size = 2
+
+[*.sh]
+indent_style = space
+indent_size = 4

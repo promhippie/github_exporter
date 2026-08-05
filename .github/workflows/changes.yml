@@ -38,16 +38,8 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: actions/checkout@v7
 
-      - name: Setup golang
-        uses: actions/setup-go@v7
-        with:
-          go-version-file: go.mod
-
-      - name: Setup task
-        uses: arduino/setup-task@v3.0.0
-        with:
-          version: 3.x
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install tools
+        uses: jdx/mise-action@v4
 
       - name: Generate envvars
         run: task envvars
@@ -64,58 +56,6 @@ jobs:
           author_email: github@webhippie.de
           add: docs/partials/envvars.md
           message: "docs: automated envvars update"
-          push: true
-          commit: --signoff
-
-  metrics:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Generate token
-        if: github.event_name != 'pull_request'
-        id: token
-        uses: actions/create-github-app-token@v3
-        with:
-          client-id: ${{ secrets.TOKEN_EXCHANGE_APP }}
-          private-key: ${{ secrets.TOKEN_EXCHANGE_KEY }}
-          permission-contents: write
-
-      - name: Checkout source
-        if: github.event_name != 'pull_request'
-        uses: actions/checkout@v7
-        with:
-          token: ${{ steps.token.outputs.token }}
-
-      - name: PR checkout
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v7
-
-      - name: Setup golang
-        uses: actions/setup-go@v7
-        with:
-          go-version-file: go.mod
-
-      - name: Setup task
-        uses: arduino/setup-task@v3.0.0
-        with:
-          version: 3.x
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Generate metrics
-        run: task metrics
-
-      - name: Source rebase
-        if: github.event_name != 'pull_request'
-        run: git pull --autostash --rebase
-
-      - name: Commit changes
-        if: github.event_name != 'pull_request'
-        uses: EndBug/add-and-commit@v10
-        with:
-          author_name: GitHub Actions
-          author_email: github@webhippie.de
-          add: docs/partials/metrics.md
-          message: "docs: automated metrics update"
           push: true
           commit: --signoff
 
@@ -142,16 +82,8 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: actions/checkout@v7
 
-      - name: Setup golang
-        uses: actions/setup-go@v7
-        with:
-          go-version-file: go.mod
-
-      - name: Setup task
-        uses: arduino/setup-task@v3.0.0
-        with:
-          version: 3.x
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install tools
+        uses: jdx/mise-action@v4
 
       - name: Generate labels
         run: task labels
@@ -168,6 +100,50 @@ jobs:
           author_email: github@webhippie.de
           add: docs/partials/labels.md
           message: "docs: automated labels update"
+          push: true
+          commit: --signoff
+
+  metrics:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate token
+        if: github.event_name != 'pull_request'
+        id: token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.TOKEN_EXCHANGE_APP }}
+          private-key: ${{ secrets.TOKEN_EXCHANGE_KEY }}
+          permission-contents: write
+
+      - name: Checkout source
+        if: github.event_name != 'pull_request'
+        uses: actions/checkout@v7
+        with:
+          token: ${{ steps.token.outputs.token }}
+
+      - name: PR checkout
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v7
+
+      - name: Install tools
+        uses: jdx/mise-action@v4
+
+      - name: Generate metrics
+        run: task metrics
+
+      - name: Source rebase
+        if: github.event_name != 'pull_request'
+        run: git pull --autostash --rebase
+
+      - name: Commit changes
+        if: github.event_name != 'pull_request'
+        uses: EndBug/add-and-commit@v10
+        with:
+          author_name: GitHub Actions
+          author_email: github@webhippie.de
+          add: docs/partials/metrics.md
+          message: "docs: automated metrics update"
           push: true
           commit: --signoff
 

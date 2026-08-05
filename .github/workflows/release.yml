@@ -3,9 +3,13 @@
 name: release
 
 "on":
+  workflow_dispatch:
   schedule:
     - cron: "0 8 * * 1"
-  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -16,7 +20,7 @@ jobs:
 
     steps:
       - name: Setup nodejs
-        uses: actions/setup-node@v7.0.0
+        uses: actions/setup-node@v7
         with:
           node-version: lts/*
 
@@ -29,6 +33,7 @@ jobs:
           permission-contents: write
           permission-pull-requests: write
           permission-issues: write
+          permission-packages: write
 
       - name: Checkout source
         uses: actions/checkout@v7
@@ -41,12 +46,12 @@ jobs:
       - name: Install releaser
         run: |
           npm install -g \
-            semantic-release@25.0.2 \
+            semantic-release \
             @semantic-release/changelog \
             @semantic-release/git \
             @semantic-release/github \
             semantic-release-replace-plugin \
-            conventional-changelog-conventionalcommits
+            conventional-changelog-conventionalcommits@9
 
       - name: Run releaser
         env:
