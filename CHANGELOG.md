@@ -1,5 +1,19 @@
 # Changelog
 
+## [18.0.0](https://github.com/promhippie/github_exporter/compare/v17.3.0...v18.0.0) (2026-08-10)
+
+### Features
+
+* **major:** update module github.com/google/go-github/v89 to v90 ([#735](https://github.com/promhippie/github_exporter/issues/735)) ([e1d7d36](https://github.com/promhippie/github_exporter/commit/e1d7d363b6872e86201cf16077c178d45b6fbb9a))
+* **minor:** update dependency github:cloudsmith-io/cloudsmith-cli to v1.21.0 ([#736](https://github.com/promhippie/github_exporter/issues/736)) ([6e71675](https://github.com/promhippie/github_exporter/commit/6e7167557a4b1df32175819e87b3e6c958734d86))
+* **minor:** update dependency golangci-lint to v2.12.2 ([1291e19](https://github.com/promhippie/github_exporter/commit/1291e192dfd29fbb776889bb92fbfff13a328c0f))
+* **minor:** update module modernc.org/sqlite to v1.56.0 ([#734](https://github.com/promhippie/github_exporter/issues/734)) ([8528b2d](https://github.com/promhippie/github_exporter/commit/8528b2d6b437994b2b1a9dd2f0c1322215a63340))
+* restructure repo and build processes ([542e088](https://github.com/promhippie/github_exporter/commit/542e08853d9dd9d54b1ccbd05e6ae70ead6a07f7))
+
+### Bugfixes
+
+* **patch:** update dependency cosign to v3.1.3 ([#738](https://github.com/promhippie/github_exporter/issues/738)) ([20a951c](https://github.com/promhippie/github_exporter/commit/20a951c1e66b7c5279ca681eacc832f1cf84b64e))
+
 ## [17.3.0](https://github.com/promhippie/github_exporter/compare/v17.2.0...v17.3.0) (2026-08-03)
 
 ## [17.2.0](https://github.com/promhippie/github_exporter/compare/v17.1.0...v17.2.0) (2026-07-27)
