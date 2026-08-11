@@ -6,7 +6,7 @@ go = "1.26.5"
 golangci-lint = "2.12.2"
 goreleaser = "2.17.1"
 hugo-extended = "0.164.0"
-pre-commit = "4.6.1"
+pre-commit = "4.6.2"
 task = "3.52.0"
 
 "github:cloudsmith-io/cloudsmith-cli" = "1.21.0"
