@@ -9,4 +9,4 @@ hugo-extended = "0.165.0"
 pre-commit = "4.6.2"
 task = "3.52.0"
 
-"github:cloudsmith-io/cloudsmith-cli" = "1.22.0"
+"github:cloudsmith-io/cloudsmith-cli" = "1.23.0"
