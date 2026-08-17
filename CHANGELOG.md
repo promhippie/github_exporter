@@ -1,5 +1,21 @@
 # Changelog
 
+## [18.1.0](https://github.com/promhippie/github_exporter/compare/v18.0.0...v18.1.0) (2026-08-17)
+
+### Features
+
+* **minor:** update dependency github:cloudsmith-io/cloudsmith-cli to v1.22.0 ([#741](https://github.com/promhippie/github_exporter/issues/741)) ([92bfe66](https://github.com/promhippie/github_exporter/commit/92bfe66f4261809705743474cbf23f9a5438c014))
+* **minor:** update dependency github:cloudsmith-io/cloudsmith-cli to v1.23.0 ([#745](https://github.com/promhippie/github_exporter/issues/745)) ([8a97cd0](https://github.com/promhippie/github_exporter/commit/8a97cd095241f6afe448d18a0163d65046302daf))
+* **minor:** update dependency hugo-extended to v0.165.0 ([#742](https://github.com/promhippie/github_exporter/issues/742)) ([9255dde](https://github.com/promhippie/github_exporter/commit/9255ddeeb3b7631aae1743d02fc7a50d45cae069))
+* **minor:** update module github.com/urfave/cli/v3 to v3.11.0 ([#747](https://github.com/promhippie/github_exporter/issues/747)) ([3dadc49](https://github.com/promhippie/github_exporter/commit/3dadc49e29ab312e26aefb3c619369709e3ed0a4))
+
+### Bugfixes
+
+* **deps:** update golang:1.26.6-alpine docker digest to 3889b42 ([#746](https://github.com/promhippie/github_exporter/issues/746)) ([e18bff5](https://github.com/promhippie/github_exporter/commit/e18bff5b85265269ff7a729a266111f00bea2fc6))
+* **patch:** update dependency go to v1.26.6 ([#743](https://github.com/promhippie/github_exporter/issues/743)) ([378cc34](https://github.com/promhippie/github_exporter/commit/378cc34d6bb6be9741be9a7c6a6fa9f49250b206))
+* **patch:** update dependency pre-commit to v4.6.2 ([#740](https://github.com/promhippie/github_exporter/issues/740)) ([9d1513b](https://github.com/promhippie/github_exporter/commit/9d1513bcd7479fb3993677d89db9558e662991bd))
+* **patch:** update golang docker tag to v1.26.6 ([#744](https://github.com/promhippie/github_exporter/issues/744)) ([1e55899](https://github.com/promhippie/github_exporter/commit/1e55899737bd6be7e83ef38b0c8db54cd608eab1))
+
 ## [18.0.0](https://github.com/promhippie/github_exporter/compare/v17.3.0...v18.0.0) (2026-08-10)
 
 ### Features
