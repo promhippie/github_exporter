@@ -1,5 +1,22 @@
 # Changelog
 
+## [18.2.0](https://github.com/promhippie/github_exporter/compare/v18.1.0...v18.2.0) (2026-08-24)
+
+### Features
+
+* **minor:** update dependency github:cloudsmith-io/cloudsmith-cli to v1.24.0 ([#749](https://github.com/promhippie/github_exporter/issues/749)) ([ca961ed](https://github.com/promhippie/github_exporter/commit/ca961ed07f0cc4e389f38795c769b9ebb55b51c7))
+* **minor:** update dependency golangci-lint to v2.13.0 ([#756](https://github.com/promhippie/github_exporter/issues/756)) ([b9beb06](https://github.com/promhippie/github_exporter/commit/b9beb06821a716ccfde432ac027804e22567976a))
+* **minor:** update dependency task to v3.53.1 ([#750](https://github.com/promhippie/github_exporter/issues/750)) ([074ea06](https://github.com/promhippie/github_exporter/commit/074ea0652daa35c144d97dc591c46f291ba45eab))
+* **minor:** update module github.com/stretchr/testify to v1.12.0 ([#748](https://github.com/promhippie/github_exporter/issues/748)) ([e1fcdd7](https://github.com/promhippie/github_exporter/commit/e1fcdd7d716f6d77833314c13ee6377f8fb5cd8a))
+* **minor:** update module modernc.org/sqlite to v1.57.0 ([#753](https://github.com/promhippie/github_exporter/issues/753)) ([ad0bc98](https://github.com/promhippie/github_exporter/commit/ad0bc98af9497fd0e902429aff785d5f8720db43))
+
+### Bugfixes
+
+* **patch:** update dependency go to v1.26.7 ([#751](https://github.com/promhippie/github_exporter/issues/751)) ([b886f44](https://github.com/promhippie/github_exporter/commit/b886f449f161f43197aaa6a5b59f234e08f606ae))
+* **patch:** update dependency golangci-lint to v2.13.1 ([#757](https://github.com/promhippie/github_exporter/issues/757)) ([2afaf1f](https://github.com/promhippie/github_exporter/commit/2afaf1f1f95affb33d3c4535fc55a2f290c108c6))
+* **patch:** update module github.com/go-chi/chi/v5 to v5.3.2 ([#758](https://github.com/promhippie/github_exporter/issues/758)) ([3079ae0](https://github.com/promhippie/github_exporter/commit/3079ae0dc778cb593c937e9b741a398dbd5cb4ae))
+* **patch:** update module github.com/stretchr/testify to v1.12.1 ([#752](https://github.com/promhippie/github_exporter/issues/752)) ([598fe56](https://github.com/promhippie/github_exporter/commit/598fe566cf99ce8a20c2d2e68c4ccef75c30efe4))
+
 ## [18.1.0](https://github.com/promhippie/github_exporter/compare/v18.0.0...v18.1.0) (2026-08-17)
 
 ### Features
