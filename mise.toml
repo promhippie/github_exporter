@@ -4,7 +4,7 @@
 cosign = "3.1.3"
 go = "1.27.0"
 golangci-lint = "2.13.2"
-goreleaser = "2.17.1"
+goreleaser = "2.18.0"
 hugo-extended = "0.165.0"
 pre-commit = "4.6.2"
 task = "3.53.1"
