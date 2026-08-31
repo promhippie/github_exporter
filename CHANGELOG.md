@@ -1,5 +1,21 @@
 # Changelog
 
+## [18.3.0](https://github.com/promhippie/github_exporter/compare/v18.2.0...v18.3.0) (2026-08-31)
+
+### Features
+
+* **minor:** update dependency github:cloudsmith-io/cloudsmith-cli to v1.25.0 ([1448be0](https://github.com/promhippie/github_exporter/commit/1448be0cfe50aafc592cb84c8653f6ecd0a845ee))
+* **minor:** update dependency github:cloudsmith-io/cloudsmith-cli to v1.26.0 ([#763](https://github.com/promhippie/github_exporter/issues/763)) ([0fb2bd7](https://github.com/promhippie/github_exporter/commit/0fb2bd762ce34137036819d23a0600218526f673))
+* **minor:** update dependency go to v1.27.0 ([#754](https://github.com/promhippie/github_exporter/issues/754)) ([2f9c148](https://github.com/promhippie/github_exporter/commit/2f9c14827f09f0a17fb15c1e71e5eec2ba6be8ae))
+* **minor:** update dependency goreleaser to v2.18.0 ([#759](https://github.com/promhippie/github_exporter/issues/759)) ([3ef0204](https://github.com/promhippie/github_exporter/commit/3ef0204866a3d838f246dfc07d67fe8eb577dd10))
+* **minor:** update golang docker tag to v1.27.0 ([#755](https://github.com/promhippie/github_exporter/issues/755)) ([d4f8ed7](https://github.com/promhippie/github_exporter/commit/d4f8ed71f2664bb464fd5d6859605482eb62512f))
+* **minor:** update module github.com/prometheus/exporter-toolkit to v0.19.0 ([#762](https://github.com/promhippie/github_exporter/issues/762)) ([6e8a0bd](https://github.com/promhippie/github_exporter/commit/6e8a0bd4592a1c3c1395b88d1ad16ef03150c341))
+
+### Bugfixes
+
+* **patch:** update dependency golangci-lint to v2.13.2 ([#764](https://github.com/promhippie/github_exporter/issues/764)) ([97d8287](https://github.com/promhippie/github_exporter/commit/97d8287b945a59ea080fcbae777ccb8413a6bef5))
+* update github.com/cockroachdb/swiss to latest version ([3f25d89](https://github.com/promhippie/github_exporter/commit/3f25d89cde4a8d65af883073c1582c65c378059a))
+
 ## [18.2.0](https://github.com/promhippie/github_exporter/compare/v18.1.0...v18.2.0) (2026-08-24)
 
 ### Features
