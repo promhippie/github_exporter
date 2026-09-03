@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/GuiaBolso/darwin"
-	"github.com/google/go-github/v90/github"
+	"github.com/google/go-github/v91/github"
 	"github.com/jmoiron/sqlx"
 	"github.com/promhippie/github_exporter/pkg/migration/dialect"
 
