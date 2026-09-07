@@ -18,12 +18,22 @@ Cloudsmith is the only fully hosted, cloud-native, universal package management
 solution, that enables your organization to create, store and share packages in
 any format, to any place, with total confidence.
 
-## Development
+## Prerequisites
 
-If you are not familiar with [Nix][nix] it is up to you to have a working
-environment for Go (>= 1.26.0) as the setup won't we covered within this guide.
-Please follow the official install instructions for [Go][golang]. Beside that
-we are using [go-task][gotask] to define all commands to build this project.
+We use [mise][mise] to manage all required tools and their versions. Install it
+by following the [official installation instructions][mise-install], then run
+the following commands inside the repository to activate mise and install all
+tools defined in `mise.toml`:
+
+```console
+mise trust
+mise install
+```
+
+## Build
+
+Since all required commands ar part of our [go-task][gotask] taskfile the
+commands you got to execute are quite simple:
 
 ```console
 git clone https://github.com/promhippie/github_exporter.git
@@ -33,36 +43,23 @@ task generate build
 ./bin/github_exporter -h
 ```
 
-If you got [Nix][nix] and [Direnv][direnv] configured you can simply execute
-the following commands to get al dependencies including [go-task][gotask] and
-the required runtimes installed. You are also able to directly use the process
-manager of [devenv][devenv]:
+## Development
 
-```console
-cat << EOF > .envrc
-use flake . --impure --extra-experimental-features nix-command
-EOF
+If you are using the provided [DevContainers][devcontainer] you could directly
+start without installing [mise][mise] on your system since it will launch a
+feature for it.
 
-direnv allow
-```
-
-To start developing on this project you have to execute only a few commands:
+To start developing on this project you have to execute only a few commands in
+multiple terminal tabs or windows:
 
 ```console
 task watch
 ```
 
-The development server should be running on
+The development server of the service should be running on
 [http://localhost:9504](http://localhost:9504). Generally it supports
-hot reloading which means the services are automatically restarted/reloaded on
+hot reloading which means the service is automatically restarted/reloaded on
 code changes.
-
-If you got [Nix][nix] configured you can simply execute the [devenv][devenv]
-command to start:
-
-```console
-devenv up
-```
 
 ## Security
 
@@ -71,7 +68,37 @@ If you find a security issue please contact
 
 ## Contributing
 
-Fork -> Patch -> Push -> Pull Request
+Generally we are following [conventional commits][commits] when we apply
+changes. That way we are able to generate proper changelogs for every release.
+Please use always pull requests to integrate new functionalities or to fix
+issues.
+
+For the release process we are following [semantic versioning][semver] which
+clearly indicates if a new version just resolves bugs, includes new features or
+even includes breaking changes.
+
+After installing the tools via `mise install` as described above set up the
+pre-commit hooks so they run automatically on every commit:
+
+```console
+prek install --hook-type pre-commit --hook-type commit-msg
+```
+
+> `prek` is managed by mise and will be available after `mise install`.
+
+If you have changed something on the source you should simply commit following
+the mentioned conventions:
+
+```console
+git checkout -b feat/new-feature
+git add --all
+git commit -m 'feat: added awesome new feature'
+git push --set-upstream origin feat/new-feature
+```
+
+After pushing your changes into the Git repository you should create a pull
+request on GitHub. If the pull request have been merged and everything built
+fine it will also create automatically a new release at least once a week.
 
 ## Authors
 
@@ -91,13 +118,14 @@ Copyright (c) 2018 Thomas Boerger <thomas@webhippie.de>
 [github]: https://github.com
 [releases]: https://github.com/promhippie/github_exporter/releases
 [pkgrepo]: https://cloudsmith.io/~webhippie/repos/promhippie/groups/
-[cloudsmith]: https://cloudsmith.com/
 [ghcr]: https://github.com/promhippie/github_exporter/pkgs/container/github_exporter
 [dockerhub]: https://hub.docker.com/r/promhippie/github-exporter/tags/
 [quayio]: https://quay.io/repository/promhippie/github-exporter?tab=tags
 [docs]: https://promhippie.github.io/github_exporter/#getting-started
-[nix]: https://nixos.org/
-[golang]: http://golang.org/doc/install.html
+[cloudsmith]: https://cloudsmith.com/
 [gotask]: https://taskfile.dev/installation/
-[direnv]: https://direnv.net/
-[devenv]: https://devenv.sh/
+[devcontainer]: https://containers.dev/
+[mise]: https://mise.jdx.dev/
+[mise-install]: https://mise.jdx.dev/getting-started.html
+[commits]: https://www.conventionalcommits.org/en/v1.0.0/
+[semver]: https://semver.org/
