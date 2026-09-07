@@ -1,5 +1,20 @@
 # Changelog
 
+## [19.0.0](https://github.com/promhippie/github_exporter/compare/v18.3.0...v19.0.0) (2026-09-07)
+
+### Features
+
+* **major:** update module github.com/google/go-github/v90 to v91 ([#771](https://github.com/promhippie/github_exporter/issues/771)) ([20115e8](https://github.com/promhippie/github_exporter/commit/20115e80ca5ab54a2483ad453bd0387218b5024f))
+* **minor:** update module modernc.org/sqlite to v1.58.0 ([#770](https://github.com/promhippie/github_exporter/issues/770)) ([918824b](https://github.com/promhippie/github_exporter/commit/918824b5a6511fc7cb45bcc1cd230a0636a6677e))
+
+### Bugfixes
+
+* **deps:** update golang:1.27.1-alpine docker digest to cf6fca6 ([#769](https://github.com/promhippie/github_exporter/issues/769)) ([1e9398d](https://github.com/promhippie/github_exporter/commit/1e9398d9864b28184d0c42508f5b7e80cb279a3a))
+* **patch:** update dependency go to v1.27.1 ([#766](https://github.com/promhippie/github_exporter/issues/766)) ([05f49bb](https://github.com/promhippie/github_exporter/commit/05f49bbe11ad4eb86ea82e6d2dd7a09be1e17d87))
+* **patch:** update dependency goreleaser to v2.18.1 ([#772](https://github.com/promhippie/github_exporter/issues/772)) ([ba7556b](https://github.com/promhippie/github_exporter/commit/ba7556bd2edf8e4775d6c9ca0aa8ee7b3eb5f85b))
+* **patch:** update golang docker tag to v1.27.1 ([#767](https://github.com/promhippie/github_exporter/issues/767)) ([ec1369d](https://github.com/promhippie/github_exporter/commit/ec1369d318b5f3692797fdd576d9a23be6d33de7))
+* **patch:** update module github.com/go-sql-driver/mysql to v1.10.1 ([#768](https://github.com/promhippie/github_exporter/issues/768)) ([65fe92f](https://github.com/promhippie/github_exporter/commit/65fe92f3df3c974d45e676b4068fc18db6264c72))
+
 ## [18.3.0](https://github.com/promhippie/github_exporter/compare/v18.2.0...v18.3.0) (2026-08-31)
 
 ### Features
