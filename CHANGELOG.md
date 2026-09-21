@@ -1,5 +1,20 @@
 # Changelog
 
+## [20.0.0](https://github.com/promhippie/github_exporter/compare/v19.0.0...v20.0.0) (2026-09-21)
+
+### Features
+
+* **major:** update module github.com/google/go-github/v91 to v92 ([#777](https://github.com/promhippie/github_exporter/issues/777)) ([aaaf560](https://github.com/promhippie/github_exporter/commit/aaaf56060b42a4f250f2fa2e8f920bd6d9c2a9f2))
+* **minor:** update module github.com/urfave/cli/v3 to v3.12.0 ([#776](https://github.com/promhippie/github_exporter/issues/776)) ([51920e8](https://github.com/promhippie/github_exporter/commit/51920e8820cf96f852c836cb9c346fdeedd1617e))
+* **minor:** update module github.com/urfave/cli/v3 to v3.13.0 ([#783](https://github.com/promhippie/github_exporter/issues/783)) ([57d930b](https://github.com/promhippie/github_exporter/commit/57d930b6365b73937cedf43e707e8c1451684e51))
+* **minor:** update module modernc.org/sqlite to v1.59.0 ([#778](https://github.com/promhippie/github_exporter/issues/778)) ([a57b324](https://github.com/promhippie/github_exporter/commit/a57b324ab28c11451e4aaef71a94790fe82aab80))
+
+### Bugfixes
+
+* **deps:** update alpine:3.24 docker digest to 294b683 ([#782](https://github.com/promhippie/github_exporter/issues/782)) ([d808225](https://github.com/promhippie/github_exporter/commit/d808225a725f71ff28aff591cec69721c164eab1))
+* **deps:** update alpine:3.24 docker digest to e7c4abb ([#780](https://github.com/promhippie/github_exporter/issues/780)) ([3fa883f](https://github.com/promhippie/github_exporter/commit/3fa883fbbd97ab726638531f1b52e78a673f0415))
+* **deps:** update docker digests ([#781](https://github.com/promhippie/github_exporter/issues/781)) ([9e9155c](https://github.com/promhippie/github_exporter/commit/9e9155c18a470416bd1dc7ab2c36a967ced3c6d1))
+
 ## [19.0.0](https://github.com/promhippie/github_exporter/compare/v18.3.0...v19.0.0) (2026-09-07)
 
 ### Features
