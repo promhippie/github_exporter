@@ -1,5 +1,15 @@
 # Changelog
 
+## [20.1.0](https://github.com/promhippie/github_exporter/compare/v20.0.0...v20.1.0) (2026-09-28)
+
+### Features
+
+* **minor:** update module github.com/prometheus/exporter-toolkit to v0.20.0 ([#785](https://github.com/promhippie/github_exporter/issues/785)) ([3a01323](https://github.com/promhippie/github_exporter/commit/3a01323a9a366a462bd409963842989f779cddf8))
+
+### Bugfixes
+
+* **deps:** update golang:1.27.1-alpine docker digest to 8a5910f ([#784](https://github.com/promhippie/github_exporter/issues/784)) ([a9208c3](https://github.com/promhippie/github_exporter/commit/a9208c3a257a6605a01cf0b18637dd4fa28b4153))
+
 ## [20.0.0](https://github.com/promhippie/github_exporter/compare/v19.0.0...v20.0.0) (2026-09-21)
 
 ### Features
