@@ -42,7 +42,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install tools
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@v5
 
       - name: Update golangci
         run: |
