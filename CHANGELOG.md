@@ -1,5 +1,17 @@
 # Changelog
 
+## [20.2.0](https://github.com/promhippie/github_exporter/compare/v20.1.0...v20.2.0) (2026-10-05)
+
+### Features
+
+* **minor:** update module github.com/urfave/cli/v3 to v3.14.0 ([#795](https://github.com/promhippie/github_exporter/issues/795)) ([1c204db](https://github.com/promhippie/github_exporter/commit/1c204db4a0f670aea12e2c7f66d87706e3999631))
+* **minor:** update module modernc.org/sqlite to v1.60.0 ([#790](https://github.com/promhippie/github_exporter/issues/790)) ([d6df2ac](https://github.com/promhippie/github_exporter/commit/d6df2ac8fb4fcb869d54102710b5677bc3349a42))
+
+### Bugfixes
+
+* **patch:** update module github.com/cenkalti/backoff/v7 to v7.0.1 ([#793](https://github.com/promhippie/github_exporter/issues/793)) ([cdcb96f](https://github.com/promhippie/github_exporter/commit/cdcb96fd1b3bf8d914b5debb40dd2909854b9300))
+* **patch:** update module modernc.org/sqlite to v1.60.1 ([#792](https://github.com/promhippie/github_exporter/issues/792)) ([f218370](https://github.com/promhippie/github_exporter/commit/f218370063bc6f9f534e9c58b55cfb6b70465fd9))
+
 ## [20.1.0](https://github.com/promhippie/github_exporter/compare/v20.0.0...v20.1.0) (2026-09-28)
 
 ### Features
