@@ -2,7 +2,22 @@ package store
 
 import (
 	"strconv"
+
+	"github.com/google/go-github/v92/github"
 )
+
+// unixTimestamp returns the Unix timestamp for t, or 0 if t is unset. The
+// GitHub API returns a nil pointer for timestamps that haven't happened yet
+// (e.g. CompletedAt on a job that's still running), and go-github's getters
+// turn that into a zero-value time.Time, whose Unix() is a large negative
+// number rather than 0.
+func unixTimestamp(t github.Timestamp) int64 {
+	if t.IsZero() {
+		return 0
+	}
+
+	return t.Unix()
+}
 
 // WorkflowRun defines the type returned by GitHub.
 type WorkflowRun struct {
