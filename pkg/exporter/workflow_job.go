@@ -146,10 +146,16 @@ func (c *WorkflowJobCollector) Collect(ch chan<- prometheus.Metric) {
 			labels...,
 		)
 
+		duration := float64(0)
+
+		if record.CompletedAt > 0 && record.StartedAt > 0 {
+			duration = float64((record.CompletedAt - record.StartedAt) * 1000)
+		}
+
 		ch <- prometheus.MustNewConstMetric(
 			c.Duration,
 			prometheus.GaugeValue,
-			float64((record.CompletedAt-record.StartedAt)*1000),
+			duration,
 			labels...,
 		)
 
