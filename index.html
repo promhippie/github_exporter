@@ -674,6 +674,8 @@ access the exporter at
 <dd>List of labels used for workflow jobs, comma-separated list, defaults to <code>owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion</code></dd>
 <dt>GITHUB_EXPORTER_COLLECTOR_RUNNERS</dt>
 <dd>Enable collector for runners, defaults to <code>false</code></dd>
+<dt>GITHUB_EXPORTER_COLLECTOR_STATUS</dt>
+<dd>Enable collector for github.com service status, defaults to <code>false</code></dd>
 <dt>GITHUB_EXPORTER_RUNNERS_LABELS</dt>
 <dd>List of labels used for runners, comma-separated list, defaults to <code>owner, id, name, os, status</code></dd>
 </dl>
@@ -851,6 +853,26 @@ take a look at the <a href="https://github.com/prometheus/client_golang/blob/mas
 <dd>1 if the runner is busy, 0 otherwise</dd>
 <dt>github_runner_repo_online{owner, id, name, os, status}</dt>
 <dd>Static metrics of runner is online or not</dd>
+<dt>github_status_actions_up{}</dt>
+<dd>Current health status of Actions on githubstatus.com</dd>
+<dt>github_status_api_requests_up{}</dt>
+<dd>Current health status of API Requests on githubstatus.com</dd>
+<dt>github_status_codespaces_up{}</dt>
+<dd>Current health status of Codespaces on githubstatus.com</dd>
+<dt>github_status_copilot_up{}</dt>
+<dd>Current health status of Copilot on githubstatus.com</dd>
+<dt>github_status_git_operations_up{}</dt>
+<dd>Current health status of Git Operations on githubstatus.com</dd>
+<dt>github_status_issues_up{}</dt>
+<dd>Current health status of Issues on githubstatus.com</dd>
+<dt>github_status_packages_up{}</dt>
+<dd>Current health status of Packages on githubstatus.com</dd>
+<dt>github_status_pages_up{}</dt>
+<dd>Current health status of Pages on githubstatus.com</dd>
+<dt>github_status_pull_requests_up{}</dt>
+<dd>Current health status of Pull Requests on githubstatus.com</dd>
+<dt>github_status_webhooks_up{}</dt>
+<dd>Current health status of Webhooks on githubstatus.com</dd>
 <dt>github_workflow_job_created_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}</dt>
 <dd>Timestamp when the workflow job have been created</dd>
 <dt>github_workflow_job_duration_ms{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}</dt>
