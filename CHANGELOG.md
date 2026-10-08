@@ -1,5 +1,20 @@
 # Changelog
 
+## [20.3.0](https://github.com/promhippie/github_exporter/compare/v20.2.0...v20.3.0) (2026-10-08)
+
+### Features
+
+* add collector for metrics from Github status page ([39cda4f](https://github.com/promhippie/github_exporter/commit/39cda4f730cdc05acd105063e3316d1e8239be04))
+* add cumulative workflow job completion counters ([758b0f4](https://github.com/promhippie/github_exporter/commit/758b0f46047bdb2785f910205172e4057f67ee3f)), closes [#712](https://github.com/promhippie/github_exporter/issues/712)
+* add cumulative workflow job queue duration counters ([ffdb932](https://github.com/promhippie/github_exporter/commit/ffdb9320a641c7b4d5caee2f8d8188c0a317bbe1)), closes [#501](https://github.com/promhippie/github_exporter/issues/501)
+* add environment label to workflow job metrics ([5ae76ec](https://github.com/promhippie/github_exporter/commit/5ae76ec5ed9f3274f60b871d2f8302e9deedb4cc)), closes [#444](https://github.com/promhippie/github_exporter/issues/444)
+* **store:** expose repository custom properties as workflow labels ([92ce8bc](https://github.com/promhippie/github_exporter/commit/92ce8bcb1445cb044c3756d083aaa733fb4cc0f5)), closes [#435](https://github.com/promhippie/github_exporter/issues/435)
+
+### Bugfixes
+
+* **exporter:** prevent huge negative workflow duration metrics ([593a362](https://github.com/promhippie/github_exporter/commit/593a36263c9f7b73c25ba4020d2fd9f8e286260e)), closes [#675](https://github.com/promhippie/github_exporter/issues/675)
+* honor cgroup CPU limits via GOMAXPROCS ([0b4aa8b](https://github.com/promhippie/github_exporter/commit/0b4aa8b425e9e64ae4839a39b2a9bf2ffecb5aa8)), closes [#493](https://github.com/promhippie/github_exporter/issues/493)
+
 ## [20.2.0](https://github.com/promhippie/github_exporter/compare/v20.1.0...v20.2.0) (2026-10-05)
 
 ### Features
