@@ -17,22 +17,23 @@ func storeWorkflowRunEvent(handle *sqlx.DB, event *github.WorkflowRunEvent) erro
 	startedAt := unixTimestamp(event.GetWorkflowRun().GetRunStartedAt())
 
 	record := &WorkflowRun{
-		Owner:      event.GetRepo().GetOwner().GetLogin(),
-		Repo:       event.GetRepo().GetName(),
-		WorkflowID: event.GetWorkflowRun().GetWorkflowID(),
-		Number:     event.GetWorkflowRun().GetRunNumber(),
-		Attempt:    event.GetWorkflowRun().GetRunAttempt(),
-		Event:      event.GetWorkflowRun().GetEvent(),
-		Name:       event.GetWorkflowRun().GetName(),
-		Title:      event.GetWorkflowRun().GetDisplayTitle(),
-		Status:     event.GetWorkflowRun().GetConclusion(),
-		Branch:     event.GetWorkflowRun().GetHeadBranch(),
-		SHA:        event.GetWorkflowRun().GetHeadSHA(),
-		Identifier: event.GetWorkflowRun().GetID(),
-		Actor:      event.GetWorkflowRun().GetActor().GetLogin(),
-		CreatedAt:  createdAt,
-		UpdatedAt:  updatedAt,
-		StartedAt:  startedAt,
+		Owner:            event.GetRepo().GetOwner().GetLogin(),
+		Repo:             event.GetRepo().GetName(),
+		WorkflowID:       event.GetWorkflowRun().GetWorkflowID(),
+		Number:           event.GetWorkflowRun().GetRunNumber(),
+		Attempt:          event.GetWorkflowRun().GetRunAttempt(),
+		Event:            event.GetWorkflowRun().GetEvent(),
+		Name:             event.GetWorkflowRun().GetName(),
+		Title:            event.GetWorkflowRun().GetDisplayTitle(),
+		Status:           event.GetWorkflowRun().GetConclusion(),
+		Branch:           event.GetWorkflowRun().GetHeadBranch(),
+		SHA:              event.GetWorkflowRun().GetHeadSHA(),
+		Identifier:       event.GetWorkflowRun().GetID(),
+		Actor:            event.GetWorkflowRun().GetActor().GetLogin(),
+		CreatedAt:        createdAt,
+		UpdatedAt:        updatedAt,
+		StartedAt:        startedAt,
+		CustomProperties: encodeCustomProperties(event.GetRepo().GetCustomProperties()),
 	}
 
 	if record.Status == "" {
@@ -153,7 +154,8 @@ SELECT
 	actor,
 	created_at,
 	updated_at,
-	started_at
+	started_at,
+	custom_properties
 FROM
 	workflow_runs
 WHERE
@@ -188,7 +190,8 @@ INSERT INTO workflow_runs (
 	actor,
 	created_at,
 	updated_at,
-	started_at
+	started_at,
+	custom_properties
 ) VALUES (
 	:owner,
 	:repo,
@@ -205,7 +208,8 @@ INSERT INTO workflow_runs (
 	:actor,
 	:created_at,
 	:updated_at,
-	:started_at
+	:started_at,
+	:custom_properties
 );`
 
 var updateWorkflowRunQuery = `
@@ -223,7 +227,8 @@ SET
 	actor=:actor,
 	created_at=:created_at,
 	updated_at=:updated_at,
-	started_at=:started_at
+	started_at=:started_at,
+	custom_properties=:custom_properties
 WHERE
 	owner=:owner AND repo=:repo AND workflow_id=:workflow_id AND number=:number;`
 

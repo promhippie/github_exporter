@@ -83,7 +83,7 @@ GITHUB_EXPORTER_WORKFLOW_RUNS_PURGE_WINDOW
 : History window for keeping data in database. Defaults to the query window, defaults to `24h0m0s`
 
 GITHUB_EXPORTER_WORKFLOW_RUNS_LABELS
-: List of labels used for workflows, comma-separated list, defaults to `owner, repo, workflow, event, name, status, branch, number, run`
+: List of labels used for workflows, any name not listed below is looked up within the repository's custom properties, comma-separated list, defaults to `owner, repo, workflow, event, name, status, branch, number, run`
 
 GITHUB_EXPORTER_COLLECTOR_WORKFLOW_JOBS
 : Enable collector for workflow jobs, defaults to `false`
@@ -95,7 +95,7 @@ GITHUB_EXPORTER_WORKFLOW_JOBS_PURGE_WINDOW
 : History window for keeping data in database. Defaults to the query window, defaults to `24h0m0s`
 
 GITHUB_EXPORTER_WORKFLOW_JOBS_LABELS
-: List of labels used for workflow jobs, comma-separated list, defaults to `owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion, environment`
+: List of labels used for workflow jobs, any name not listed below is looked up within the repository's custom properties, comma-separated list, defaults to `owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion, environment`
 
 GITHUB_EXPORTER_COLLECTOR_RUNNERS
 : Enable collector for runners, defaults to `false`

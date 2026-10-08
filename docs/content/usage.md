@@ -265,7 +265,34 @@ that can be customized.
 
 {{< partial "labels.md" >}}
 
+For the workflow run and workflow job labels you aren't limited to the lists
+above, any label name that doesn't match one of these predefined names gets
+looked up within the [custom properties][customproperties] of the related
+repository, as delivered by the GitHub webhook payload. This allows you to
+expose org-defined custom properties, like a team or department, as a metric
+label without any further configuration, just add the exact custom property
+key to `GITHUB_EXPORTER_WORKFLOW_RUNS_LABELS` or
+`GITHUB_EXPORTER_WORKFLOW_JOBS_LABELS` to make use of it:
+
+{{< highlight diff >}}
+  github_exporter:
+    image: promhippie/github-exporter:latest
+    restart: always
+    environment:
+-     - GITHUB_EXPORTER_WORKFLOW_JOBS_LABELS=owner,repo,name,title,branch,sha,identifier,run_id,run_attempt,labels,runner_id,runner_name,runner_group_id,runner_group_name,workflow_name,conclusion
++     - GITHUB_EXPORTER_WORKFLOW_JOBS_LABELS=owner,repo,name,title,branch,sha,identifier,run_id,run_attempt,labels,runner_id,runner_name,runner_group_id,runner_group_name,workflow_name,conclusion,department
+      - GITHUB_EXPORTER_TOKEN=bldyecdtysdahs76ygtbw51w3oeo6a4cvjwoitmb
+      - GITHUB_EXPORTER_LOG_PRETTY=true
+      - GITHUB_EXPORTER_ORG=promhippie
+      - GITHUB_EXPORTER_REPO=promhippie/example
+{{< / highlight >}}
+
+Custom properties of type multi-select get exposed as a comma-separated list
+of values, the same way the built-in `labels` label already works. A missing
+or unset custom property simply results in an empty label value.
+
 [prometheus]: https://prometheus.io
+[customproperties]: https://docs.github.com/en/organizations/managing-organization-settings/managing-custom-properties-for-repositories-in-your-organization
 [compose]: https://docs.docker.com/compose/
 [dockerhub]: https://hub.docker.com/r/promhippie/github-exporter/tags/
 [quayio]: https://quay.io/repository/promhippie/github-exporter?tab=tags
