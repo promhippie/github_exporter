@@ -121,6 +121,11 @@ var (
 			Script: `CREATE INDEX idx_workflow_job_completions_queue_aggregate
 				ON workflow_job_completions(owner, repo, workflow_name, runner_group_name, conclusion);`,
 		},
+		{
+			Version:     11,
+			Description: "Adding environment column to workflow_jobs table",
+			Script:      `ALTER TABLE workflow_jobs ADD COLUMN environment TEXT;`,
+		},
 	}
 )
 

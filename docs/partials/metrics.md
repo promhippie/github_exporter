@@ -274,13 +274,13 @@ github_status_webhooks_up{}
 github_workflow_job_completed_total{owner, repo, workflow_name, name, conclusion}
 : Total number of completed workflow jobs
 
-github_workflow_job_created_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
+github_workflow_job_created_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion, environment}
 : Timestamp when the workflow job have been created
 
-github_workflow_job_duration_ms{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
+github_workflow_job_duration_ms{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion, environment}
 : Duration of workflow runs
 
-github_workflow_job_duration_run_created_minutes{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
+github_workflow_job_duration_run_created_minutes{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion, environment}
 : Duration since the workflow run creation time in minutes
 
 github_workflow_job_duration_seconds_total{owner, repo, workflow_name, name, conclusion}
@@ -292,10 +292,10 @@ github_workflow_job_queue_duration_seconds_total{owner, repo, workflow_name, run
 github_workflow_job_queued_total{owner, repo, workflow_name, runner_group_name, conclusion}
 : Total number of completed workflow jobs that reported a queue time
 
-github_workflow_job_started_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
+github_workflow_job_started_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion, environment}
 : Timestamp when the workflow job have been started
 
-github_workflow_job_status{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
+github_workflow_job_status{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion, environment}
 : Status of workflow jobs
 
 github_workflow_run_created_timestamp{owner, repo, workflow, event, name, status, branch, number, run}

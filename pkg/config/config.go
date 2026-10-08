@@ -132,6 +132,7 @@ func JobLabels() []string {
 		"runner_group_name",
 		"workflow_name",
 		"conclusion",
+		"environment",
 	}
 }
 
