@@ -286,6 +286,12 @@ github_workflow_job_duration_run_created_minutes{owner, repo, name, title, branc
 github_workflow_job_duration_seconds_total{owner, repo, workflow_name, name, conclusion}
 : Total duration of completed workflow jobs in seconds
 
+github_workflow_job_queue_duration_seconds_total{owner, repo, workflow_name, runner_group_name, conclusion}
+: Total time workflow jobs spent queued before starting in seconds
+
+github_workflow_job_queued_total{owner, repo, workflow_name, runner_group_name, conclusion}
+: Total number of completed workflow jobs that reported a queue time
+
 github_workflow_job_started_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}
 : Timestamp when the workflow job have been started
 

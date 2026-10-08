@@ -19,13 +19,15 @@ type WorkflowJobCollector struct {
 	duration *prometheus.HistogramVec
 	config   config.Target
 
-	Status         *prometheus.Desc
-	Duration       *prometheus.Desc
-	Creation       *prometheus.Desc
-	Created        *prometheus.Desc
-	Started        *prometheus.Desc
-	CompletedTotal *prometheus.Desc
-	DurationTotal  *prometheus.Desc
+	Status             *prometheus.Desc
+	Duration           *prometheus.Desc
+	Creation           *prometheus.Desc
+	Created            *prometheus.Desc
+	Started            *prometheus.Desc
+	CompletedTotal     *prometheus.Desc
+	DurationTotal      *prometheus.Desc
+	QueuedTotal        *prometheus.Desc
+	QueueDurationTotal *prometheus.Desc
 }
 
 // NewWorkflowJobCollector returns a new WorkflowCollector.
@@ -41,6 +43,14 @@ func NewWorkflowJobCollector(logger *slog.Logger, client *github.Client, db stor
 		"repo",
 		"workflow_name",
 		"name",
+		"conclusion",
+	}
+
+	queueLabels := []string{
+		"owner",
+		"repo",
+		"workflow_name",
+		"runner_group_name",
 		"conclusion",
 	}
 
@@ -94,6 +104,18 @@ func NewWorkflowJobCollector(logger *slog.Logger, client *github.Client, db stor
 			completionLabels,
 			nil,
 		),
+		QueuedTotal: prometheus.NewDesc(
+			"github_workflow_job_queued_total",
+			"Total number of completed workflow jobs that reported a queue time",
+			queueLabels,
+			nil,
+		),
+		QueueDurationTotal: prometheus.NewDesc(
+			"github_workflow_job_queue_duration_seconds_total",
+			"Total time workflow jobs spent queued before starting in seconds",
+			queueLabels,
+			nil,
+		),
 	}
 }
 
@@ -107,6 +129,8 @@ func (c *WorkflowJobCollector) Metrics() []*prometheus.Desc {
 		c.Started,
 		c.CompletedTotal,
 		c.DurationTotal,
+		c.QueuedTotal,
+		c.QueueDurationTotal,
 	}
 }
 
@@ -119,6 +143,8 @@ func (c *WorkflowJobCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.Started
 	ch <- c.CompletedTotal
 	ch <- c.DurationTotal
+	ch <- c.QueuedTotal
+	ch <- c.QueueDurationTotal
 }
 
 // Collect is called by the Prometheus registry when collecting metrics.
@@ -243,6 +269,45 @@ func (c *WorkflowJobCollector) Collect(ch chan<- prometheus.Metric) {
 			c.DurationTotal,
 			prometheus.CounterValue,
 			completion.DurationSecondsTotal,
+			labels...,
+		)
+	}
+
+	queueDurations, err := c.db.GetWorkflowJobQueueDurations()
+
+	if err != nil {
+		c.logger.Error("Failed to fetch workflow job queue durations",
+			"err", err,
+		)
+
+		c.failures.WithLabelValues("workflow_job").Inc()
+		return
+	}
+
+	c.logger.Debug("Fetched workflow job queue durations",
+		"count", len(queueDurations),
+	)
+
+	for _, queueDuration := range queueDurations {
+		labels := []string{
+			queueDuration.Owner,
+			queueDuration.Repo,
+			queueDuration.WorkflowName,
+			queueDuration.RunnerGroupName,
+			queueDuration.Conclusion,
+		}
+
+		ch <- prometheus.MustNewConstMetric(
+			c.QueuedTotal,
+			prometheus.CounterValue,
+			float64(queueDuration.Count),
+			labels...,
+		)
+
+		ch <- prometheus.MustNewConstMetric(
+			c.QueueDurationTotal,
+			prometheus.CounterValue,
+			queueDuration.QueueDurationSecondsTotal,
 			labels...,
 		)
 	}

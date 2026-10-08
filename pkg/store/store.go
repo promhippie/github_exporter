@@ -31,6 +31,7 @@ type Store interface {
 	GetWorkflowJobs(time.Duration) ([]*WorkflowJob, error)
 	PruneWorkflowJobs(time.Duration) error
 	GetWorkflowJobCompletions() ([]*WorkflowJobCompletionAggregate, error)
+	GetWorkflowJobQueueDurations() ([]*WorkflowJobQueueAggregate, error)
 
 	Open() (bool, error)
 	Close() error

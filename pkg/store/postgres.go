@@ -105,6 +105,22 @@ var (
 			Script: `CREATE INDEX idx_workflow_job_completions_aggregate
 				ON workflow_job_completions(owner, repo, workflow_name, name, conclusion);`,
 		},
+		{
+			Version:     8,
+			Description: "Adding runner_group_name column to workflow_job_completions table",
+			Script:      `ALTER TABLE workflow_job_completions ADD COLUMN runner_group_name TEXT;`,
+		},
+		{
+			Version:     9,
+			Description: "Adding queue_duration_seconds column to workflow_job_completions table",
+			Script:      `ALTER TABLE workflow_job_completions ADD COLUMN queue_duration_seconds DOUBLE PRECISION;`,
+		},
+		{
+			Version:     10,
+			Description: "Creating index for workflow_job_completions queue duration aggregate",
+			Script: `CREATE INDEX idx_workflow_job_completions_queue_aggregate
+				ON workflow_job_completions(owner, repo, workflow_name, runner_group_name, conclusion);`,
+		},
 	}
 )
 
@@ -212,6 +228,11 @@ func (s *postgresStore) PruneWorkflowJobs(timeframe time.Duration) error {
 // GetWorkflowJobCompletions implements the Store interface.
 func (s *postgresStore) GetWorkflowJobCompletions() ([]*WorkflowJobCompletionAggregate, error) {
 	return getWorkflowJobCompletions(s.handle)
+}
+
+// GetWorkflowJobQueueDurations implements the Store interface.
+func (s *postgresStore) GetWorkflowJobQueueDurations() ([]*WorkflowJobQueueAggregate, error) {
+	return getWorkflowJobQueueDurations(s.handle)
 }
 
 func (s *postgresStore) dsn() string {

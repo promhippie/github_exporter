@@ -146,15 +146,17 @@ func (r *WorkflowJob) ByLabel(label string) string {
 // job event. Each (owner, repo, identifier, run_attempt) tuple is recorded at
 // most once; the first terminal payload wins.
 type WorkflowJobCompletion struct {
-	Owner           string  `db:"owner"`
-	Repo            string  `db:"repo"`
-	Identifier      int64   `db:"identifier"`
-	RunAttempt      int     `db:"run_attempt"`
-	WorkflowName    string  `db:"workflow_name"`
-	Name            string  `db:"name"`
-	Conclusion      string  `db:"conclusion"`
-	DurationSeconds float64 `db:"duration_seconds"`
-	RecordedAt      int64   `db:"recorded_at"`
+	Owner                string  `db:"owner"`
+	Repo                 string  `db:"repo"`
+	Identifier           int64   `db:"identifier"`
+	RunAttempt           int     `db:"run_attempt"`
+	WorkflowName         string  `db:"workflow_name"`
+	Name                 string  `db:"name"`
+	RunnerGroupName      string  `db:"runner_group_name"`
+	Conclusion           string  `db:"conclusion"`
+	DurationSeconds      float64 `db:"duration_seconds"`
+	QueueDurationSeconds float64 `db:"queue_duration_seconds"`
+	RecordedAt           int64   `db:"recorded_at"`
 }
 
 // WorkflowJobCompletionAggregate groups completion records for counter
@@ -167,4 +169,17 @@ type WorkflowJobCompletionAggregate struct {
 	Conclusion           string  `db:"conclusion"`
 	Count                int64   `db:"count"`
 	DurationSecondsTotal float64 `db:"duration_seconds_total"`
+}
+
+// WorkflowJobQueueAggregate groups completion records by runner group for
+// queue time counter emission, keeping the label set fixed and independent
+// of the per-job identifier/run_id that drives metric cardinality up.
+type WorkflowJobQueueAggregate struct {
+	Owner                     string  `db:"owner"`
+	Repo                      string  `db:"repo"`
+	WorkflowName              string  `db:"workflow_name"`
+	RunnerGroupName           string  `db:"runner_group_name"`
+	Conclusion                string  `db:"conclusion"`
+	Count                     int64   `db:"count"`
+	QueueDurationSecondsTotal float64 `db:"queue_duration_seconds_total"`
 }

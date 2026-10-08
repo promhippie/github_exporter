@@ -106,16 +106,29 @@ func recordWorkflowJobCompletion(handle *sqlx.DB, record *WorkflowJob) error {
 		}
 	}
 
+	queueDuration := 0.0
+	createdAt := record.CreatedAt
+
+	if createdAt > 0 && startedAt > 0 {
+		queueDuration = float64(startedAt - createdAt)
+
+		if queueDuration < 0 {
+			queueDuration = 0
+		}
+	}
+
 	completion := &WorkflowJobCompletion{
-		Owner:           record.Owner,
-		Repo:            record.Repo,
-		Identifier:      record.Identifier,
-		RunAttempt:      record.RunAttempt,
-		WorkflowName:    record.WorkflowName,
-		Name:            record.Name,
-		Conclusion:      record.Conclusion,
-		DurationSeconds: duration,
-		RecordedAt:      time.Now().Unix(),
+		Owner:                record.Owner,
+		Repo:                 record.Repo,
+		Identifier:           record.Identifier,
+		RunAttempt:           record.RunAttempt,
+		WorkflowName:         record.WorkflowName,
+		Name:                 record.Name,
+		RunnerGroupName:      record.RunnerGroupName,
+		Conclusion:           record.Conclusion,
+		DurationSeconds:      duration,
+		QueueDurationSeconds: queueDuration,
+		RecordedAt:           time.Now().Unix(),
 	}
 
 	if _, err := handle.NamedExec(
@@ -185,6 +198,21 @@ func getWorkflowJobCompletions(handle *sqlx.DB) ([]*WorkflowJobCompletionAggrega
 	if err := handle.Select(
 		&records,
 		selectWorkflowJobCompletionsQuery,
+	); err != nil {
+		return records, err
+	}
+
+	return records, nil
+}
+
+// getWorkflowJobQueueDurations retrieves aggregated workflow job queue
+// durations, grouped by runner group instead of by job name.
+func getWorkflowJobQueueDurations(handle *sqlx.DB) ([]*WorkflowJobQueueAggregate, error) {
+	records := make([]*WorkflowJobQueueAggregate, 0)
+
+	if err := handle.Select(
+		&records,
+		selectWorkflowJobQueueDurationsQuery,
 	); err != nil {
 		return records, err
 	}
@@ -322,8 +350,10 @@ INSERT INTO workflow_job_completions (
 	run_attempt,
 	workflow_name,
 	name,
+	runner_group_name,
 	conclusion,
 	duration_seconds,
+	queue_duration_seconds,
 	recorded_at
 ) VALUES (
 	:owner,
@@ -332,8 +362,10 @@ INSERT INTO workflow_job_completions (
 	:run_attempt,
 	:workflow_name,
 	:name,
+	:runner_group_name,
 	:conclusion,
 	:duration_seconds,
+	:queue_duration_seconds,
 	:recorded_at
 )
 ON CONFLICT DO NOTHING;`
@@ -346,8 +378,10 @@ INSERT INTO workflow_job_completions (
 	run_attempt,
 	workflow_name,
 	name,
+	runner_group_name,
 	conclusion,
 	duration_seconds,
+	queue_duration_seconds,
 	recorded_at
 ) VALUES (
 	:owner,
@@ -356,8 +390,10 @@ INSERT INTO workflow_job_completions (
 	:run_attempt,
 	:workflow_name,
 	:name,
+	:runner_group_name,
 	:conclusion,
 	:duration_seconds,
+	:queue_duration_seconds,
 	:recorded_at
 )
 ON DUPLICATE KEY UPDATE owner=owner;`
@@ -378,4 +414,22 @@ GROUP BY
 	repo,
 	workflow_name,
 	name,
+	conclusion;`
+
+var selectWorkflowJobQueueDurationsQuery = `
+SELECT
+	owner,
+	repo,
+	workflow_name,
+	runner_group_name,
+	conclusion,
+	COUNT(*) AS count,
+	COALESCE(SUM(queue_duration_seconds), 0.0) AS queue_duration_seconds_total
+FROM
+	workflow_job_completions
+GROUP BY
+	owner,
+	repo,
+	workflow_name,
+	runner_group_name,
 	conclusion;`
