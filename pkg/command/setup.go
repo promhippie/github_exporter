@@ -8,6 +8,7 @@ import (
 
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
+	"go.uber.org/automaxprocs/maxprocs"
 )
 
 func setupLogger(cfg *config.Config) *slog.Logger {
@@ -39,6 +40,16 @@ func loggerLevel(cfg *config.Config) slog.Leveler {
 	}
 
 	return slog.LevelInfo
+}
+
+func setupMaxProcs(logger *slog.Logger) {
+	if _, err := maxprocs.Set(maxprocs.Logger(func(format string, args ...any) {
+		logger.Info(fmt.Sprintf(format, args...))
+	})); err != nil {
+		logger.Warn("Failed to set GOMAXPROCS",
+			"error", err,
+		)
+	}
 }
 
 func setupStorage(cfg *config.Config, logger *slog.Logger) (store.Store, error) {

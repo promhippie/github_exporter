@@ -42,6 +42,8 @@ func Run() error {
 		},
 		Action: func(ctx context.Context, _ *cli.Command) error {
 			logger := setupLogger(cfg)
+			setupMaxProcs(logger)
+
 			db, err := setupStorage(cfg, logger)
 
 			if err != nil {
