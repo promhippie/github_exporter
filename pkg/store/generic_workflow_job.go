@@ -35,6 +35,7 @@ func storeWorkflowJobEvent(handle *sqlx.DB, event *github.WorkflowJobEvent) erro
 		RunnerGroupID:   job.GetRunnerGroupID(),
 		RunnerGroupName: job.GetRunnerGroupName(),
 		WorkflowName:    job.GetWorkflowName(),
+		Environment:     event.GetDeployment().GetEnvironment(),
 	}
 
 	if err := createOrUpdateWorkflowJob(handle, record); err != nil {
@@ -254,7 +255,8 @@ SELECT
 	runner_name,
 	runner_group_id,
 	runner_group_name,
-	workflow_name
+	workflow_name,
+	environment
 FROM
 	workflow_jobs
 WHERE
@@ -292,7 +294,8 @@ INSERT INTO workflow_jobs (
 	runner_name,
 	runner_group_id,
 	runner_group_name,
-	workflow_name
+	workflow_name,
+	environment
 ) VALUES (
 	:owner,
 	:repo,
@@ -312,7 +315,8 @@ INSERT INTO workflow_jobs (
 	:runner_name,
 	:runner_group_id,
 	:runner_group_name,
-	:workflow_name
+	:workflow_name,
+	:environment
 );`
 
 var updateWorkflowJobQuery = `
@@ -332,7 +336,8 @@ SET
 	runner_id=:runner_id,
 	runner_name=:runner_name,
 	runner_group_id=:runner_group_id,
-	runner_group_name=:runner_group_name
+	runner_group_name=:runner_group_name,
+	environment=:environment
 WHERE
 	owner=:owner AND repo=:repo AND identifier=:identifier;`
 

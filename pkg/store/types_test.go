@@ -22,3 +22,21 @@ func TestUnixTimestamp(t *testing.T) {
 		}
 	})
 }
+
+func TestWorkflowJobByLabelEnvironment(t *testing.T) {
+	t.Run("environment set", func(t *testing.T) {
+		record := &WorkflowJob{Environment: "production"}
+
+		if got := record.ByLabel("environment"); got != "production" {
+			t.Errorf("expected %q, got %q", "production", got)
+		}
+	})
+
+	t.Run("environment unset", func(t *testing.T) {
+		record := &WorkflowJob{}
+
+		if got := record.ByLabel("environment"); got != "" {
+			t.Errorf("expected empty string, got %q", got)
+		}
+	})
+}

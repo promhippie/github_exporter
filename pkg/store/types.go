@@ -96,6 +96,7 @@ type WorkflowJob struct {
 	RunnerGroupID   int64  `db:"runner_group_id"`
 	RunnerGroupName string `db:"runner_group_name"`
 	WorkflowName    string `db:"workflow_name"`
+	Environment     string `db:"environment"`
 }
 
 // ByLabel returns values by the defined list of labels.
@@ -137,6 +138,8 @@ func (r *WorkflowJob) ByLabel(label string) string {
 		return r.WorkflowName
 	case "conclusion":
 		return r.Conclusion
+	case "environment":
+		return r.Environment
 	}
 
 	return ""
