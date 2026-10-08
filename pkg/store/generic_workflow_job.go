@@ -2,6 +2,7 @@ package store
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -16,26 +17,27 @@ func storeWorkflowJobEvent(handle *sqlx.DB, event *github.WorkflowJobEvent) erro
 	job := event.WorkflowJob
 
 	record := &WorkflowJob{
-		Owner:           event.GetRepo().GetOwner().GetLogin(),
-		Repo:            event.GetRepo().GetName(),
-		Name:            job.GetName(),
-		Status:          job.GetStatus(),
-		Conclusion:      job.GetConclusion(),
-		Branch:          job.GetHeadBranch(),
-		SHA:             job.GetHeadSHA(),
-		Identifier:      event.GetWorkflowJob().GetID(),
-		RunID:           job.GetRunID(),
-		RunAttempt:      int(job.GetRunAttempt()),
-		CreatedAt:       unixTimestamp(job.GetCreatedAt()),
-		StartedAt:       unixTimestamp(job.GetStartedAt()),
-		CompletedAt:     unixTimestamp(job.GetCompletedAt()),
-		Labels:          strings.Join(job.Labels, ","),
-		RunnerID:        job.GetRunnerID(),
-		RunnerName:      job.GetRunnerName(),
-		RunnerGroupID:   job.GetRunnerGroupID(),
-		RunnerGroupName: job.GetRunnerGroupName(),
-		WorkflowName:    job.GetWorkflowName(),
-		Environment:     event.GetDeployment().GetEnvironment(),
+		Owner:            event.GetRepo().GetOwner().GetLogin(),
+		Repo:             event.GetRepo().GetName(),
+		Name:             job.GetName(),
+		Status:           job.GetStatus(),
+		Conclusion:       job.GetConclusion(),
+		Branch:           job.GetHeadBranch(),
+		SHA:              job.GetHeadSHA(),
+		Identifier:       event.GetWorkflowJob().GetID(),
+		RunID:            job.GetRunID(),
+		RunAttempt:       int(job.GetRunAttempt()),
+		CreatedAt:        unixTimestamp(job.GetCreatedAt()),
+		StartedAt:        unixTimestamp(job.GetStartedAt()),
+		CompletedAt:      unixTimestamp(job.GetCompletedAt()),
+		Labels:           strings.Join(job.Labels, ","),
+		RunnerID:         job.GetRunnerID(),
+		RunnerName:       job.GetRunnerName(),
+		RunnerGroupID:    job.GetRunnerGroupID(),
+		RunnerGroupName:  job.GetRunnerGroupName(),
+		WorkflowName:     job.GetWorkflowName(),
+		Environment:      event.GetDeployment().GetEnvironment(),
+		CustomProperties: encodeCustomProperties(event.GetRepo().GetCustomProperties()),
 	}
 
 	if err := createOrUpdateWorkflowJob(handle, record); err != nil {
@@ -43,6 +45,23 @@ func storeWorkflowJobEvent(handle *sqlx.DB, event *github.WorkflowJobEvent) erro
 	}
 
 	return recordWorkflowJobCompletion(handle, record)
+}
+
+// encodeCustomProperties marshals the repository's custom properties to a
+// JSON string for storage, returning an empty string if there are none or
+// marshaling fails.
+func encodeCustomProperties(properties map[string]any) string {
+	if len(properties) == 0 {
+		return ""
+	}
+
+	encoded, err := json.Marshal(properties)
+
+	if err != nil {
+		return ""
+	}
+
+	return string(encoded)
 }
 
 // createOrUpdateWorkflowJob creates or updates the record.
@@ -256,7 +275,8 @@ SELECT
 	runner_group_id,
 	runner_group_name,
 	workflow_name,
-	environment
+	environment,
+	custom_properties
 FROM
 	workflow_jobs
 WHERE
@@ -295,7 +315,8 @@ INSERT INTO workflow_jobs (
 	runner_group_id,
 	runner_group_name,
 	workflow_name,
-	environment
+	environment,
+	custom_properties
 ) VALUES (
 	:owner,
 	:repo,
@@ -316,7 +337,8 @@ INSERT INTO workflow_jobs (
 	:runner_group_id,
 	:runner_group_name,
 	:workflow_name,
-	:environment
+	:environment,
+	:custom_properties
 );`
 
 var updateWorkflowJobQuery = `
@@ -337,7 +359,8 @@ SET
 	runner_name=:runner_name,
 	runner_group_id=:runner_group_id,
 	runner_group_name=:runner_group_name,
-	environment=:environment
+	environment=:environment,
+	custom_properties=:custom_properties
 WHERE
 	owner=:owner AND repo=:repo AND identifier=:identifier;`
 

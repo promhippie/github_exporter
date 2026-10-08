@@ -326,7 +326,7 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 		&cli.StringSliceFlag{
 			Name:        "collector.workflow_runs.labels",
 			Value:       config.RunLabels(),
-			Usage:       "List of labels used for workflows",
+			Usage:       "List of labels used for workflows, any name not listed below is looked up within the repository's custom properties",
 			Sources:     cli.EnvVars("GITHUB_EXPORTER_WORKFLOW_RUNS_LABELS"),
 			Destination: &cfg.Target.WorkflowRuns.Labels,
 		},
@@ -354,7 +354,7 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 		&cli.StringSliceFlag{
 			Name:        "collector.workflow_jobs.labels",
 			Value:       config.JobLabels(),
-			Usage:       "List of labels used for workflow jobs",
+			Usage:       "List of labels used for workflow jobs, any name not listed below is looked up within the repository's custom properties",
 			Sources:     cli.EnvVars("GITHUB_EXPORTER_WORKFLOW_JOBS_LABELS"),
 			Destination: &cfg.Target.WorkflowJobs.Labels,
 		},

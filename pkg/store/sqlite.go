@@ -117,6 +117,16 @@ var (
 			Description: "Adding environment column to workflow_jobs table",
 			Script:      `ALTER TABLE workflow_jobs ADD COLUMN environment TEXT;`,
 		},
+		{
+			Version:     10,
+			Description: "Adding custom_properties column to workflow_jobs table",
+			Script:      `ALTER TABLE workflow_jobs ADD COLUMN custom_properties TEXT;`,
+		},
+		{
+			Version:     11,
+			Description: "Adding custom_properties column to workflow_runs table",
+			Script:      `ALTER TABLE workflow_runs ADD COLUMN custom_properties TEXT;`,
+		},
 	}
 )
 

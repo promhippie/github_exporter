@@ -1,7 +1,10 @@
 package store
 
 import (
+	"encoding/json"
+	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/google/go-github/v92/github"
 )
@@ -38,9 +41,15 @@ type WorkflowRun struct {
 	CreatedAt  int64  `db:"created_at"`
 	UpdatedAt  int64  `db:"updated_at"`
 	StartedAt  int64  `db:"started_at"`
+
+	CustomProperties string `db:"custom_properties"`
 }
 
-// ByLabel returns values by the defined list of labels.
+// ByLabel returns values by the defined list of labels. Any label name that
+// doesn't match one of the known cases is looked up as a key within the
+// repository's custom properties, as delivered by the GitHub webhook payload.
+// This allows exposing org-defined custom properties (e.g. a team or
+// department) as metric labels without requiring dedicated configuration.
 func (r *WorkflowRun) ByLabel(label string) string {
 	switch label {
 	case "owner":
@@ -71,7 +80,7 @@ func (r *WorkflowRun) ByLabel(label string) string {
 		return r.Actor
 	}
 
-	return ""
+	return customPropertyValue(r.CustomProperties, label)
 }
 
 // WorkflowJob defines the type returned by GitHub.
@@ -79,27 +88,32 @@ type WorkflowJob struct {
 	Owner string `db:"owner"`
 	Repo  string `db:"repo"`
 
-	Name            string `db:"name"`
-	Status          string `db:"status"`
-	Conclusion      string `db:"conclusion"`
-	Branch          string `db:"branch"`
-	SHA             string `db:"sha"`
-	Identifier      int64  `db:"identifier"`
-	RunID           int64  `db:"run_id"`
-	RunAttempt      int    `db:"run_attempt"`
-	CreatedAt       int64  `db:"created_at"`
-	StartedAt       int64  `db:"started_at"`
-	CompletedAt     int64  `db:"completed_at"`
-	Labels          string `db:"labels"`
-	RunnerID        int64  `db:"runner_id"`
-	RunnerName      string `db:"runner_name"`
-	RunnerGroupID   int64  `db:"runner_group_id"`
-	RunnerGroupName string `db:"runner_group_name"`
-	WorkflowName    string `db:"workflow_name"`
-	Environment     string `db:"environment"`
+	Name             string `db:"name"`
+	Status           string `db:"status"`
+	Conclusion       string `db:"conclusion"`
+	Branch           string `db:"branch"`
+	SHA              string `db:"sha"`
+	Identifier       int64  `db:"identifier"`
+	RunID            int64  `db:"run_id"`
+	RunAttempt       int    `db:"run_attempt"`
+	CreatedAt        int64  `db:"created_at"`
+	StartedAt        int64  `db:"started_at"`
+	CompletedAt      int64  `db:"completed_at"`
+	Labels           string `db:"labels"`
+	RunnerID         int64  `db:"runner_id"`
+	RunnerName       string `db:"runner_name"`
+	RunnerGroupID    int64  `db:"runner_group_id"`
+	RunnerGroupName  string `db:"runner_group_name"`
+	WorkflowName     string `db:"workflow_name"`
+	Environment      string `db:"environment"`
+	CustomProperties string `db:"custom_properties"`
 }
 
-// ByLabel returns values by the defined list of labels.
+// ByLabel returns values by the defined list of labels. Any label name that
+// doesn't match one of the known cases is looked up as a key within the
+// repository's custom properties, as delivered by the GitHub webhook payload.
+// This allows exposing org-defined custom properties (e.g. a team or
+// department) as metric labels without requiring dedicated configuration.
 func (r *WorkflowJob) ByLabel(label string) string {
 	switch label {
 	case "owner":
@@ -142,7 +156,41 @@ func (r *WorkflowJob) ByLabel(label string) string {
 		return r.Environment
 	}
 
-	return ""
+	return customPropertyValue(r.CustomProperties, label)
+}
+
+// customPropertyValue extracts the value for key from a JSON encoded map of
+// GitHub custom properties, returning an empty string if it's missing,
+// unparsable or empty. Multi-select custom properties are comma-joined.
+func customPropertyValue(encoded, key string) string {
+	if encoded == "" {
+		return ""
+	}
+
+	properties := map[string]any{}
+	if err := json.Unmarshal([]byte(encoded), &properties); err != nil {
+		return ""
+	}
+
+	value, ok := properties[key]
+	if !ok || value == nil {
+		return ""
+	}
+
+	switch v := value.(type) {
+	case string:
+		return v
+	case []any:
+		values := make([]string, len(v))
+
+		for i, item := range v {
+			values[i] = fmt.Sprintf("%v", item)
+		}
+
+		return strings.Join(values, ",")
+	default:
+		return fmt.Sprintf("%v", v)
+	}
 }
 
 // WorkflowJobCompletion defines the append-only record of a terminal workflow
