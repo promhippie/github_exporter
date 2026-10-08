@@ -44,6 +44,10 @@ func (s StaticStore) GetWorkflowJobCompletions() ([]*store.WorkflowJobCompletion
 	return nil, nil
 }
 
+func (s StaticStore) GetWorkflowJobQueueDurations() ([]*store.WorkflowJobQueueAggregate, error) {
+	return nil, nil
+}
+
 func (s StaticStore) Open() (bool, error) {
 	return true, nil
 }
@@ -123,6 +127,16 @@ func TestWorkflowJobCollector(t *testing.T) {
 		DurationTotal: prometheus.NewDesc(
 			"github_workflow_job_duration_seconds_total",
 			"Total duration of completed workflow jobs in seconds",
+			nil, nil,
+		),
+		QueuedTotal: prometheus.NewDesc(
+			"github_workflow_job_queued_total",
+			"Total number of completed workflow jobs that reported a queue time",
+			nil, nil,
+		),
+		QueueDurationTotal: prometheus.NewDesc(
+			"github_workflow_job_queue_duration_seconds_total",
+			"Total time workflow jobs spent queued before starting in seconds",
 			nil, nil,
 		),
 	}
@@ -215,6 +229,84 @@ func TestWorkflowJobCollectorCounters(t *testing.T) {
 	expected := map[string]float64{
 		"github_workflow_job_completed_total":        3,
 		"github_workflow_job_duration_seconds_total": 52.5,
+	}
+
+	for name, expectedValue := range expected {
+		value := metricFamilyValue(t, metrics, name)
+		if value != expectedValue {
+			t.Errorf("expected %s to be %v, got %v", name, expectedValue, value)
+		}
+	}
+}
+
+type queueStore struct {
+	StaticStore
+	queueDurations []*store.WorkflowJobQueueAggregate
+}
+
+func (s queueStore) GetWorkflowJobQueueDurations() ([]*store.WorkflowJobQueueAggregate, error) {
+	return s.queueDurations, nil
+}
+
+func TestWorkflowJobCollectorQueueCounters(t *testing.T) {
+	mockLogger := slog.New(
+		slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		}),
+	)
+
+	mockFailures := prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "test_failures_total",
+		Help: "Total number of test failures",
+	}, []string{"type"})
+
+	mockDuration := prometheus.NewHistogramVec(prometheus.HistogramOpts{
+		Name: "test_duration_seconds",
+		Help: "Duration of test",
+	}, []string{"type"})
+
+	queueDurations := []*store.WorkflowJobQueueAggregate{
+		{
+			Owner:                     "promhippie",
+			Repo:                      "github_exporter",
+			WorkflowName:              "CI",
+			RunnerGroupName:           "default",
+			Conclusion:                "success",
+			Count:                     2,
+			QueueDurationSecondsTotal: 30.0,
+		},
+		{
+			Owner:                     "promhippie",
+			Repo:                      "github_exporter",
+			WorkflowName:              "CI",
+			RunnerGroupName:           "self-hosted",
+			Conclusion:                "success",
+			Count:                     1,
+			QueueDurationSecondsTotal: 5.0,
+		},
+	}
+
+	store := queueStore{queueDurations: queueDurations}
+	collector := NewWorkflowJobCollector(
+		mockLogger,
+		nil,
+		store,
+		mockFailures,
+		mockDuration,
+		config.Target{},
+	)
+
+	registry := prometheus.NewRegistry()
+	registry.MustRegister(collector)
+
+	metrics, err := registry.Gather()
+	if err != nil {
+		t.Fatalf("failed to gather metrics: %v", err)
+	}
+
+	expected := map[string]float64{
+		"github_workflow_job_queued_total":                 3,
+		"github_workflow_job_queue_duration_seconds_total": 35.0,
 	}
 
 	for name, expectedValue := range expected {
