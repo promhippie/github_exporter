@@ -883,6 +883,10 @@ take a look at the <a href="https://github.com/prometheus/client_golang/blob/mas
 <dd>Duration since the workflow run creation time in minutes</dd>
 <dt>github_workflow_job_duration_seconds_total{owner, repo, workflow_name, name, conclusion}</dt>
 <dd>Total duration of completed workflow jobs in seconds</dd>
+<dt>github_workflow_job_queue_duration_seconds_total{owner, repo, workflow_name, runner_group_name, conclusion}</dt>
+<dd>Total time workflow jobs spent queued before starting in seconds</dd>
+<dt>github_workflow_job_queued_total{owner, repo, workflow_name, runner_group_name, conclusion}</dt>
+<dd>Total number of completed workflow jobs that reported a queue time</dd>
 <dt>github_workflow_job_started_timestamp{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}</dt>
 <dd>Timestamp when the workflow job have been started</dd>
 <dt>github_workflow_job_status{owner, repo, name, title, branch, sha, identifier, run_id, run_attempt, labels, runner_id, runner_name, runner_group_id, runner_group_name, workflow_name, conclusion}</dt>
