@@ -1,5 +1,17 @@
 # Changelog
 
+## [20.4.0](https://github.com/promhippie/github_exporter/compare/v20.3.0...v20.4.0) (2026-10-12)
+
+### Features
+
+* **minor:** update module github.com/go-chi/chi/v5 to v5.4.0 ([#808](https://github.com/promhippie/github_exporter/issues/808)) ([44e5ea0](https://github.com/promhippie/github_exporter/commit/44e5ea0c8b359f463becfd05e0b66200b0bae8d0))
+* **minor:** update module github.com/prometheus/client_golang to v1.25.0 ([#804](https://github.com/promhippie/github_exporter/issues/804)) ([009faec](https://github.com/promhippie/github_exporter/commit/009faec455d9c124d2d07b9a891381ebaa25fc2c))
+
+### Bugfixes
+
+* **deps:** update golang:1.27.2-alpine docker digest to f92b6ef ([#807](https://github.com/promhippie/github_exporter/issues/807)) ([060c3b4](https://github.com/promhippie/github_exporter/commit/060c3b45f100caaaffeb92f33579bd3557630837))
+* **patch:** update golang docker tag to v1.27.2 ([#805](https://github.com/promhippie/github_exporter/issues/805)) ([c1c759c](https://github.com/promhippie/github_exporter/commit/c1c759c426ce1e78757c18ac26707d564ada8e63))
+
 ## [20.3.0](https://github.com/promhippie/github_exporter/compare/v20.2.0...v20.3.0) (2026-10-08)
 
 ### Features
