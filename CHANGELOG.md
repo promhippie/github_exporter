@@ -1,5 +1,12 @@
 # Changelog
 
+## [21.0.0](https://github.com/promhippie/github_exporter/compare/v20.4.0...v21.0.0) (2026-10-19)
+
+### Features
+
+* **major:** update module github.com/google/go-github/v92 to v93 ([#813](https://github.com/promhippie/github_exporter/issues/813)) ([40e9352](https://github.com/promhippie/github_exporter/commit/40e9352e73f9813c6cb4ad4b095703c6f97cb4a0))
+* **minor:** update module github.com/go-chi/chi/v5 to v5.5.0 ([#811](https://github.com/promhippie/github_exporter/issues/811)) ([92eefb6](https://github.com/promhippie/github_exporter/commit/92eefb67d1b64a5f3da863ebe87b644e19467fbd))
+
 ## [20.4.0](https://github.com/promhippie/github_exporter/compare/v20.3.0...v20.4.0) (2026-10-12)
 
 ### Features
