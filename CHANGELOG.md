@@ -1,5 +1,20 @@
 # Changelog
 
+## [21.1.0](https://github.com/promhippie/github_exporter/compare/v21.0.0...v21.1.0) (2026-10-26)
+
+### Features
+
+* **minor:** update module modernc.org/sqlite to v1.61.0 ([#821](https://github.com/promhippie/github_exporter/issues/821)) ([e1486de](https://github.com/promhippie/github_exporter/commit/e1486de8056bf98e4f615ea3b9bf1d092874425c))
+
+### Bugfixes
+
+* **deps:** update alpine:3.24 docker digest to 71e9b7b ([#824](https://github.com/promhippie/github_exporter/issues/824)) ([b0fb56e](https://github.com/promhippie/github_exporter/commit/b0fb56e1c53dfe75d007f0e24235a0cf61e94b02))
+* **deps:** update alpine:3.24 docker digest to be26560 ([#828](https://github.com/promhippie/github_exporter/issues/828)) ([75bb867](https://github.com/promhippie/github_exporter/commit/75bb8678a1e121b8014804a439f7b170cf990eec))
+* **deps:** update alpine:3.24 docker digest to c6b073f ([#822](https://github.com/promhippie/github_exporter/issues/822)) ([0071a92](https://github.com/promhippie/github_exporter/commit/0071a9266ad3df84423049d1fda13db64a048328))
+* **deps:** update golang:1.27.3-alpine docker digest to b8c9b82 ([#825](https://github.com/promhippie/github_exporter/issues/825)) ([c93733e](https://github.com/promhippie/github_exporter/commit/c93733e280fc2fa607bcacef0ad0403e4ce2bef0))
+* **deps:** update golang:1.27.3-alpine docker digest to d530cf6 ([#823](https://github.com/promhippie/github_exporter/issues/823)) ([22ed9f2](https://github.com/promhippie/github_exporter/commit/22ed9f297eb0be2d64e14eca7be91595f226635a))
+* **patch:** update golang docker tag to v1.27.3 ([#818](https://github.com/promhippie/github_exporter/issues/818)) ([be47e87](https://github.com/promhippie/github_exporter/commit/be47e875fbd160e9ffda893b631a690c1b88ada2))
+
 ## [21.0.0](https://github.com/promhippie/github_exporter/compare/v20.4.0...v21.0.0) (2026-10-19)
 
 ### Features
