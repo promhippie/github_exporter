@@ -1,5 +1,13 @@
 # Changelog
 
+## [21.1.1](https://github.com/promhippie/github_exporter/compare/v21.1.0...v21.1.1) (2026-11-02)
+
+### Bugfixes
+
+* **deps:** update golang:1.27.3-alpine docker digest to d200d2d ([#829](https://github.com/promhippie/github_exporter/issues/829)) ([e45e47c](https://github.com/promhippie/github_exporter/commit/e45e47c2f9f613ea2b6ebee7bccd096261f7aca6))
+* **patch:** update module github.com/cenkalti/backoff/v7 to v7.0.3 ([#834](https://github.com/promhippie/github_exporter/issues/834)) ([ca3926b](https://github.com/promhippie/github_exporter/commit/ca3926ba5c2feb3b41f6f430fe4bb4d5af403663))
+* **patch:** update module modernc.org/sqlite to v1.61.1 ([#833](https://github.com/promhippie/github_exporter/issues/833)) ([29d1541](https://github.com/promhippie/github_exporter/commit/29d1541fb2adbd1cee39e859f001a73bf5380d68))
+
 ## [21.1.0](https://github.com/promhippie/github_exporter/compare/v21.0.0...v21.1.0) (2026-10-26)
 
 ### Features
