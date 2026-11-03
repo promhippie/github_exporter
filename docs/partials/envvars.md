@@ -104,4 +104,4 @@ GITHUB_EXPORTER_COLLECTOR_STATUS
 : Enable collector for GitHub service status, defaults to `false`
 
 GITHUB_EXPORTER_RUNNERS_LABELS
-: List of labels used for runners, comma-separated list, defaults to `owner, id, name, os, status`
+: List of labels used for runners, group adds the runner group of org and enterprise runners with extra requests, comma-separated list, defaults to `owner, id, name, os, status`
