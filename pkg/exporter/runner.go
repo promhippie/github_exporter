@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/google/go-github/v93/github"
@@ -606,28 +607,49 @@ func (c *RunnerCollector) runnerGroups(
 		return result
 	}
 
+	// Listing the runners of every group one after another adds up quickly,
+	// so the groups are listed concurrently.
+	var (
+		mu  sync.Mutex
+		wg  sync.WaitGroup
+		sem = make(chan struct{}, runnerGroupConcurrency)
+	)
+
 	for _, group := range groups {
-		runners, err := group.Runners(ctx)
+		wg.Go(func() {
+			sem <- struct{}{}
+			defer func() { <-sem }()
 
-		if err != nil {
-			c.logger.Error("Failed to fetch runner group runners",
-				"type", kind,
-				"name", name,
-				"group", group.Name,
-				"err", err,
-			)
+			runners, err := group.Runners(ctx)
 
-			c.failures.WithLabelValues("runner").Inc()
-			continue
-		}
+			if err != nil {
+				c.logger.Error("Failed to fetch runner group runners",
+					"type", kind,
+					"name", name,
+					"group", group.Name,
+					"err", err,
+				)
 
-		for _, row := range runners {
-			result[row.GetID()] = group.Name
-		}
+				c.failures.WithLabelValues("runner").Inc()
+				return
+			}
+
+			mu.Lock()
+			defer mu.Unlock()
+
+			for _, row := range runners {
+				result[row.GetID()] = group.Name
+			}
+		})
 	}
+
+	wg.Wait()
 
 	return result
 }
+
+// runnerGroupConcurrency limits the runner groups listed at the same time.
+const runnerGroupConcurrency = 8
 
 func (c *RunnerCollector) pagedOrgRunnerGroups(ctx context.Context, name string) ([]runnerGroup, error) {
 	opts := &github.ListOrgRunnerGroupOptions{
