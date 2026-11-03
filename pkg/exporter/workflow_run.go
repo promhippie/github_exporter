@@ -4,7 +4,6 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/google/go-github/v93/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
@@ -12,7 +11,7 @@ import (
 
 // WorkflowRunCollector collects metrics about the servers.
 type WorkflowRunCollector struct {
-	client   *github.Client
+	clients  Clients
 	logger   *slog.Logger
 	db       store.Store
 	failures *prometheus.CounterVec
@@ -28,14 +27,14 @@ type WorkflowRunCollector struct {
 }
 
 // NewWorkflowRunCollector returns a new WorkflowRunCollector.
-func NewWorkflowRunCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *WorkflowRunCollector {
+func NewWorkflowRunCollector(logger *slog.Logger, clients Clients, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *WorkflowRunCollector {
 	if failures != nil {
 		failures.WithLabelValues("action").Add(0)
 	}
 
 	labels := cfg.WorkflowRuns.Labels
 	return &WorkflowRunCollector{
-		client:   client,
+		clients:  clients,
 		logger:   logger.With("collector", "workflow_run"),
 		db:       db,
 		failures: failures,

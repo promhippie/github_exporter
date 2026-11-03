@@ -17,7 +17,7 @@ import (
 
 // RunnerCollector collects metrics about the runners.
 type RunnerCollector struct {
-	client   *github.Client
+	clients  Clients
 	logger   *slog.Logger
 	db       store.Store
 	failures *prometheus.CounterVec
@@ -33,14 +33,14 @@ type RunnerCollector struct {
 }
 
 // NewRunnerCollector returns a new RunnerCollector.
-func NewRunnerCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *RunnerCollector {
+func NewRunnerCollector(logger *slog.Logger, clients Clients, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *RunnerCollector {
 	if failures != nil {
 		failures.WithLabelValues("runner").Add(0)
 	}
 
 	labels := cfg.Runners.Labels
 	return &RunnerCollector{
-		client:   client,
+		clients:  clients,
 		logger:   logger.With("collector", "runner"),
 		db:       db,
 		failures: failures,
@@ -312,7 +312,7 @@ func (c *RunnerCollector) repoRunners() []runner {
 		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
 		defer cancel()
 
-		repos, err := reposByOwnerAndName(ctx, c.client, splitOwner, splitName, c.config.PerPage)
+		repos, err := reposByOwnerAndName(ctx, c.clients.Owner(splitOwner), splitOwner, splitName, c.config.PerPage)
 
 		if err != nil {
 			c.logger.Error("Failed to fetch repos",
@@ -379,7 +379,7 @@ func (c *RunnerCollector) pagedRepoRunners(ctx context.Context, owner, name stri
 	)
 
 	for {
-		result, resp, err := c.client.Actions.ListRunners(
+		result, resp, err := c.clients.Owner(owner).Actions.ListRunners(
 			ctx,
 			owner,
 			name,
@@ -450,7 +450,7 @@ func (c *RunnerCollector) pagedEnterpriseRunners(ctx context.Context, name strin
 	)
 
 	for {
-		result, resp, err := c.client.Enterprise.ListRunners(
+		result, resp, err := c.clients.Owner(name).Enterprise.ListRunners(
 			ctx,
 			name,
 			opts,
@@ -520,7 +520,7 @@ func (c *RunnerCollector) pagedOrgRunners(ctx context.Context, name string) ([]*
 	)
 
 	for {
-		result, resp, err := c.client.Actions.ListOrganizationRunners(
+		result, resp, err := c.clients.Owner(name).Actions.ListOrganizationRunners(
 			ctx,
 			name,
 			opts,
