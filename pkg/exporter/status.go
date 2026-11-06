@@ -8,7 +8,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/go-github/v93/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
@@ -46,7 +45,7 @@ var statusComponents = []statusComponent{
 
 // StatusCollector exposes gauges for GitHub component status.
 type StatusCollector struct {
-	client   *github.Client
+	clients  Clients
 	logger   *slog.Logger
 	db       store.Store
 	failures *prometheus.CounterVec
@@ -66,14 +65,14 @@ type StatusCollector struct {
 }
 
 // NewStatusCollector returns a new StatusCollector.
-func NewStatusCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *StatusCollector {
+func NewStatusCollector(logger *slog.Logger, clients Clients, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *StatusCollector {
 	if failures != nil {
 		failures.WithLabelValues("status").Add(0)
 	}
 
 	labels := []string{}
 	return &StatusCollector{
-		client:   client,
+		clients:  clients,
 		logger:   logger.With("collector", "status"),
 		db:       db,
 		failures: failures,
