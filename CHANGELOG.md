@@ -1,5 +1,17 @@
 # Changelog
 
+## [21.2.0](https://github.com/promhippie/github_exporter/compare/v21.1.1...v21.2.0) (2026-11-09)
+
+### Features
+
+* **minor:** update module modernc.org/sqlite to v1.62.0 ([#841](https://github.com/promhippie/github_exporter/issues/841)) ([3cf1343](https://github.com/promhippie/github_exporter/commit/3cf1343e1f7702c46d28740fe00d083b70c74e2f))
+
+### Bugfixes
+
+* **deps:** update alpine:3.24 docker digest to f59abe6 ([#842](https://github.com/promhippie/github_exporter/issues/842)) ([06f3d6e](https://github.com/promhippie/github_exporter/commit/06f3d6e3edd37e562a8209c6c710e38d90bbfcef))
+* **deps:** update docker digests ([#840](https://github.com/promhippie/github_exporter/issues/840)) ([bba60f2](https://github.com/promhippie/github_exporter/commit/bba60f2e91d6faa0dff1a6453c532c9b98a913ee))
+* **deps:** update golang:1.27.3-alpine docker digest to fa48812 ([#839](https://github.com/promhippie/github_exporter/issues/839)) ([7ca377c](https://github.com/promhippie/github_exporter/commit/7ca377cf4432c7aa9174ac32b8f667a890414d18))
+
 ## [21.1.1](https://github.com/promhippie/github_exporter/compare/v21.1.0...v21.1.1) (2026-11-02)
 
 ### Bugfixes
