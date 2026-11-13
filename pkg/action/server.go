@@ -33,7 +33,7 @@ func Server(cfg *config.Config, db store.Store, logger *slog.Logger) error {
 		"go", version.Go,
 	)
 
-	client, err := getClient(cfg, logger)
+	clients, err := getClients(cfg, logger)
 
 	if err != nil {
 		return err
@@ -44,7 +44,7 @@ func Server(cfg *config.Config, db store.Store, logger *slog.Logger) error {
 	{
 		server := &http.Server{
 			Addr:         cfg.Server.Addr,
-			Handler:      handler(cfg, db, logger, client),
+			Handler:      handler(cfg, db, logger, clients),
 			ReadTimeout:  5 * time.Second,
 			WriteTimeout: cfg.Server.Timeout,
 		}
@@ -98,7 +98,7 @@ func Server(cfg *config.Config, db store.Store, logger *slog.Logger) error {
 	return gr.Run()
 }
 
-func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *github.Client) *chi.Mux {
+func handler(cfg *config.Config, db store.Store, logger *slog.Logger, clients exporter.Clients) *chi.Mux {
 	mux := chi.NewRouter()
 	mux.Use(middleware.Recoverer(logger))
 	mux.Use(middleware.RealIP)
@@ -114,7 +114,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 
 		registry.MustRegister(exporter.NewAdminCollector(
 			logger,
-			client,
+			clients,
 			db,
 			requestFailures,
 			requestDuration,
@@ -127,7 +127,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 
 		registry.MustRegister(exporter.NewOrgCollector(
 			logger,
-			client,
+			clients,
 			db,
 			requestFailures,
 			requestDuration,
@@ -140,7 +140,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 
 		registry.MustRegister(exporter.NewRepoCollector(
 			logger,
-			client,
+			clients,
 			db,
 			requestFailures,
 			requestDuration,
@@ -153,7 +153,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 
 		registry.MustRegister(exporter.NewBillingCollector(
 			logger,
-			client,
+			clients,
 			db,
 			requestFailures,
 			requestDuration,
@@ -166,7 +166,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 
 		registry.MustRegister(exporter.NewRunnerCollector(
 			logger,
-			client,
+			clients,
 			db,
 			requestFailures,
 			requestDuration,
@@ -179,7 +179,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 
 		registry.MustRegister(exporter.NewWorkflowRunCollector(
 			logger,
-			client,
+			clients,
 			db,
 			requestFailures,
 			requestDuration,
@@ -192,7 +192,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 
 		registry.MustRegister(exporter.NewWorkflowJobCollector(
 			logger,
-			client,
+			clients,
 			db,
 			requestFailures,
 			requestDuration,
@@ -205,7 +205,7 @@ func handler(cfg *config.Config, db store.Store, logger *slog.Logger, client *gi
 
 		registry.MustRegister(exporter.NewStatusCollector(
 			logger,
-			client,
+			clients,
 			db,
 			requestFailures,
 			requestDuration,
@@ -381,6 +381,42 @@ func useApplication(cfg *config.Config, _ *slog.Logger) bool {
 	return cfg.Target.PrivateKey != "" && cfg.Target.AppID != 0 && cfg.Target.InstallID != 0
 }
 
+func enterpriseAPIURL(cfg *config.Config) string {
+	if strings.HasSuffix(cfg.Target.BaseURL, "/api/v3") ||
+		strings.HasSuffix(cfg.Target.BaseURL, "/api/v3/") {
+		return cfg.Target.BaseURL
+	}
+
+	return cfg.Target.BaseURL + "/api/v3"
+}
+
+func newClient(cfg *config.Config, logger *slog.Logger, transport http.RoundTripper) (*github.Client, error) {
+	opts := []github.ClientOptionsFunc{
+		github.WithTransport(transport),
+	}
+
+	if useEnterprise(cfg, logger) {
+		opts = append(opts, github.WithEnterpriseURLs(
+			cfg.Target.BaseURL,
+			cfg.Target.BaseURL,
+		))
+	}
+
+	client, err := github.NewClient(
+		opts...,
+	)
+
+	if err != nil {
+		logger.Error("Failed to create GitHub client",
+			"err", err,
+		)
+
+		return nil, err
+	}
+
+	return client, nil
+}
+
 func githubTransport(cfg *config.Config) *http.Transport {
 	transport := http.DefaultTransport.(*http.Transport).Clone()
 	transport.TLSClientConfig = &tls.Config{
@@ -490,12 +526,7 @@ func getEnterprise(cfg *config.Config, logger *slog.Logger) (*github.Client, err
 			return nil, err
 		}
 
-		if !strings.HasSuffix(cfg.Target.BaseURL, "/api/v3") &&
-			!strings.HasSuffix(cfg.Target.BaseURL, "/api/v3/") {
-			transport.BaseURL = cfg.Target.BaseURL + "/api/v3"
-		} else {
-			transport.BaseURL = cfg.Target.BaseURL
-		}
+		transport.BaseURL = enterpriseAPIURL(cfg)
 
 		opts = append(opts, github.WithTransport(
 			transport,

@@ -6,7 +6,6 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/google/go-github/v93/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
@@ -14,7 +13,7 @@ import (
 
 // BillingCollector collects metrics about the servers.
 type BillingCollector struct {
-	client   *github.Client
+	clients  Clients
 	logger   *slog.Logger
 	db       store.Store
 	failures *prometheus.CounterVec
@@ -29,14 +28,14 @@ type BillingCollector struct {
 }
 
 // NewBillingCollector returns a new BillingCollector.
-func NewBillingCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *BillingCollector {
+func NewBillingCollector(logger *slog.Logger, clients Clients, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *BillingCollector {
 	if failures != nil {
 		failures.WithLabelValues("billing").Add(0)
 	}
 
 	labels := []string{"type", "name", "product", "sku", "unit", "org", "repo"}
 	return &BillingCollector{
-		client:   client,
+		clients:  clients,
 		logger:   logger.With("collector", "billing"),
 		db:       db,
 		failures: failures,
@@ -243,7 +242,8 @@ func (c *BillingCollector) fetchUsageForEntity(ctx context.Context, entity, name
 
 	now := time.Now().UTC()
 	endpoint = fmt.Sprintf("%s?year=%d&month=%d&day=%d", endpoint, now.Year(), int(now.Month()), now.Day())
-	req, err := c.client.NewRequest(ctx, "GET", endpoint, nil)
+	client := c.clients.Owner(name)
+	req, err := client.NewRequest(ctx, "GET", endpoint, nil)
 
 	if err != nil {
 		c.logger.Error("Failed to prepare billing usage",
@@ -257,7 +257,7 @@ func (c *BillingCollector) fetchUsageForEntity(ctx context.Context, entity, name
 	}
 
 	response := &UsageResponse{}
-	resp, err := c.client.Do(req, response)
+	resp, err := client.Do(req, response)
 
 	if err != nil {
 		c.logger.Error("Failed to fetch billing usage",

@@ -6,7 +6,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/go-github/v93/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
@@ -15,7 +14,7 @@ import (
 
 // RepoCollector collects metrics about the servers.
 type RepoCollector struct {
-	client   *github.Client
+	clients  Clients
 	logger   *slog.Logger
 	db       store.Store
 	failures *prometheus.CounterVec
@@ -46,14 +45,14 @@ type RepoCollector struct {
 }
 
 // NewRepoCollector returns a new RepoCollector.
-func NewRepoCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *RepoCollector {
+func NewRepoCollector(logger *slog.Logger, clients Clients, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *RepoCollector {
 	if failures != nil {
 		failures.WithLabelValues("repo").Add(0)
 	}
 
 	labels := []string{"owner", "name"}
 	return &RepoCollector{
-		client:   client,
+		clients:  clients,
 		logger:   logger.With("collector", "repo"),
 		db:       db,
 		failures: failures,
@@ -263,7 +262,7 @@ func (c *RepoCollector) Collect(ch chan<- prometheus.Metric) {
 		defer cancel()
 
 		now := time.Now()
-		records, err := reposByOwnerAndName(ctx, c.client, owner, repo, c.config.PerPage)
+		records, err := reposByOwnerAndName(ctx, c.clients.Owner(owner), owner, repo, c.config.PerPage)
 		c.duration.WithLabelValues("repo").Observe(time.Since(now).Seconds())
 
 		if err != nil {

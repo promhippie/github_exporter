@@ -221,7 +221,7 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 		},
 		&cli.Int64Flag{
 			Name:        "github.installation_id",
-			Usage:       "Installation ID for the GitHub app",
+			Usage:       "Installation ID for the GitHub app, detected for every configured enterprise, org and repo owner if empty",
 			Sources:     cli.EnvVars("GITHUB_EXPORTER_INSTALLATION_ID"),
 			Destination: &cfg.Target.InstallID,
 		},
@@ -375,7 +375,7 @@ func RootFlags(cfg *config.Config) []cli.Flag {
 		&cli.StringSliceFlag{
 			Name:        "collector.runners.labels",
 			Value:       config.RunnerLabels(),
-			Usage:       "List of labels used for runners",
+			Usage:       "List of labels used for runners, group adds the runner group of org and enterprise runners with extra requests",
 			Sources:     cli.EnvVars("GITHUB_EXPORTER_RUNNERS_LABELS"),
 			Destination: &cfg.Target.Runners.Labels,
 		},
