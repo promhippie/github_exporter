@@ -1,5 +1,12 @@
 # Changelog
 
+## [21.2.1](https://github.com/promhippie/github_exporter/compare/v21.2.0...v21.2.1) (2026-11-16)
+
+### Bugfixes
+
+* **deps:** update golang:1.27.4-alpine docker digest to 70bd7dd ([#851](https://github.com/promhippie/github_exporter/issues/851)) ([6b45344](https://github.com/promhippie/github_exporter/commit/6b45344b4aa562d93d320ec6cac233df7036c931))
+* **patch:** update golang docker tag to v1.27.4 ([#844](https://github.com/promhippie/github_exporter/issues/844)) ([61cc4eb](https://github.com/promhippie/github_exporter/commit/61cc4ebf18d4dbe6032a535f757cb3d1b6262b99))
+
 ## [21.2.0](https://github.com/promhippie/github_exporter/compare/v21.1.1...v21.2.0) (2026-11-09)
 
 ### Features
