@@ -38,7 +38,7 @@ GITHUB_EXPORTER_APP_ID
 : App ID for the GitHub app, defaults to `0`
 
 GITHUB_EXPORTER_INSTALLATION_ID
-: Installation ID for the GitHub app, defaults to `0`
+: Installation ID for the GitHub app, detected for every configured enterprise, org and repo owner if empty, defaults to `0`
 
 GITHUB_EXPORTER_PRIVATE_KEY
 : Private key for the GitHub app, also supports file:// and base64://
@@ -104,4 +104,4 @@ GITHUB_EXPORTER_COLLECTOR_STATUS
 : Enable collector for GitHub service status, defaults to `false`
 
 GITHUB_EXPORTER_RUNNERS_LABELS
-: List of labels used for runners, comma-separated list, defaults to `owner, id, name, os, status`
+: List of labels used for runners, group adds the runner group of org and enterprise runners with extra requests, comma-separated list, defaults to `owner, id, name, os, status`

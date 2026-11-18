@@ -5,7 +5,6 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/google/go-github/v93/github"
 	"github.com/prometheus/client_golang/prometheus"
 
 	"github.com/promhippie/github_exporter/pkg/config"
@@ -14,7 +13,7 @@ import (
 
 // OrgCollector collects metrics about the servers.
 type OrgCollector struct {
-	client   *github.Client
+	clients  Clients
 	logger   *slog.Logger
 	db       store.Store
 	failures *prometheus.CounterVec
@@ -37,14 +36,14 @@ type OrgCollector struct {
 }
 
 // NewOrgCollector returns a new OrgCollector.
-func NewOrgCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *OrgCollector {
+func NewOrgCollector(logger *slog.Logger, clients Clients, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *OrgCollector {
 	if failures != nil {
 		failures.WithLabelValues("org").Add(0)
 	}
 
 	labels := []string{"name"}
 	return &OrgCollector{
-		client:   client,
+		clients:  clients,
 		logger:   logger.With("collector", "org"),
 		db:       db,
 		failures: failures,
@@ -187,7 +186,7 @@ func (c *OrgCollector) Collect(ch chan<- prometheus.Metric) {
 		defer cancel()
 
 		now := time.Now()
-		record, resp, err := c.client.Organizations.Get(ctx, name)
+		record, resp, err := c.clients.Owner(name).Organizations.Get(ctx, name)
 		c.duration.WithLabelValues("org").Observe(time.Since(now).Seconds())
 		defer closeBody(resp)
 

@@ -4,7 +4,6 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/google/go-github/v93/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
@@ -12,7 +11,7 @@ import (
 
 // WorkflowJobCollector collects metrics about the servers.
 type WorkflowJobCollector struct {
-	client   *github.Client
+	clients  Clients
 	logger   *slog.Logger
 	db       store.Store
 	failures *prometheus.CounterVec
@@ -31,7 +30,7 @@ type WorkflowJobCollector struct {
 }
 
 // NewWorkflowJobCollector returns a new WorkflowCollector.
-func NewWorkflowJobCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *WorkflowJobCollector {
+func NewWorkflowJobCollector(logger *slog.Logger, clients Clients, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *WorkflowJobCollector {
 	if failures != nil {
 		failures.WithLabelValues("action").Add(0)
 	}
@@ -55,7 +54,7 @@ func NewWorkflowJobCollector(logger *slog.Logger, client *github.Client, db stor
 	}
 
 	return &WorkflowJobCollector{
-		client:   client,
+		clients:  clients,
 		logger:   logger.With("collector", "workflow_job"),
 		db:       db,
 		failures: failures,
