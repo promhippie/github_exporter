@@ -3,11 +3,8 @@
 baseURL: https://promhippie.github.io/github_exporter/
 locale: en-us
 title: GitHub Exporter
-
-params:
-  author: Thomas Boerger
-  description: Prometheus exporter for GitHub
-  keywords: prometheus, exporter, github
+pygmentsUseClasses: true
+enableRobotsTXT: true
 
 disableKinds:
   - rss
@@ -16,13 +13,12 @@ disableKinds:
   - term
   - section
 
-pygmentsUseClasses: true
-enableRobotsTXT: true
-
-markup:
-  goldmark:
-    renderer:
-      unsafe: true
+cascade:
+  - build:
+      render: never
+      list: always
+    target:
+      kind: page
 
 blackfriday:
   angledQuotes: true
@@ -31,5 +27,15 @@ blackfriday:
   smartlists: true
   extensions:
     - hardLineBreak
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
+params:
+  author: Thomas Boerger
+  description: Prometheus exporter for GitHub
+  keywords: prometheus, exporter, github
 
 ...
