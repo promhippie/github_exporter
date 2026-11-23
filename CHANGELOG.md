@@ -1,5 +1,17 @@
 # Changelog
 
+## [21.3.0](https://github.com/promhippie/github_exporter/compare/v21.2.1...v21.3.0) (2026-11-23)
+
+### Features
+
+* **minor:** update module github.com/prometheus/exporter-toolkit to v0.21.0 ([#856](https://github.com/promhippie/github_exporter/issues/856)) ([47945b5](https://github.com/promhippie/github_exporter/commit/47945b538acead5b6af56b730fc6ae18ecdf1f13))
+* **minor:** update module modernc.org/sqlite to v1.63.0 ([#857](https://github.com/promhippie/github_exporter/issues/857)) ([65f545e](https://github.com/promhippie/github_exporter/commit/65f545eac52223474fc28a3abdf2bd3d00c7512a))
+* switch to plain hugo and resolve deprecations ([370d6ca](https://github.com/promhippie/github_exporter/commit/370d6ca6f37f67d718c4f35eb2983967c4b2b9a2))
+
+### Bugfixes
+
+* **patch:** update module github.com/go-sql-driver/mysql to v1.10.2 ([#854](https://github.com/promhippie/github_exporter/issues/854)) ([e51941a](https://github.com/promhippie/github_exporter/commit/e51941afb80a63dd74424e27a30a8fcbeac9ca9b))
+
 ## [21.2.1](https://github.com/promhippie/github_exporter/compare/v21.2.0...v21.2.1) (2026-11-16)
 
 ### Bugfixes
