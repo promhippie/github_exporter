@@ -9,5 +9,5 @@ hugo = "0.170.1"
 prek = "0.5.11"
 task = "3.54.0"
 
-"github:cloudsmith-io/cloudsmith-cli" = "1.31.3"
+"github:cloudsmith-io/cloudsmith-cli" = "1.31.4"
 "github:sass/dart-sass" = "1.108.2"
