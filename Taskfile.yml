@@ -85,6 +85,7 @@ tasks:
       CGO_ENABLED: "0"
       GOOS: "{{ .GOOS }}"
       GOARCH: "{{ .GOARCH }}"
+      GOARM: "{{ .GOARM }}"
     vars:
       VERSION:
         sh: if [[ -z "${CI_COMMIT_TAG}" ]]; then git rev-parse --short HEAD; else echo "${CI_COMMIT_TAG#v}"; fi
@@ -94,6 +95,8 @@ tasks:
         sh: go env GOOS
       GOARCH:
         sh: go env GOARCH
+      GOARM:
+        sh: go env GOARM
       TAGS: |-
         {{- if eq .GOOS "linux" -}}
           {{- if eq .GOARCH "amd64" }}netgo sqlite chai{{ end }}

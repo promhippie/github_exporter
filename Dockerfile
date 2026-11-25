@@ -9,12 +9,13 @@ COPY . /go/src/exporter/
 RUN --mount=type=cache,target=/go/pkg \
     go mod download -x
 
+ARG TARGETVARIANT
 ARG TARGETOS
 ARG TARGETARCH
 
 RUN --mount=type=cache,target=/go/pkg \
     --mount=type=cache,target=/root/.cache/go-build \
-    task generate build GOOS=${TARGETOS} GOARCH=${TARGETARCH}
+    task generate build GOOS=${TARGETOS} GOARCH=${TARGETARCH} GOARM=${TARGETVARIANT#v}
 
 FROM alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf
 
