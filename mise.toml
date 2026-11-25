@@ -1,7 +1,7 @@
 #:schema https://mise.jdx.dev/schema/mise.json
 
 [tools]
-cosign = "3.1.5"
+cosign = "3.1.6"
 go = "1.27.4"
 golangci-lint = "2.15.0"
 goreleaser = "2.20.3"
