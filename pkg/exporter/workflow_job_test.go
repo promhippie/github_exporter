@@ -88,7 +88,7 @@ func TestWorkflowJobCollector(t *testing.T) {
 	mockConfig := config.Target{}
 
 	collector := &WorkflowJobCollector{
-		client:   mockClient,
+		clients:  StaticClients{Client: mockClient},
 		logger:   mockLogger,
 		db:       mockStore,
 		failures: mockFailures,
@@ -141,8 +141,8 @@ func TestWorkflowJobCollector(t *testing.T) {
 		),
 	}
 
-	if collector.client != mockClient {
-		t.Errorf("Expected client to be %v, got %v", mockClient, collector.client)
+	if collector.clients.Default() != mockClient {
+		t.Errorf("Expected client to be %v, got %v", mockClient, collector.clients.Default())
 	}
 	if collector.logger != mockLogger {
 		t.Errorf("Expected logger to be %v, got %v", mockLogger, collector.logger)

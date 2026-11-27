@@ -47,3 +47,23 @@ got to copy the installation ID from the URL, it's the last numeric part of it.
 As an example for me it's something like
 `https://github.com/.../installations/43103110` where `43103110` shows the
 installation ID you need for the exporter.
+
+## Multiple organizations
+
+If you want to collect metrics from several organizations, or from an
+enterprise and its organizations, install the same application on all of them
+and leave the installation ID empty. The exporter lists the installations of
+the application on startup and uses the matching installation for every
+configured enterprise, org and repo owner:
+
+{{< highlight txt >}}
+GITHUB_EXPORTER_APP_ID=12345
+GITHUB_EXPORTER_PRIVATE_KEY=file:///etc/github_exporter/app.pem
+GITHUB_EXPORTER_ENTERPRISE=my-enterprise
+GITHUB_EXPORTER_ORG=first-org,second-org
+{{< / highlight >}}
+
+Owners the application is not installed on are logged on startup and use the
+installation of the first configured owner, enterprises first. The exporter
+refuses to start if the application is not installed on any of them.
+Installations created later are only picked up after a restart.

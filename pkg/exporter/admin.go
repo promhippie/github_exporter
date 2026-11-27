@@ -5,7 +5,6 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/google/go-github/v93/github"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/promhippie/github_exporter/pkg/config"
 	"github.com/promhippie/github_exporter/pkg/store"
@@ -13,7 +12,7 @@ import (
 
 // AdminCollector collects metrics about the servers.
 type AdminCollector struct {
-	client   *github.Client
+	clients  Clients
 	logger   *slog.Logger
 	db       store.Store
 	failures *prometheus.CounterVec
@@ -66,14 +65,14 @@ type AdminCollector struct {
 }
 
 // NewAdminCollector returns a new AdminCollector.
-func NewAdminCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *AdminCollector {
+func NewAdminCollector(logger *slog.Logger, clients Clients, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *AdminCollector {
 	if failures != nil {
 		failures.WithLabelValues("admin").Add(0)
 	}
 
 	labels := []string{}
 	return &AdminCollector{
-		client:   client,
+		clients:  clients,
 		logger:   logger.With("collector", "admin"),
 		db:       db,
 		failures: failures,
@@ -380,7 +379,7 @@ func (c *AdminCollector) Collect(ch chan<- prometheus.Metric) {
 	defer cancel()
 
 	now := time.Now()
-	record, resp, err := c.client.Admin.GetAdminStats(ctx)
+	record, resp, err := c.clients.Default().Admin.GetAdminStats(ctx)
 	c.duration.WithLabelValues("admin").Observe(time.Since(now).Seconds())
 	defer closeBody(resp)
 

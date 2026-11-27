@@ -3,9 +3,11 @@ package exporter
 import (
 	"context"
 	"log/slog"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/google/go-github/v93/github"
@@ -17,7 +19,7 @@ import (
 
 // RunnerCollector collects metrics about the runners.
 type RunnerCollector struct {
-	client   *github.Client
+	clients  Clients
 	logger   *slog.Logger
 	db       store.Store
 	failures *prometheus.CounterVec
@@ -33,14 +35,14 @@ type RunnerCollector struct {
 }
 
 // NewRunnerCollector returns a new RunnerCollector.
-func NewRunnerCollector(logger *slog.Logger, client *github.Client, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *RunnerCollector {
+func NewRunnerCollector(logger *slog.Logger, clients Clients, db store.Store, failures *prometheus.CounterVec, duration *prometheus.HistogramVec, cfg config.Target) *RunnerCollector {
 	if failures != nil {
 		failures.WithLabelValues("runner").Add(0)
 	}
 
 	labels := cfg.Runners.Labels
 	return &RunnerCollector{
-		client:   client,
+		clients:  clients,
 		logger:   logger.With("collector", "runner"),
 		db:       db,
 		failures: failures,
@@ -312,7 +314,7 @@ func (c *RunnerCollector) repoRunners() []runner {
 		ctx, cancel := context.WithTimeout(context.Background(), c.config.Timeout)
 		defer cancel()
 
-		repos, err := reposByOwnerAndName(ctx, c.client, splitOwner, splitName, c.config.PerPage)
+		repos, err := reposByOwnerAndName(ctx, c.clients.Owner(splitOwner), splitOwner, splitName, c.config.PerPage)
 
 		if err != nil {
 			c.logger.Error("Failed to fetch repos",
@@ -379,7 +381,7 @@ func (c *RunnerCollector) pagedRepoRunners(ctx context.Context, owner, name stri
 	)
 
 	for {
-		result, resp, err := c.client.Actions.ListRunners(
+		result, resp, err := c.clients.Owner(owner).Actions.ListRunners(
 			ctx,
 			owner,
 			name,
@@ -427,9 +429,12 @@ func (c *RunnerCollector) enterpriseRunners() []runner {
 			continue
 		}
 
+		groups := c.runnerGroups(ctx, "enterprise", name, records, c.pagedEnterpriseRunnerGroups)
+
 		for _, row := range records {
 			result = append(result, runner{
 				Owner:  name,
+				Group:  groups[row.GetID()],
 				Runner: row,
 			})
 		}
@@ -450,7 +455,7 @@ func (c *RunnerCollector) pagedEnterpriseRunners(ctx context.Context, name strin
 	)
 
 	for {
-		result, resp, err := c.client.Enterprise.ListRunners(
+		result, resp, err := c.clients.Owner(name).Enterprise.ListRunners(
 			ctx,
 			name,
 			opts,
@@ -497,9 +502,12 @@ func (c *RunnerCollector) orgRunners() []runner {
 			continue
 		}
 
+		groups := c.runnerGroups(ctx, "org", name, records, c.pagedOrgRunnerGroups)
+
 		for _, row := range records {
 			result = append(result, runner{
 				Owner:  name,
+				Group:  groups[row.GetID()],
 				Runner: row,
 			})
 		}
@@ -520,7 +528,7 @@ func (c *RunnerCollector) pagedOrgRunners(ctx context.Context, name string) ([]*
 	)
 
 	for {
-		result, resp, err := c.client.Actions.ListOrganizationRunners(
+		result, resp, err := c.clients.Owner(name).Actions.ListOrganizationRunners(
 			ctx,
 			name,
 			opts,
@@ -548,8 +556,242 @@ func (c *RunnerCollector) pagedOrgRunners(ctx context.Context, name string) ([]*
 	return runners, nil
 }
 
+// runnerGroup is a runner group of an org or enterprise, with a function to
+// list the runners assigned to it.
+type runnerGroup struct {
+	ID      int64
+	Name    string
+	Runners func(ctx context.Context) ([]*github.Runner, error)
+}
+
+// runnerGroups maps the ID of every runner to the name of its runner group,
+// only if the group label is enabled, as it requires extra requests.
+func (c *RunnerCollector) runnerGroups(
+	ctx context.Context,
+	kind, name string,
+	records []*github.Runner,
+	list func(context.Context, string) ([]runnerGroup, error),
+) map[int64]string {
+	result := make(map[int64]string)
+
+	if len(records) == 0 || !slices.Contains(c.config.Runners.Labels, "group") {
+		return result
+	}
+
+	groups, err := list(ctx, name)
+
+	if err != nil {
+		c.logger.Error("Failed to fetch runner groups",
+			"type", kind,
+			"name", name,
+			"err", err,
+		)
+
+		c.failures.WithLabelValues("runner").Inc()
+		return result
+	}
+
+	names := make(map[int64]string, len(groups))
+
+	for _, group := range groups {
+		names[group.ID] = group.Name
+	}
+
+	// Newer API responses reference the runner group of every runner, which
+	// avoids listing the runners of every group.
+	if !slices.ContainsFunc(records, func(r *github.Runner) bool { return r.RunnerGroupID == nil }) {
+		for _, record := range records {
+			result[record.GetID()] = names[record.GetRunnerGroupID()]
+		}
+
+		return result
+	}
+
+	// Listing the runners of every group one after another adds up quickly,
+	// so the groups are listed concurrently.
+	var (
+		mu  sync.Mutex
+		wg  sync.WaitGroup
+		sem = make(chan struct{}, runnerGroupConcurrency)
+	)
+
+	for _, group := range groups {
+		wg.Go(func() {
+			sem <- struct{}{}
+			defer func() { <-sem }()
+
+			runners, err := group.Runners(ctx)
+
+			if err != nil {
+				c.logger.Error("Failed to fetch runner group runners",
+					"type", kind,
+					"name", name,
+					"group", group.Name,
+					"err", err,
+				)
+
+				c.failures.WithLabelValues("runner").Inc()
+				return
+			}
+
+			mu.Lock()
+			defer mu.Unlock()
+
+			for _, row := range runners {
+				result[row.GetID()] = group.Name
+			}
+		})
+	}
+
+	wg.Wait()
+
+	return result
+}
+
+// runnerGroupConcurrency limits the runner groups listed at the same time.
+const runnerGroupConcurrency = 8
+
+func (c *RunnerCollector) pagedOrgRunnerGroups(ctx context.Context, name string) ([]runnerGroup, error) {
+	opts := &github.ListOrgRunnerGroupOptions{
+		ListOptions: github.ListOptions{
+			PerPage: c.config.PerPage,
+		},
+	}
+
+	var (
+		groups []runnerGroup
+	)
+
+	for {
+		result, resp, err := c.clients.Owner(name).Actions.ListOrganizationRunnerGroups(
+			ctx,
+			name,
+			opts,
+		)
+
+		if err != nil {
+			closeBody(resp)
+			return nil, err
+		}
+
+		for _, group := range result.RunnerGroups {
+			// Runners of groups inherited from the enterprise are no org runners.
+			if group.GetInherited() {
+				continue
+			}
+
+			id := group.GetID()
+
+			groups = append(groups, runnerGroup{
+				ID:   id,
+				Name: group.GetName(),
+				Runners: func(ctx context.Context) ([]*github.Runner, error) {
+					return pagedRunners(c.config.PerPage, func(opts *github.ListOptions) (*github.Runners, *github.Response, error) {
+						return c.clients.Owner(name).Actions.ListRunnerGroupRunners(ctx, name, id, opts)
+					})
+				},
+			})
+		}
+
+		if resp.NextPage == 0 {
+			closeBody(resp)
+			break
+		}
+
+		closeBody(resp)
+		opts.Page = resp.NextPage
+	}
+
+	return groups, nil
+}
+
+func (c *RunnerCollector) pagedEnterpriseRunnerGroups(ctx context.Context, name string) ([]runnerGroup, error) {
+	opts := &github.ListEnterpriseRunnerGroupOptions{
+		ListOptions: github.ListOptions{
+			PerPage: c.config.PerPage,
+		},
+	}
+
+	var (
+		groups []runnerGroup
+	)
+
+	for {
+		result, resp, err := c.clients.Owner(name).Enterprise.ListRunnerGroups(
+			ctx,
+			name,
+			opts,
+		)
+
+		if err != nil {
+			closeBody(resp)
+			return nil, err
+		}
+
+		for _, group := range result.RunnerGroups {
+			id := group.GetID()
+
+			groups = append(groups, runnerGroup{
+				ID:   id,
+				Name: group.GetName(),
+				Runners: func(ctx context.Context) ([]*github.Runner, error) {
+					return pagedRunners(c.config.PerPage, func(opts *github.ListOptions) (*github.Runners, *github.Response, error) {
+						return c.clients.Owner(name).Enterprise.ListRunnerGroupRunners(ctx, name, id, opts)
+					})
+				},
+			})
+		}
+
+		if resp.NextPage == 0 {
+			closeBody(resp)
+			break
+		}
+
+		closeBody(resp)
+		opts.Page = resp.NextPage
+	}
+
+	return groups, nil
+}
+
+// pagedRunners collects the runners of every page returned by list.
+func pagedRunners(perPage int, list func(*github.ListOptions) (*github.Runners, *github.Response, error)) ([]*github.Runner, error) {
+	opts := &github.ListOptions{
+		PerPage: perPage,
+	}
+
+	var (
+		runners []*github.Runner
+	)
+
+	for {
+		result, resp, err := list(opts)
+
+		if err != nil {
+			closeBody(resp)
+			return nil, err
+		}
+
+		runners = append(
+			runners,
+			result.Runners...,
+		)
+
+		if resp.NextPage == 0 {
+			closeBody(resp)
+			break
+		}
+
+		closeBody(resp)
+		opts.Page = resp.NextPage
+	}
+
+	return runners, nil
+}
+
 type runner struct {
 	Owner string
+	Group string
 	*github.Runner
 }
 
@@ -580,6 +822,8 @@ func (r *runner) ByLabel(label string) string {
 		return r.GetStatus()
 	case "labels":
 		return r.AggregateLabels()
+	case "group":
+		return r.Group
 	}
 
 	return ""
