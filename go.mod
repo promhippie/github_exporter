@@ -8,7 +8,7 @@ require (
 	github.com/cenkalti/backoff/v7 v7.0.3
 	github.com/chaisql/chai v0.18.0
 	github.com/go-chi/chi/v5 v5.5.0
-	github.com/go-sql-driver/mysql v1.10.2
+	github.com/go-sql-driver/mysql v1.11.0
 	github.com/google/go-github/v93 v93.0.0
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/joho/godotenv v1.5.1
